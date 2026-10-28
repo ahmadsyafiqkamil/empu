@@ -79,7 +79,7 @@ terms:
     gloss_id: alat pena kecil dari tembaga bergagang bambu untuk menorehkan malam cair
     gloss_en: small copper pen with a bamboo handle used to draw with hot wax
     visual: true
-    sam_prompt: canting, small copper wax pen
+    sam_prompt: wooden stick with copper tip, pen with wooden handle
     verified: false
   - id: canting_klowongan
     label: canting klowongan
@@ -89,7 +89,7 @@ terms:
     gloss_id: canting untuk membuat garis utama motif
     gloss_en: canting for outlining the main pattern
     visual: true
-    sam_prompt: canting, small copper wax pen
+    sam_prompt: wooden stick with copper tip, pen with wooden handle
     verified: false   # cek
   - id: canting_cecekan
     label: canting cecekan
@@ -99,7 +99,7 @@ terms:
     gloss_id: canting bercucuk kecil untuk titik-titik isen-isen
     gloss_en: fine-spout canting for dotted fillings
     visual: true
-    sam_prompt: canting, small copper wax pen
+    sam_prompt: wooden stick with copper tip, pen with wooden handle
     verified: false   # cek
   - id: canting_tembokan
     label: canting tembokan
@@ -109,7 +109,7 @@ terms:
     gloss_id: canting bercucuk besar untuk menutup bidang luas
     gloss_en: wide-spout canting for blocking large areas
     visual: true
-    sam_prompt: canting, small copper wax pen
+    sam_prompt: wooden stick with copper tip, pen with wooden handle
     verified: false   # cek
   - id: wajan
     label: wajan

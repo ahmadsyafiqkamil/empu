@@ -1,0 +1,103 @@
+{
+ "hits": [
+  {
+   "gold": "pola",
+   "muse": "memola",
+   "t": 87.0
+  },
+  {
+   "gold": "lilin malam",
+   "muse": "malam",
+   "t": 111.0
+  },
+  {
+   "gold": "spangkring",
+   "muse": "spangkring",
+   "t": 123.0
+  },
+  {
+   "gold": "membatik",
+   "muse": null,
+   "nearest_any_source": [
+    [
+     "canting",
+     "visual_only",
+     31.0
+    ],
+    [
+     "canting",
+     "on_screen_text",
+     64.0
+    ],
+    [
+     "canting",
+     "on_screen_text",
+     65.0
+    ],
+    [
+     "canting",
+     "visual_only",
+     130.0
+    ],
+    [
+     "membatik",
+     "on_screen_text",
+     198.0
+    ],
+    [
+     "canting",
+     "on_screen_text",
+     202.0
+    ]
+   ]
+  },
+  {
+   "gold": "mewarna",
+   "muse": "fiksasi",
+   "t": 143.5
+  },
+  {
+   "gold": "hcl",
+   "muse": null,
+   "nearest_any_source": [
+    [
+     "HCl",
+     "speech",
+     137.0
+    ]
+   ]
+  },
+  {
+   "gold": "waterglass",
+   "muse": null,
+   "nearest_any_source": [
+    [
+     "waterglass",
+     "speech",
+     142.0
+    ]
+   ]
+  },
+  {
+   "gold": "nglorod",
+   "muse": null,
+   "nearest_any_source": [
+    [
+     "nglorod",
+     "speech",
+     150.0
+    ]
+   ]
+  }
+ ],
+ "recall": "4/8",
+ "pass": false,
+ "median_dt": 1.2,
+ "speech_before_80s": [],
+ "n_terms_total": 44,
+ "by_source": {
+  "speech": 14,
+  "on_screen_text": 20,
+  "visual_only": 10
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "with": {
+  "speech_heard": true,
+  "transcript_excerpt": "memotong kain sesuai ukuran yang diperlukan. Memilih pola yang ingin dibatik serta menggambar pola tersebut di atas kain. mencairkan lilin malam yang akan digunakan...",
+  "n_terms": 12,
+  "n_speech": 7,
+  "speech_terms": [
+   [
+    "persiapan_kain",
+    3.0
+   ],
+   [
+    "memola",
+    7.0
+   ],
+   [
+    "malam",
+    32.0
+   ],
+   [
+    "koran",
+    37.0
+   ],
+   [
+    "spangkring",
+    41.0
+   ],
+   [
+    "nglowong",
+    47.0
+   ],
+   [
+    "pewarnaan",
+    63.0
+   ]
+  ],
+  "by_source": {
+   "speech": 7,
+   "on_screen_text": 0,
+   "visual_only": 5
+  }
+ },
+ "without": {
+  "speech_heard": false,
+  "transcript_excerpt": "[musik, tanpa ucapan]",
+  "n_terms": 10,
+  "n_speech": 0,
+  "speech_terms": [],
+  "by_source": {
+   "speech": 0,
+   "on_screen_text": 1,
+   "visual_only": 9
+  }
+ },
+ "speech_ratio": 0.0,
+ "transcript_similarity": 0.09,
+ "muse_hears_audio": true
+}

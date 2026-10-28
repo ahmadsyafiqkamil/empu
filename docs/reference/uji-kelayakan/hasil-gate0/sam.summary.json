@@ -1,0 +1,189 @@
+[
+ {
+  "frame": "canting-closeup-50",
+  "prompt": "pen with wooden handle",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    209,
+    135,
+    743,
+    340,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-50",
+  "prompt": "small copper cup on a wooden stick",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    208,
+    135,
+    743,
+    341,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-50",
+  "prompt": "wooden stick with copper tip",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    209,
+    135,
+    743,
+    341,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-100",
+  "prompt": "pen with wooden handle",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    279,
+    265,
+    708,
+    473,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-100",
+  "prompt": "small copper cup on a wooden stick",
+  "status": 200,
+  "n_boxes": 0,
+  "boxes": []
+ },
+ {
+  "frame": "canting-closeup-100",
+  "prompt": "wooden stick with copper tip",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    236,
+    196,
+    708,
+    474,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-125",
+  "prompt": "pen with wooden handle",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    407,
+    155,
+    690,
+    479,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-closeup-125",
+  "prompt": "small copper cup on a wooden stick",
+  "status": 200,
+  "n_boxes": 0,
+  "boxes": []
+ },
+ {
+  "frame": "canting-closeup-125",
+  "prompt": "wooden stick with copper tip",
+  "status": 200,
+  "n_boxes": 1,
+  "boxes": [
+   [
+    407,
+    155,
+    690,
+    479,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "canting-row",
+  "prompt": "small copper cup on a wooden stick",
+  "status": 200,
+  "n_boxes": 0,
+  "boxes": []
+ },
+ {
+  "frame": "canting-row",
+  "prompt": "wooden stick with copper tip",
+  "status": 200,
+  "n_boxes": 4,
+  "boxes": [
+   [
+    689,
+    196,
+    853,
+    290,
+    854,
+    480
+   ],
+   [
+    665,
+    226,
+    853,
+    333,
+    854,
+    480
+   ],
+   [
+    607,
+    245,
+    824,
+    374,
+    854,
+    480
+   ],
+   [
+    553,
+    265,
+    736,
+    425,
+    854,
+    480
+   ]
+  ]
+ },
+ {
+  "frame": "wajan",
+  "prompt": "small black wok",
+  "status": 200,
+  "n_boxes": 0,
+  "boxes": []
+ },
+ {
+  "frame": "wajan",
+  "prompt": "small stove",
+  "status": 200,
+  "n_boxes": 0,
+  "boxes": []
+ }
+]

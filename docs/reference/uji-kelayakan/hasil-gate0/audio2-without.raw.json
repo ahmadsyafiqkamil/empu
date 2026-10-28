@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1a0ecd6a38e3d562940b5",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793171692.0,
+ "completed_at": 1793171692.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1a0ecd6a38e3d562940b5:rs_fe70ecba-534c-4bde-8d7d-0ec665619600",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_d01dff3b-adaa-415f-840b-a7d72d6e989b",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": false, \"language_notes\": \"Tidak ada ucapan manusia, hanya musik latar\", \"transcript_excerpt\": \"[musik, tanpa ucapan]\", \"terms\": [{\"spoken\": \"SPANGKRING\", \"term\": \"spangkring\", \"category\": \"tool\", \"source\": \"on_screen_text\", \"t_start\": 0.0, \"t_end\": 0.8, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Tiga lingkaran kayu bambu dengan pengencang logam di atas lantai\", \"visible_object_en\": \"wooden embroidery hoop\", \"visual_match\": \"yes\", \"gloss_id\": \"Bingkai lingkaran kayu untuk merentangkan kain saat membatik\", \"gloss_en\": \"Round wooden frame to stretch cloth for waxing\", \"confidence\": \"high\"}, {\"spoken\": \"mori\", \"term\": \"mori\", \"category\": \"material\", \"source\": \"visual_only\", \"t_start\": 2.5, \"t_end\": 6.0, \"stage\": \"persiapan_kain\", \"evidence_quote\": \"\", \"visible\": \"Orang jongkok menggelar dan mengukur kain putih di lantai\", \"visible_object_en\": \"white cotton cloth\", \"visual_match\": \"yes\", \"gloss_id\": \"Kain katun putih polos untuk batik tulis\", \"gloss_en\": \"Plain white cotton cloth for hand-drawn batik\", \"confidence\": \"medium\"}, {\"spoken\": \"memola\", \"term\": \"memola\", \"category\": \"stage\", \"source\": \"visual_only\", \"t_start\": 6.0, \"t_end\": 31.0, \"stage\": \"memola\", \"evidence_quote\": \"\", \"visible\": \"Tangan menggambar pola logo dan bunga mawar dengan pensil di atas kain putih\", \"visible_object_en\": null, \"visual_match\": \"yes\", \"gloss_id\": \"Membuat pola sketsa di atas kain sebelum dicanting\", \"gloss_en\": \"Drawing pattern sketch on cloth before waxing\", \"confidence\": \"high\"}, {\"spoken\": \"wajan\", \"term\": \"wajan\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 31.0, \"t_end\": 35.5, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Wajan hitam berisi cairan hitam mengepul di atas tungku\", \"visible_object_en\": \"small black wok pan\", \"visual_match\": \"yes\", \"gloss_id\": \"Wadah logam kecil untuk melelehkan malam batik\", \"gloss_en\": \"Small metal pan to melt batik wax\", \"confidence\": \"high\"}, {\"spoken\": \"kompor\", \"term\": \"kompor\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 31.0, \"t_end\": 35.5, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Tungku kecil di bawah wajan hitam untuk memanaskan malam\", \"visible_object_en\": \"small batik stove\", \"visual_match\": \"yes\", \"gloss_id\": \"Kompor kecil untuk memanaskan wajan malam\", \"gloss_en\": \"Small stove to heat wax pan\", \"confidence\": \"high\"}, {\"spoken\": \"malam\", \"term\": \"malam\", \"category\": \"material\", \"source\": \"visual_only\", \"t_start\": 31.0, \"t_end\": 35.5, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Cairan lilin hitam mendidih di dalam wajan\", \"visible_object_en\": \"molten batik wax\", \"visual_match\": \"yes\", \"gloss_id\": \"Lilin batik panas sebagai perintang warna\", \"gloss_en\": \"Hot batik wax as color resist\", \"confidence\": \"high\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 43.0, \"t_end\": 67.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Tangan memegang alat tembaga bergagang menorehkan malam cair mengikuti pola bunga di kain dalam spangkring\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"Alat bercucuk untuk menorehkan malam cair\", \"gloss_en\": \"Spouted tool to apply molten wax\", \"confidence\": \"high\"}, {\"spoken\": \"nglowong\", \"term\": \"nglowong\", \"category\": \"stage\", \"source\": \"visual_only\", \"t_start\": 43.0, \"t_end\": 67.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Garis utama motif bunga ditorehkan dengan malam di atas kain yang direntang\", \"visible_object_en\": null, \"visual_match\": \"yes\", \"gloss_id\": \"Mencanting garis utama pola batik\", \"gloss_en\": \"Waxing the main outlines of pattern\", \"confidence\": \"high\"}, {\"spoken\": \"pewarnaan\", \"term\": \"pewarnaan\", \"category\": \"stage\", \"source\": \"visual_only\", \"t_start\": 67.5, \"t_end\": 75.0, \"stage\": \"pewarnaan\", \"evidence_quote\": \"\", \"visible\": \"Tangan bersarung tangan mencelupkan kain ungu ke dalam bak cairan pewarna gelap\", \"visible_object_en\": null, \"visual_match\": \"yes\", \"gloss_id\": \"Pemberian warna pada kain batik dengan cara celup\", \"gloss_en\": \"Coloring batik cloth by immersion\", \"confidence\": \"high\"}, {\"spoken\": \"bak celup\", \"term\": \"bak celup\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 67.5, \"t_end\": 75.0, \"stage\": \"pewarnaan\", \"evidence_quote\": \"\", \"visible\": \"Ember hitam berisi cairan pewarna gelap untuk mencelup kain\", \"visible_object_en\": \"dye bath bucket\", \"visual_match\": \"yes\", \"gloss_id\": \"Wadah berisi larutan pewarna untuk pencelupan\", \"gloss_en\": \"Container with dye solution for immersion\", \"confidence\": \"high\"}], \"process_steps\": [{\"step\": \"persiapan_kain\", \"t_start\": 2.0, \"t_end\": 6.0, \"tools\": []}, {\"step\": \"memola\", \"t_start\": 6.0, \"t_end\": 31.0, \"tools\": []}, {\"step\": \"nglowong\", \"t_start\": 43.0, \"t_end\": 67.0, \"tools\": [\"spangkring\", \"canting\", \"wajan\", \"kompor\", \"malam\"]}, {\"step\": \"pewarnaan\", \"t_start\": 67.5, \"t_end\": 75.0, \"tools\": [\"bak celup\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 21851,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 3513,
+  "output_tokens_details": {
+   "reasoning_tokens": 1955
+  },
+  "total_tokens": 25364
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

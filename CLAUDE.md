@@ -43,4 +43,4 @@ Diisi saat scaffolding (H1): instalasi, menjalankan api, worker, dan web, tes, l
 - Setiap perubahan prompt menaikkan `PROMPT_VERSION`.
 
 ## Status
-- H0 (Rab 28 Okt): dokumen konteks selesai. Plan di `docs/superpowers/plans/2026-10-28-empu/` (ikhtisar, H0, H1 sebagian). Keputusan: demo pakai video YouTube CC BY dengan atribusi (spec diperbarui). Berikutnya: spike Gate 0, hubungi kreator CC BY.
+- H0 (Rab 28 Okt): dokumen konteks selesai. Plan di `docs/superpowers/plans/2026-10-28-empu/` (ikhtisar, H0, H1 sebagian). Keputusan: demo pakai video YouTube CC BY dengan atribusi (spec diperbarui). Gate 0 selesai (`docs/reference/hasil-gate0.md`): audio lulus, recall 4/8 dengan waktu (7/8 isi) → **Mode B** (faster-whisper sebagai jangkar waktu), SAM lulus dengan prompt deskriptif Inggris + bbox saja, structured output skema penuh didukung. Berikutnya: hubungi kreator CC BY, lalu H1.

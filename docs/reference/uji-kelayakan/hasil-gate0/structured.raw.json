@@ -1,0 +1,237 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "text": {
+  "format": {
+   "type": "json_schema",
+   "name": "empu_terms",
+   "schema": {
+    "description": "Output Muse untuk SATU segmen video. Semua waktu dalam detik dari awal segmen. Enum memakai bahasa Inggris (uji v1/v2 memakai enum Indonesia, lihat pemetaan di hasil-uji-kelayakan.md).",
+    "$id": "empu/muse-output/v3",
+    "properties": {
+     "language_notes": {
+      "description": "Bahasa yang terdengar, mis. 'Indonesia bercampur istilah Jawa'",
+      "type": "string"
+     },
+     "process_steps": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "step": {
+         "type": "string"
+        },
+        "t_end": {
+         "minimum": 0,
+         "type": "number"
+        },
+        "t_start": {
+         "minimum": 0,
+         "type": "number"
+        },
+        "tools": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "step",
+        "t_start",
+        "t_end",
+        "tools"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "speech_heard": {
+      "description": "true jika ada ucapan manusia yang terdengar di audio segmen ini",
+      "type": "boolean"
+     },
+     "terms": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "category": {
+         "enum": [
+          "tool",
+          "tool_part",
+          "material",
+          "dye",
+          "stage",
+          "technique",
+          "motif",
+          "other"
+         ],
+         "type": "string"
+        },
+        "confidence": {
+         "enum": [
+          "low",
+          "medium",
+          "high"
+         ],
+         "type": "string"
+        },
+        "evidence_quote": {
+         "description": "Kalimat yang diucapkan di sekitar istilah (kosong jika source bukan speech)",
+         "maxLength": 160,
+         "type": "string"
+        },
+        "gloss_en": {
+         "description": "Short meaning in English",
+         "type": "string"
+        },
+        "gloss_id": {
+         "description": "Arti singkat dalam bahasa Indonesia",
+         "type": "string"
+        },
+        "source": {
+         "description": "speech = terdengar di audio; on_screen_text = hanya terbaca di layar; visual_only = bendanya terlihat tapi tidak diucapkan dan tidak tertulis",
+         "enum": [
+          "speech",
+          "on_screen_text",
+          "visual_only"
+         ],
+         "type": "string"
+        },
+        "spoken": {
+         "description": "Bentuk persis yang diucapkan atau tertulis (mis. 'dilorot', 'ngelowong')",
+         "type": "string"
+        },
+        "stage": {
+         "description": "Tahap proses saat istilah muncul, idealnya id tahap dari craft pack",
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "t_end": {
+         "minimum": 0,
+         "type": "number"
+        },
+        "t_start": {
+         "minimum": 0,
+         "type": "number"
+        },
+        "term": {
+         "description": "Bentuk baku/kanonis menurut Muse (mis. 'nglorod', 'nglowong')",
+         "type": "string"
+        },
+        "visible": {
+         "description": "Apa yang terlihat di layar saat itu (alat, bahan, gerakan)",
+         "type": "string"
+        },
+        "visible_object_en": {
+         "description": "Frasa benda pendek dalam bahasa Inggris untuk prompt SAM, mis. 'copper wax pen'. null jika tidak ada benda yang relevan",
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "visual_match": {
+         "enum": [
+          "yes",
+          "no",
+          "not_visible"
+         ],
+         "type": "string"
+        }
+       },
+       "required": [
+        "spoken",
+        "term",
+        "category",
+        "source",
+        "t_start",
+        "t_end",
+        "stage",
+        "evidence_quote",
+        "visible",
+        "visible_object_en",
+        "visual_match",
+        "gloss_id",
+        "gloss_en",
+        "confidence"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "transcript_excerpt": {
+      "description": "Transkrip kasar 20 detik pertama, atau keterangan seperti '[musik, tanpa ucapan]'",
+      "maxLength": 300,
+      "type": "string"
+     }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "speech_heard",
+     "language_notes",
+     "transcript_excerpt",
+     "terms",
+     "process_steps"
+    ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Empu: Muse analysis output per segment"
+   },
+   "strict": true
+  }
+ },
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1a0d6f2d85f2738d94065",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793171670.0,
+ "completed_at": 1793171670.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1a0d6f2d85f2738d94065:rs_422e98ce-4700-4bde-8d5c-5597738b8c13",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_c57ee9b8-e03e-47cb-97cc-ac687b1fa21a",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"language_notes\": \"Indonesia\", \"process_steps\": [{\"step\": \"persiapan_kain\", \"t_end\": 3.0, \"t_start\": 0.0, \"tools\": [\"spangkring\"]}, {\"step\": \"nglowong\", \"t_end\": 26.5, \"t_start\": 3.0, \"tools\": [\"canting\", \"malam\", \"wajan\", \"kompor\", \"spangkring\"]}, {\"step\": \"pewarnaan\", \"t_end\": 30.0, \"t_start\": 27.0, \"tools\": [\"bak celup\"]}], \"speech_heard\": true, \"terms\": [{\"category\": \"tool\", \"confidence\": \"high\", \"evidence_quote\": \"langsung memasangkan kain pada spankring\", \"gloss_en\": \"stretching frame/hoop for batik\", \"gloss_id\": \"bingkai pembentang kain untuk membatik\", \"source\": \"speech\", \"spoken\": \"spankring\", \"stage\": \"persiapan_kain\", \"t_end\": 2.5, \"t_start\": 0.5, \"term\": \"spangkring\", \"visible\": \"Tangan memegang koran, di lantai terlihat kain dan pemanas; gawang bundar terlihat di shot berikutnya\", \"visible_object_en\": \"round fabric hoop\", \"visual_match\": \"yes\"}, {\"category\": \"material\", \"confidence\": \"high\", \"evidence_quote\": \"langsung memasangkan kain pada spankring\", \"gloss_en\": \"fabric, usually white cotton mori\", \"gloss_id\": \"kain, biasanya kain mori putih\", \"source\": \"speech\", \"spoken\": \"kain\", \"stage\": \"persiapan_kain\", \"t_end\": 2.0, \"t_start\": 0.5, \"term\": \"mori\", \"visible\": \"Kain putih dibentangkan dan dipasang pada lingkaran kayu\", \"visible_object_en\": \"white fabric\", \"visual_match\": \"yes\"}, {\"category\": \"technique\", \"confidence\": \"high\", \"evidence_quote\": \"selanjutnya proses membatik yaitu meletakkan lilin pada kain sesuai dengan pola\", \"gloss_en\": \"hand-drawn batik wax-resist process\", \"gloss_id\": \"proses batik tulis dengan perintang malam\", \"source\": \"speech\", \"spoken\": \"membatik\", \"stage\": \"nglowong\", \"t_end\": 7.0, \"t_start\": 5.0, \"term\": \"batik tulis\", \"visible\": \"Tangan mencanting di atas kain putih berpola bunga\", \"visible_object_en\": null, \"visual_match\": \"yes\"}, {\"category\": \"material\", \"confidence\": \"high\", \"evidence_quote\": \"proses membatik yaitu meletakkan lilin pada kain sesuai dengan pola\", \"gloss_en\": \"hot batik wax as dye resist\", \"gloss_id\": \"malam/lilin batik panas sebagai perintang warna\", \"source\": \"speech\", \"spoken\": \"lilin\", \"stage\": \"nglowong\", \"t_end\": 9.0, \"t_start\": 7.0, \"term\": \"malam\", \"visible\": \"Goresan malam coklat cair menutup garis pola bunga pada kain\", \"visible_object_en\": \"hot batik wax\", \"visual_match\": \"yes\"}, {\"category\": \"stage\", \"confidence\": \"high\", \"evidence_quote\": \"meletakkan lilin pada kain sesuai dengan pola\", \"gloss_en\": \"pattern drafting stage\", \"gloss_id\": \"tahap pembuatan pola\", \"source\": \"speech\", \"spoken\": \"pola\", \"stage\": \"memola\", \"t_end\": 11.0, \"t_start\": 9.0, \"term\": \"memola\", \"visible\": \"Sketsa pensil pola bunga dan sulur terlihat pada kain putih\", \"visible_object_en\": \"floral pattern on fabric\", \"visual_match\": \"yes\"}, {\"category\": \"stage\", \"confidence\": \"high\", \"evidence_quote\": \"lalu masuk ke proses mewarna\", \"gloss_en\": \"coloring by dipping or hand-painting\", \"gloss_id\": \"tahap pewarnaan kain\", \"source\": \"speech\", \"spoken\": \"mewarna\", \"stage\": \"pewarnaan\", \"t_end\": 15.0, \"t_start\": 12.5, \"term\": \"pewarnaan\", \"visible\": \"Saat diucapkan masih terlihat proses mencanting; pencelupan baru terlihat di akhir segmen\", \"visible_object_en\": null, \"visual_match\": \"no\"}, {\"category\": \"tool\", \"confidence\": \"high\", \"evidence_quote\": \"\", \"gloss_en\": \"copper wax pen for applying hot wax\", \"gloss_id\": \"canting untuk menorehkan malam panas\", \"source\": \"visual_only\", \"spoken\": \"canting\", \"stage\": \"nglowong\", \"t_end\": 6.0, \"t_start\": 3.5, \"term\": \"canting\", \"visible\": \"Tangan memegang canting tembaga menorehkan malam cair pada kain\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\"}, {\"category\": \"tool\", \"confidence\": \"high\", \"evidence_quote\": \"\", \"gloss_en\": \"small batik stove for heating wax\", \"gloss_id\": \"kompor kecil untuk memanaskan malam\", \"source\": \"visual_only\", \"spoken\": \"kompor\", \"stage\": \"nglowong\", \"t_end\": 3.0, \"t_start\": 0.0, \"term\": \"kompor\", \"visible\": \"Kompor hijau kecil di atas lantai untuk memanaskan malam\", \"visible_object_en\": \"small batik stove\", \"visual_match\": \"yes\"}, {\"category\": \"tool\", \"confidence\": \"high\", \"evidence_quote\": \"\", \"gloss_en\": \"small pan for melting wax\", \"gloss_id\": \"wajan kecil untuk melelehkan malam\", \"source\": \"visual_only\", \"spoken\": \"wajan\", \"stage\": \"nglowong\", \"t_end\": 3.0, \"t_start\": 0.0, \"term\": \"wajan\", \"visible\": \"Wajan hitam kecil di atas kompor berisi malam leleh\", \"visible_object_en\": \"small wax melting pan\", \"visual_match\": \"yes\"}, {\"category\": \"tool\", \"confidence\": \"high\", \"evidence_quote\": \"\", \"gloss_en\": \"dyeing basin/bucket\", \"gloss_id\": \"bak/ember untuk pencelupan warna\", \"source\": \"visual_only\", \"spoken\": \"bak celup\", \"stage\": \"pewarnaan\", \"t_end\": 30.0, \"t_start\": 27.0, \"term\": \"bak celup\", \"visible\": \"Tangan bersarung merah mencelupkan kain ungu ke cairan gelap di ember\", \"visible_object_en\": \"dye bucket\", \"visual_match\": \"yes\"}], \"transcript_excerpt\": \"langsung memasangkan kain pada spankring, selanjutnya proses membatik yaitu meletakkan lilin pada kain sesuai dengan pola, lalu masuk ke proses mewarna\"}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 10269,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 4835,
+  "output_tokens_details": {
+   "reasoning_tokens": 3271
+  },
+  "total_tokens": 15104
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

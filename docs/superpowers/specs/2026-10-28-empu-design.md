@@ -466,7 +466,7 @@ Submission paling lambat **Kamis 5 Nov 09:00 WIB**. Target kirim **Rabu 4 Nov 22
 | 3 | Deploy | Docker Compose (web, api, worker, caddy) di VPS yang sudah ada. Alternatif: Railway |
 | 4 | Database | SQLite (satu file). Pindah ke Postgres hanya kalau perlu multi-instance |
 | 5 | Akses tulis | Kunci studio di header (`STUDIO_KEY`). Juri memakai sandbox |
-| 6 | Mode pipeline | Mode A. Ditentukan ulang oleh Gate 0 |
+| 6 | Mode pipeline | **Mode B** (Gate 0, 28 Okt: Muse mendengar audio, tetapi recall dengan waktu hanya 4/8 karena waktu bergeser di segmen yang diawali jeda musik; isi 7/8 benar). Transkripsi: faster-whisper lokal. Mode A tetap jadi pembanding. Lihat `docs/reference/hasil-gate0.md` |
 | 7 | Tema submission | "Build for Your World" atau "Push the Frontier". Diputuskan saat submission, tidak memengaruhi build |
 | 8 | Sumber video demo | **Diputuskan 28 Okt:** video YouTube CC BY dengan atribusi. Rekam sanggar opsional |
 

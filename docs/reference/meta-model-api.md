@@ -48,7 +48,14 @@ POST /v1/responses
 ### Fallback yang sudah ada di skrip uji
 Kalau `input_video` dengan `file_id` gagal, coba `{"type": "input_file", "file_id": ...}`. Kalau unggah gagal, kirim `{"type": "input_video", "video_url": "data:video/mp4;base64,..."}`. Di v1, jalur utama berhasil.
 
-## Belum terverifikasi (cek di Gate 0)
+## Terverifikasi di Gate 0 (28 Okt), detail di `hasil-gate0.md`
+- **Audio:** Muse memakai audio. Tanpa audio, istilah `speech` turun dari 7 ke 0 pada video tanpa subtitle tertanam. Waktu bisa bergeser 14–23 s pada segmen yang diawali jeda musik → Mode B (faster-whisper sebagai jangkar waktu).
+- **Structured output:** `"text": {"format": {"type": "json_schema", "name": "empu_terms", "schema": <muse-output.schema.json penuh>, "strict": true}}` diterima, keluaran lolos validasi skema. Tanpa structured output, Muse kadang menyalin skema dari prompt sebelum jawaban; parser harus mengambil objek pertama yang `terms`-nya list.
+- **SAM 3.1:** `POST /responses`, `{"model": "sam-3.1", "stream": false, "input": [{"role": "user", "content": [{"type": "input_text", "text": "<frasa Inggris>"}, {"type": "input_image", "image_url": "data:image/jpeg;base64,..."}]}]}`. Keluaran teks: `<|box;x1=..;y1=..;x2=..;y2=..;w=..;h=..|><|mask;x=..;y=..;data=...|>` per instance (piksel terhadap `w`×`h`). Mask berencoding khusus, belum dipecahkan; Empu memakai bbox saja. Istilah lokal ("canting") tidak dikenali; deskripsi Inggris ("wooden stick with copper tip") berhasil. Token 0, `usage.images_processed` = 1.
+- **Transkripsi Meta:** `muse-voice-transcribe-1.0` muncul di `GET /models`, tetapi `/audio/transcriptions` → 404 dan `/responses` → `model_not_found`. Pakai faster-whisper lokal.
+- **Daftar model** (`GET /models`): muse-image-1.0, muse-spark-1.1, muse-spark-1.2(-contributor), muse-spark-1.3(-contributor), muse-voice-transcribe-1.0, muse-wonder-1.0, sam-3.1.
+
+## Belum terverifikasi (catatan awal sebelum Gate 0, dipertahankan untuk riwayat)
 
 | Hal | Status | Cara cek |
 |---|---|---|

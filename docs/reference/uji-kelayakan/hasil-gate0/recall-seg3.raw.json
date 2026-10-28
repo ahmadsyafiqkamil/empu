@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1a12bf394fd6e19c74905",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793171755.0,
+ "completed_at": 1793171755.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1a12bf394fd6e19c74905:rs_d9830abf-fb2e-4007-8a3e-fa2679030a03",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_65c2d36e-1f87-4318-96dd-e8a948a6bd9f",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"$id\": \"empu/muse-output/v3\", \"title\": \"Empu: Muse analysis output per segment\", \"description\": \"Output Muse untuk SATU segmen video. Semua waktu dalam detik dari awal segmen. Enum memakai bahasa Inggris (uji v1/v2 memakai enum Indonesia, lihat pemetaan di hasil-uji-kelayakan.md).\", \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"speech_heard\", \"language_notes\", \"transcript_excerpt\", \"terms\", \"process_steps\"], \"properties\": {\"speech_heard\": {\"type\": \"boolean\", \"description\": \"true jika ada ucapan manusia yang terdengar di audio segmen ini\"}, \"language_notes\": {\"type\": \"string\", \"description\": \"Bahasa yang terdengar, mis. 'Indonesia bercampur istilah Jawa'\"}, \"transcript_excerpt\": {\"type\": \"string\", \"maxLength\": 300, \"description\": \"Transkrip kasar 20 detik pertama, atau keterangan seperti '[musik, tanpa ucapan]'\"}, \"terms\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"additionalProperties\": false, \"required\": [\"spoken\", \"term\", \"category\", \"source\", \"t_start\", \"t_end\", \"stage\", \"evidence_quote\", \"visible\", \"visible_object_en\", \"visual_match\", \"gloss_id\", \"gloss_en\", \"confidence\"], \"properties\": {\"spoken\": {\"type\": \"string\", \"description\": \"Bentuk persis yang diucapkan atau tertulis (mis. 'dilorot', 'ngelowong')\"}, \"term\": {\"type\": \"string\", \"description\": \"Bentuk baku/kanonis menurut Muse (mis. 'nglorod', 'nglowong')\"}, \"category\": {\"type\": \"string\", \"enum\": [\"tool\", \"tool_part\", \"material\", \"dye\", \"stage\", \"technique\", \"motif\", \"other\"]}, \"source\": {\"type\": \"string\", \"enum\": [\"speech\", \"on_screen_text\", \"visual_only\"], \"description\": \"speech = terdengar di audio; on_screen_text = hanya terbaca di layar; visual_only = bendanya terlihat tapi tidak diucapkan dan tidak tertulis\"}, \"t_start\": {\"type\": \"number\", \"minimum\": 0}, \"t_end\": {\"type\": \"number\", \"minimum\": 0}, \"stage\": {\"type\": [\"string\", \"null\"], \"description\": \"Tahap proses saat istilah muncul, idealnya id tahap dari craft pack\"}, \"evidence_quote\": {\"type\": \"string\", \"maxLength\": 160, \"description\": \"Kalimat yang diucapkan di sekitar istilah (kosong jika source bukan speech)\"}, \"visible\": {\"type\": \"string\", \"description\": \"Apa yang terlihat di layar saat itu (alat, bahan, gerakan)\"}, \"visible_object_en\": {\"type\": [\"string\", \"null\"], \"description\": \"Frasa benda pendek dalam bahasa Inggris untuk prompt SAM, mis. 'copper wax pen'. null jika tidak ada benda yang relevan\"}, \"visual_match\": {\"type\": \"string\", \"enum\": [\"yes\", \"no\", \"not_visible\"]}, \"gloss_id\": {\"type\": \"string\", \"description\": \"Arti singkat dalam bahasa Indonesia\"}, \"gloss_en\": {\"type\": \"string\", \"description\": \"Short meaning in English\"}, \"confidence\": {\"type\": \"string\", \"enum\": [\"low\", \"medium\", \"high\"]}}}}, \"process_steps\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"additionalProperties\": false, \"required\": [\"step\", \"t_start\", \"t_end\", \"tools\"], \"properties\": {\"step\": {\"type\": \"string\"}, \"t_start\": {\"type\": \"number\", \"minimum\": 0}, \"t_end\": {\"type\": \"number\", \"minimum\": 0}, \"tools\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}}}}}}} , \"speech_heard\": true, \"language_notes\": \"Indonesia, dengan teks instruksi Bahasa Indonesia; terdengar percakapan latar dan musik gamelan\", \"transcript_excerpt\": \"[teks: TIPS DALAM MEMBATIK] tiup ujung canting agar malam keluar dengan lancar... telaten dan sabar... [musik gamelan latar]\", \"terms\": [{\"spoken\": \"MEMBATIK\", \"term\": \"membatik\", \"category\": \"technique\", \"source\": \"on_screen_text\", \"t_start\": 3.5, \"t_end\": 7.0, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"tulisan judul putih TIPS DALAM MEMBATIK di layar hitam\", \"visible_object_en\": null, \"visual_match\": \"not_visible\", \"gloss_id\": \"proses membuat batik tulis dengan canting dan malam\", \"gloss_en\": \"process of making hand-drawn batik\", \"confidence\": \"high\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"category\": \"tool\", \"source\": \"speech\", \"t_start\": 8.0, \"t_end\": 10.0, \"stage\": \"nglowong\", \"evidence_quote\": \"tiup ujung canting agar malam keluar dengan lancar\", \"visible\": \"perempuan berkerudung pink memegang canting kayu, meniup ujungnya\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"alat berujung logam untuk menorehkan malam panas\", \"gloss_en\": \"pen-like tool for applying hot wax\", \"confidence\": \"high\"}, {\"spoken\": \"malam\", \"term\": \"malam\", \"category\": \"material\", \"source\": \"speech\", \"t_start\": 8.0, \"t_end\": 10.0, \"stage\": \"nglowong\", \"evidence_quote\": \"tiup ujung canting agar malam keluar dengan lancar\", \"visible\": \"perempuan memegang canting, malam cair di ujung canting\", \"visible_object_en\": \"hot batik wax\", \"visual_match\": \"yes\", \"gloss_id\": \"lilin batik panas sebagai perintang warna\", \"gloss_en\": \"hot batik wax as dye resist\", \"confidence\": \"high\"}, {\"spoken\": \"telaten\", \"term\": \"telaten\", \"category\": \"other\", \"source\": \"speech\", \"t_start\": 11.5, \"t_end\": 13.5, \"stage\": null, \"evidence_quote\": \"telaten dan sabar\", \"visible\": \"perempuan berkacamata berbaju motif daun berbicara sambil memegang kain\", \"visible_object_en\": null, \"visual_match\": \"not_visible\", \"gloss_id\": \"sikap tekun dan teliti saat membatik\", \"gloss_en\": \"diligence and carefulness in batik work\", \"confidence\": \"medium\"}, {\"spoken\": \"sabar\", \"term\": \"sabar\", \"category\": \"other\", \"source\": \"speech\", \"t_start\": 11.5, \"t_end\": 13.5, \"stage\": null, \"evidence_quote\": \"telaten dan sabar\", \"visible\": \"perempuan berkacamata berbaju motif daun berbicara sambil memegang kain\", \"visible_object_en\": null, \"visual_match\": \"not_visible\", \"gloss_id\": \"sikap sabar saat membatik\", \"gloss_en\": \"patience while making batik\", \"confidence\": \"medium\"}, {\"spoken\": \"kain\", \"term\": \"mori\", \"category\": \"material\", \"source\": \"on_screen_text\", \"t_start\": 15.5, \"t_end\": 21.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"tangan memegang kain putih dalam pembidang kayu bundar, dimiringkan sambil dicanting\", \"visible_object_en\": \"white fabric in hoop\", \"visual_match\": \"yes\", \"gloss_id\": \"kain putih polos untuk batik tulis\", \"gloss_en\": \"plain white cotton cloth for batik\", \"confidence\": \"high\"}, {\"spoken\": \"membatik\", \"term\": \"membatik\", \"category\": \"technique\", \"source\": \"on_screen_text\", \"t_start\": 15.5, \"t_end\": 21.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"tangan menorehkan malam dengan canting di atas kain putih\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"proses menorehkan malam dengan canting\", \"gloss_en\": \"applying wax with canting\", \"confidence\": \"high\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"category\": \"tool\", \"source\": \"on_screen_text\", \"t_start\": 22.0, \"t_end\": 28.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"tangan menggoreskan canting di atas kain berpola lingkaran dan bangunan dengan malam coklat\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"alat berujung logam untuk menorehkan malam panas\", \"gloss_en\": \"pen-like tool for applying hot wax\", \"confidence\": \"high\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"category\": \"tool\", \"source\": \"on_screen_text\", \"t_start\": 29.0, \"t_end\": 33.5, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"laki-laki berkacamata memegang canting tegak di atas kain, tidak terlalu miring\", \"visible_object_en\": \"copper wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"alat berujung logam untuk menorehkan malam panas, posisi tidak terlalu miring\", \"gloss_en\": \"canting held upright, not too tilted\", \"confidence\": \"high\"}], \"process_steps\": [{\"step\": \"nglowong\", \"t_start\": 8.0, \"t_end\": 33.5, \"tools\": [\"canting\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 14629,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 6617,
+  "output_tokens_details": {
+   "reasoning_tokens": 4387
+  },
+  "total_tokens": 21246
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

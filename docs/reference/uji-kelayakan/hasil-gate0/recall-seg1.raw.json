@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1a0a26ce337b12f074ba5",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793171618.0,
+ "completed_at": 1793171618.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1a0a26ce337b12f074ba5:rs_774ea706-7785-4a80-ae4d-a0f48a11c17b",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_af05aecb-bcf1-4a59-b5aa-b942ea9ce757",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"language_notes\": \"Bahasa Indonesia\", \"transcript_excerpt\": \"Memotong kain sesuai ukuran yang diperlukan, memilih pola yang ingin dibatik serta menggambar pola tersebut di atas kain...\", \"terms\": [{\"spoken\": \"CANTING\", \"term\": \"canting\", \"category\": \"tool\", \"source\": \"on_screen_text\", \"t_start\": 0.0, \"t_end\": 2.8, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"Foto canting dengan label bagian-bagiannya\", \"visible_object_en\": \"wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"Alat untuk menorehkan malam panas\", \"gloss_en\": \"Hand tool for applying hot wax\", \"confidence\": \"high\"}, {\"spoken\": \"Nyamplung\", \"term\": \"nyamplung\", \"category\": \"tool_part\", \"source\": \"on_screen_text\", \"t_start\": 0.0, \"t_end\": 2.8, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"Label menunjuk wadah malam pada canting\", \"visible_object_en\": \"wax reservoir\", \"visual_match\": \"yes\", \"gloss_id\": \"Wadah/tandon malam pada canting\", \"gloss_en\": \"Wax reservoir of canting\", \"confidence\": \"high\"}, {\"spoken\": \"Cucuk\", \"term\": \"cucuk\", \"category\": \"tool_part\", \"source\": \"on_screen_text\", \"t_start\": 0.0, \"t_end\": 2.8, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"Label menunjuk ujung pipa canting\", \"visible_object_en\": \"canting spout\", \"visual_match\": \"yes\", \"gloss_id\": \"Ujung/moncong canting tempat malam keluar\", \"gloss_en\": \"Canting tip spout\", \"confidence\": \"high\"}, {\"spoken\": \"Gagang\", \"term\": \"gagang\", \"category\": \"tool_part\", \"source\": \"on_screen_text\", \"t_start\": 0.0, \"t_end\": 2.8, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"Label menunjuk tangkai bambu canting\", \"visible_object_en\": \"bamboo handle\", \"visual_match\": \"yes\", \"gloss_id\": \"Tangkai pegangan canting\", \"gloss_en\": \"Canting handle\", \"confidence\": \"high\"}, {\"spoken\": \"DINGKLIK\", \"term\": \"dingklik\", \"category\": \"tool\", \"source\": \"on_screen_text\", \"t_start\": 7.5, \"t_end\": 11.5, \"stage\": null, \"evidence_quote\": \"\", \"visible\": \"Kursi kayu pendek berkaki empat di lantai\", \"visible_object_en\": \"low wooden stool\", \"visual_match\": \"yes\", \"gloss_id\": \"Kursi kecil pendek untuk duduk membatik\", \"gloss_en\": \"Low stool for sitting while batik work\", \"confidence\": \"high\"}, {\"spoken\": \"Memotong kain\", \"term\": \"persiapan_kain\", \"category\": \"stage\", \"source\": \"speech\", \"t_start\": 17.0, \"t_end\": 19.5, \"stage\": \"persiapan_kain\", \"evidence_quote\": \"Memotong kain sesuai ukuran yang diperlukan\", \"visible\": \"Orang jongkok menggelar kain putih di lantai\", \"visible_object_en\": \"white cloth\", \"visual_match\": \"yes\", \"gloss_id\": \"Penyiapan kain sebelum dibatik\", \"gloss_en\": \"Cloth preparation\", \"confidence\": \"high\"}, {\"spoken\": \"kain\", \"term\": \"kain\", \"category\": \"material\", \"source\": \"speech\", \"t_start\": 17.0, \"t_end\": 19.5, \"stage\": \"persiapan_kain\", \"evidence_quote\": \"Memotong kain sesuai ukuran yang diperlukan\", \"visible\": \"Orang jongkok menggelar kain putih di lantai\", \"visible_object_en\": \"white cloth\", \"visual_match\": \"yes\", \"gloss_id\": \"Kain mori putih untuk batik\", \"gloss_en\": \"White cotton cloth for batik\", \"confidence\": \"high\"}, {\"spoken\": \"pola\", \"term\": \"memola\", \"category\": \"stage\", \"source\": \"speech\", \"t_start\": 22.0, \"t_end\": 27.0, \"stage\": \"memola\", \"evidence_quote\": \"memilih pola yang ingin dibatik serta menggambar pola tersebut di atas kain\", \"visible\": \"Tangan menjiplak dan menggambar pola dengan pensil di atas kain\", \"visible_object_en\": \"pencil drawing on cloth\", \"visual_match\": \"yes\", \"gloss_id\": \"Membuat pola di atas kain\", \"gloss_en\": \"Pattern drafting on cloth\", \"confidence\": \"high\"}, {\"spoken\": \"lilin malam\", \"term\": \"malam\", \"category\": \"material\", \"source\": \"speech\", \"t_start\": 46.0, \"t_end\": 49.0, \"stage\": \"nglowong\", \"evidence_quote\": \"mencairkan lilin malam yang akan digunakan untuk membatik\", \"visible\": \"Wajan berisi cairan malam hitam mendidih di atas kompor\", \"visible_object_en\": \"molten wax\", \"visual_match\": \"yes\", \"gloss_id\": \"Lilin batik sebagai perintang warna\", \"gloss_en\": \"Batik wax resist material\", \"confidence\": \"high\"}, {\"spoken\": \"koran\", \"term\": \"koran\", \"category\": \"other\", \"source\": \"speech\", \"t_start\": 50.5, \"t_end\": 54.0, \"stage\": \"nglowong\", \"evidence_quote\": \"meletakkan koran agar tetesan malam yang jatuh tidak mengenai kaki\", \"visible\": \"Orang memegang lembaran koran sebagai alas\", \"visible_object_en\": \"newspaper sheet\", \"visual_match\": \"yes\", \"gloss_id\": \"Kertas koran sebagai alas tetesan malam\", \"gloss_en\": \"Newspaper as protective base\", \"confidence\": \"high\"}, {\"spoken\": \"spangkring\", \"term\": \"spangkring\", \"category\": \"tool\", \"source\": \"speech\", \"t_start\": 58.0, \"t_end\": 61.5, \"stage\": \"nglowong\", \"evidence_quote\": \"memasang kain pada spangkring selanjutnya proses membatik\", \"visible\": \"Kain putih dipasang kencang pada lingkaran kayu\", \"visible_object_en\": \"embroidery hoop\", \"visual_match\": \"yes\", \"gloss_id\": \"Bingkai lingkaran untuk merentangkan kain\", \"gloss_en\": \"Hoop frame to stretch cloth\", \"confidence\": \"high\"}, {\"spoken\": \"meletakkan lilin pada kain sesuai dengan pola\", \"term\": \"nglowong\", \"category\": \"stage\", \"source\": \"speech\", \"t_start\": 62.0, \"t_end\": 69.0, \"stage\": \"nglowong\", \"evidence_quote\": \"proses membatik yaitu meletakkan lilin pada kain sesuai dengan pola\", \"visible\": \"Tangan mencantingkan malam mengikuti garis pola bunga\", \"visible_object_en\": \"wax pen\", \"visual_match\": \"yes\", \"gloss_id\": \"Mencanting garis utama pola dengan malam\", \"gloss_en\": \"Waxing main outlines\", \"confidence\": \"medium\"}, {\"spoken\": \"wajan\", \"term\": \"wajan\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 46.0, \"t_end\": 50.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Wajan hitam berisi malam cair di atas tungku\", \"visible_object_en\": \"wax pan\", \"visual_match\": \"yes\", \"gloss_id\": \"Wajan kecil untuk mencairkan malam\", \"gloss_en\": \"Small pan for melting wax\", \"confidence\": \"high\"}, {\"spoken\": \"kompor\", \"term\": \"kompor\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 46.0, \"t_end\": 50.0, \"stage\": \"nglowong\", \"evidence_quote\": \"\", \"visible\": \"Tungku/kompor kecil di bawah wajan\", \"visible_object_en\": \"small stove\", \"visual_match\": \"yes\", \"gloss_id\": \"Kompor untuk memanaskan malam\", \"gloss_en\": \"Stove for heating wax\", \"confidence\": \"medium\"}, {\"spoken\": \"pensil\", \"term\": \"pensil\", \"category\": \"tool\", \"source\": \"visual_only\", \"t_start\": 25.0, \"t_end\": 44.0, \"stage\": \"memola\", \"evidence_quote\": \"\", \"visible\": \"Tangan menggambar pola bunga dengan pensil biru\", \"visible_object_en\": \"pencil\", \"visual_match\": \"yes\", \"gloss_id\": \"Pensil untuk membuat sketsa pola\", \"gloss_en\": \"Pencil for sketching pattern\", \"confidence\": \"high\"}], \"process_steps\": [{\"step\": \"persiapan_kain\", \"t_start\": 17.0, \"t_end\": 21.0, \"tools\": [\"kain\"]}, {\"step\": \"memola\", \"t_start\": 21.0, \"t_end\": 46.0, \"tools\": [\"pensil\"]}, {\"step\": \"nglowong\", \"t_start\": 58.0, \"t_end\": 75.0, \"tools\": [\"canting\", \"spangkring\", \"malam\", \"wajan\", \"kompor\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 22531,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 5932,
+  "output_tokens_details": {
+   "reasoning_tokens": 3799
+  },
+  "total_tokens": 28463
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}
