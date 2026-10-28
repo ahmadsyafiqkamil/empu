@@ -6,7 +6,8 @@ export function getStudioKey(): string {
 }
 
 export function setStudioKey(key: string) {
-  sessionStorage.setItem(KEY_STORAGE, key);
+  if (key) sessionStorage.setItem(KEY_STORAGE, key);
+  else sessionStorage.removeItem(KEY_STORAGE);
 }
 
 export function studioHeaders(extra?: HeadersInit): Headers {
