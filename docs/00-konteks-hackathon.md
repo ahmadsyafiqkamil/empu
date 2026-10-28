@@ -20,7 +20,7 @@
 
 ## Persyaratan submission (dicek 28 Okt 2026)
 
-Sumber: halaman resmi [dev.meta.ai](https://dev.meta.ai/events/global-hackathon) dan [Cerebral Valley](https://cerebralvalley.ai/e/meta-ai-developer-hackathon), plus ringkasan waiver di artikel pihak ketiga (ReconScribe, 17–18 Okt). **Form field submission masih belum tampil di portal.** Official Rules mestinya terbit sebelum kickoff 26 Okt, tetapi per 28 Okt malam **belum muncul di halaman publik**. Cek ulang di Discord / portal di awal H3 dan H7.
+Sumber: halaman resmi [dev.meta.ai](https://dev.meta.ai/events/global-hackathon) dan [Cerebral Valley](https://cerebralvalley.ai/e/meta-ai-developer-hackathon), plus ringkasan waiver di artikel pihak ketiga (ReconScribe, 17–18 Okt). **Form field submission masih belum tampil di portal.** Official Rules mestinya terbit sebelum kickoff 26 Okt, tetapi per 28 Okt malam **belum muncul di halaman publik**. Dicek ulang 29 Okt 2026 (dini hari): [dev.meta.ai](https://dev.meta.ai/events/global-hackathon) dan [Cerebral Valley](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) masih menampilkan kalimat bahwa Official Rules akan terbit sebelum 26 Okt, dan belum ada form submission. Status 28 Okt tetap berlaku. Cek ulang di Discord / portal di H7.
 
 | Butir | Status 28 Okt | Implikasi H6–H7 |
 |---|---|---|
