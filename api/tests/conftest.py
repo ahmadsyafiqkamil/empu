@@ -4,8 +4,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from sqlmodel import Session
 
 from empu.config import Settings
+from empu.db import init_db, make_engine
 from empu.packs import CraftPack, load_pack
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +31,20 @@ def settings(tmp_path) -> Settings:
     )
 
 
+@pytest.fixture
+def engine(settings):
+    eng = make_engine(settings.db_url)
+    init_db(eng)
+    yield eng
+    eng.dispose()
+
+
+@pytest.fixture
+def session(engine):
+    with Session(engine) as s:
+        yield s
+
+
 @pytest.fixture(scope="session")
 def pack() -> CraftPack:
     return load_pack("batik_tulis", REPO_ROOT / "packs")
@@ -42,10 +58,31 @@ def sample_video(tmp_path_factory) -> Path:
     if shutil.which("ffmpeg") is None:
         pytest.skip("ffmpeg not on PATH")
     out = tmp_path_factory.mktemp("media") / "sample.mp4"
-    subprocess.run([
-        "ffmpeg", "-y", "-loglevel", "error",
-        "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=25",
-        "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=44100",
-        "-t", "12", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", str(out),
-    ], check=True)
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-loglevel",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "testsrc=size=1280x720:rate=25",
+            "-f",
+            "lavfi",
+            "-i",
+            "sine=frequency=440:sample_rate=44100",
+            "-t",
+            "12",
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:a",
+            "aac",
+            "-shortest",
+            str(out),
+        ],
+        check=True,
+    )
     return out

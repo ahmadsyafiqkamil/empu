@@ -101,3 +101,14 @@ class ChunkStatus(StrEnum):
     pending = "pending"
     done = "done"
     failed = "failed"
+
+
+class SourceKind(StrEnum):
+    own_recording = "own_recording"
+    cc_by_video = "cc_by_video"
+    internal_eval = "internal_eval"
+
+
+class TimeSource(StrEnum):
+    asr = "asr"
+    muse = "muse"
