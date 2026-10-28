@@ -106,6 +106,9 @@ export const COPY = {
   },
 };
 
+/** Human-readable pipeline stage labels (desain.md). Do not paraphrase. */
+export const STAGE_LABEL = COPY.stages;
+
 export function expertValidationLabel(name: string): string {
   return `Validated by the expert · ${name}`;
 }
