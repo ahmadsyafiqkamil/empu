@@ -224,9 +224,11 @@ Catat durasi lewat ffprobe.
 
 **Mode A (default): Muse-native.** Video dan audio langsung ke Muse.
 
-**Mode B (ASR-assisted).** Dipakai kalau Gate 0 gagal, atau sebagai pembanding di ablasi:
-1. Transkripsi audio dengan timestamp per kata atau per frasa. Pilihan pertama Muse Voice Transcribe (belum diverifikasi). Fallback: faster-whisper secara lokal.
-2. Kirim video dan transkrip (dengan timestamp) ke Muse. Instruksikan bahwa transkrip bisa salah eja untuk istilah keahlian, dan Muse harus memperbaikinya berdasarkan apa yang terlihat dan terdengar, sambil memakai timestamp transkrip sebagai jangkar waktu.
+**Mode B (ASR-assisted), default sejak Gate 0 (28 Okt).** Bentuk yang dipakai: **koreksi waktu (realign)**, diputuskan Syafiq 28 Okt.
+1. Transkripsi audio dengan timestamp per kata memakai **faster-whisper lokal** (`muse-voice-transcribe-1.0` tidak bisa dipanggil, lihat `hasil-gate0.md`).
+2. Muse dipanggil persis seperti Mode A (prompt dan cache sama).
+3. Untuk setiap istilah `speech`, `evidence_quote` (dan `spoken`) dicocokkan secara fuzzy ke jendela kata transkrip di sekitar waktu Muse (±30 s). Kalau kecocokan cukup (rapidfuzz `partial_ratio` ≥ 80), `t_start`/`t_end` diganti dengan waktu kata yang cocok dan kemunculan ditandai `time_source = asr`. Kalau tidak cocok, waktu Muse dipakai dan ditandai `time_source = muse`. Ejaan istilah tetap dari Muse.
+4. Varian lama (transkrip disisipkan ke prompt, prompt sudah tersedia di `pipeline/prompts.py`) hanya untuk ablasi kalau waktu cukup.
 
 ### 8.5 Penggabungan dan normalisasi istilah
 1. Geser timestamp dengan `chunk.start_s`.
