@@ -13,7 +13,7 @@ Folder ini adalah konteks lengkap untuk membuat implementation plan Empu dengan 
 | 5 | `reference/muse-output.schema.json` | Skema JSON keluaran Muse per segmen |
 | 6 | `reference/hasil-uji-kelayakan.md` | Hasil uji 28 Okt, termasuk kelemahannya |
 | 7 | `reference/uji-kelayakan/` | Skrip uji, glosarium, dan respons mentah v1 (bahan fixture) |
-| 8 | `packs/batik_tulis.yaml` | Craft pack draf (13 tahap, 42 istilah) |
+| 8 | `../packs/batik_tulis.yaml` | Craft pack draf (13 tahap, 42 istilah) |
 | 9 | `eval/` | Set uji, format kunci jawaban |
 | 10 | `00-konteks-hackathon.md` | Fakta hackathon, kriteria juri, nama, klaim yang aman, positioning, visi |
 

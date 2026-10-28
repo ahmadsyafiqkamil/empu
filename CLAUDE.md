@@ -8,7 +8,7 @@ Empu mengubah video seorang ahli yang bekerja sambil bercerita menjadi kamus kea
 1. `docs/superpowers/specs/2026-10-28-empu-design.md`: sumber kebenaran (scope, pipeline, data, API, evaluasi, roadmap, gate).
 2. `docs/reference/meta-model-api.md`: sebelum menulis kode apa pun yang memanggil Meta API.
 3. `docs/reference/prompt-analisis.md` dan `docs/reference/muse-output.schema.json`.
-4. `docs/packs/batik_tulis.yaml`: craft pack draf.
+4. `packs/batik_tulis.yaml`: craft pack draf.
 5. `docs/reference/hasil-uji-kelayakan.md`: apa yang sudah dan belum terbukti.
 6. `docs/00-konteks-hackathon.md`: kriteria juri dan klaim yang boleh dipakai.
 

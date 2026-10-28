@@ -5,7 +5,7 @@
 | Status | Draf siap dijadikan implementation plan, 28 Okt 2026 |
 | Pemilik | Syafiq (solo) |
 | Konteks | Meta Global AI Developer Hackathon 2026, track Indie. Submission **Kamis 5 Nov 2026, 09:00 WIB** (4 Nov 21:00 ET) |
-| Dokumen terkait | `docs/00-konteks-hackathon.md`, `docs/reference/meta-model-api.md`, `docs/reference/prompt-analisis.md`, `docs/reference/muse-output.schema.json`, `docs/reference/hasil-uji-kelayakan.md`, `docs/packs/batik_tulis.yaml`, `docs/eval/` |
+| Dokumen terkait | `docs/00-konteks-hackathon.md`, `docs/reference/meta-model-api.md`, `docs/reference/prompt-analisis.md`, `docs/reference/muse-output.schema.json`, `docs/reference/hasil-uji-kelayakan.md`, `packs/batik_tulis.yaml`, `docs/eval/` |
 
 Dokumen ini adalah sumber kebenaran. Kalau plan atau kode bertentangan dengan dokumen ini, dokumen ini yang menang, kecuali Syafiq memutuskan lain dan dokumen ini diperbarui.
 
@@ -163,7 +163,7 @@ flowchart LR
 empu/
 ├── CLAUDE.md
 ├── docs/                      # dokumen ini dan rujukannya
-├── packs/                     # craft pack (dipindah dari docs/packs saat H1)
+├── packs/                     # craft pack YAML
 │   └── batik_tulis.yaml
 ├── api/
 │   ├── pyproject.toml

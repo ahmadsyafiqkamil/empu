@@ -2,7 +2,7 @@
 
 Skrip: `spikes/gate0/`. Respons mentah terpilih: `docs/reference/uji-kelayakan/hasil-gate0/`.
 Hasil uji sebelumnya dari sesi lain (prompt v2, klip utuh, SAM awal): `docs/reference/uji-kelayakan/hasil/`.
-Prompt: analyze-v3 (keputusan D2), dibangun dari `docs/packs/batik_tulis.yaml` v0.1.0. Model `muse-spark-1.3`.
+Prompt: analyze-v3 (keputusan D2), dibangun dari `packs/batik_tulis.yaml` v0.1.0. Model `muse-spark-1.3`.
 
 ## Ringkasan keputusan
 

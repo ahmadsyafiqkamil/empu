@@ -12,7 +12,7 @@
 # visual: true  -> layak dipotong dengan SAM 3.1 (pakai sam_prompt, bahasa Inggris, pendek)
 # Aturan validasi: id unik; varian tidak boleh dipakai dua kali, baik antar-istilah maupun
 # antara istilah dan tahap; stage pada istilah harus merujuk id tahap yang ada.
-# Saat H1, file ini dipindah ke packs/batik_tulis.yaml dan divalidasi dengan Pydantic.
+# Divalidasi oleh api/empu/packs.py (tes: api/tests/test_packs.py).
 
 id: batik_tulis
 version: 0.1.0
@@ -27,6 +27,13 @@ prompt_context: >
   Urutan bisa berulang untuk beberapa warna. Narasumber biasanya berbicara bahasa Indonesia
   bercampur bahasa Jawa, dan istilah bisa berbeda antardaerah (Solo, Yogyakarta, Pekalongan,
   Cirebon, Madura, dan lain-lain).
+
+# Contoh salah tulis pengenal suara umum, dari subtitle otomatis YouTube di uji kelayakan.
+# Dipakai di prompt Mode B. Bukan daftar koreksi otomatis.
+asr_error_examples:
+  - {heard: "spang King", correct: spangkring}
+  - {heard: "watera gelas", correct: waterglass}
+  - {heard: ngelorot, correct: nglorod}
 
 stages:
   - id: persiapan_kain

@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from empu.config import Settings
+from empu.packs import CraftPack, load_pack
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -24,3 +25,8 @@ def settings(tmp_path) -> Settings:
         sam_enabled=True,
         structured_output=False,
     )
+
+
+@pytest.fixture(scope="session")
+def pack() -> CraftPack:
+    return load_pack("batik_tulis", REPO_ROOT / "packs")

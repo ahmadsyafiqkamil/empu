@@ -20,7 +20,7 @@ BASE = "https://api.meta.ai/v1"
 OUT = REPO / "data" / "spikes" / "gate0"
 TESTDATA = Path(os.environ.get("EMPU_TESTDATA_DIR", REPO / "data-uji")).resolve()
 SCHEMA_PATH = REPO / "docs" / "reference" / "muse-output.schema.json"
-PACK_PATH = REPO / "docs" / "packs" / "batik_tulis.yaml"
+PACK_PATH = REPO / "packs" / "batik_tulis.yaml"
 
 
 def _api_key() -> str:
