@@ -13,10 +13,36 @@
 | Hadiah | Total USD 1.000.000 |
 | Track | **Indie**, dinilai dari **kreativitas, ambisi teknis, dan apakah berfungsi** |
 | Tema resmi | "Build for Your World" dan "Push the Frontier" |
-| Kredit partner | Baseten USD 100, Modal USD 100, Fireworks USD 25. Kredit Meta Model API USD 150 per peserta disebut di forum, belum terkonfirmasi |
+| Kredit partner | Baseten USD 100, Modal USD 100, Fireworks USD 25. Kredit Meta Model API USD 150 per peserta (dikonfirmasi di halaman resmi / waiver) |
+| Hadiah Indie | 1st $150k, 2nd $100k, 3rd $75k, 4th $50k, 5th $25k (dari waiver; Official Rules menang kalau berbeda) |
+| Penilaian proyek (waiver) | Impact 30% · Use of Meta AI Tooling 25% · Demo 25% · Technical Depth 20% |
 | Target | Menang, minimal masuk 5 besar |
 
-**Belum dicek:** persyaratan isi submission (repo publik, video demo dan durasi maksimalnya, deskripsi, link aplikasi). Cek halaman submission di hari pertama build dan sesuaikan H7.
+## Persyaratan submission (dicek 28 Okt 2026)
+
+Sumber: halaman resmi [dev.meta.ai](https://dev.meta.ai/events/global-hackathon) dan [Cerebral Valley](https://cerebralvalley.ai/e/meta-ai-developer-hackathon), plus ringkasan waiver di artikel pihak ketiga (ReconScribe, 17–18 Okt). **Form field submission masih belum tampil di portal.** Official Rules mestinya terbit sebelum kickoff 26 Okt, tetapi per 28 Okt malam **belum muncul di halaman publik**. Cek ulang di Discord / portal di awal H3 dan H7.
+
+| Butir | Status 28 Okt | Implikasi H6–H7 |
+|---|---|---|
+| Deadline | 4 Nov 21:00 ET = 5 Nov 09:00 WIB (sudah EST) | Target internal 4 Nov 22:00 WIB tetap; jangan andalkan "grace period" di data halaman |
+| Platform | Cerebral Valley submission portal | Satu orang (Syafiq) yang submit |
+| Demo yang jalan | **Wajib** (kriteria Demo 25%: live + kualitas video) | URL publik H6 tidak boleh dipotong |
+| Video demo | **Wajib**; durasi **belum diumumkan** | H7: rekam 60–90 d, siapkan versi ≤3 menit kalau aturan belakangan membatasi |
+| Repo publik | **Belum diumumkan** resmi. Catatan peserta lain menyebut wajib; jangan andalkan | Siapkan repo publik bersih (tanpa video, tanpa `.env`) di H6 |
+| Deskripsi / panjang | **Belum diumumkan** | H7: siapkan ringkas + panjang |
+| Link aplikasi | Belum diumumkan; demo yang jalan hampir pasti butuh URL | H6 deploy VPS |
+| Wajib model Meta | Tidak ada kalimat "must use" di halaman publik; **Use of Meta AI Tooling = 25%** | Empu sudah pakai Muse Spark + SAM 3.1; jangan tambah Muse Image (gambar hanya frame asli) |
+| Karya baru selama event | Waiver: karya milik sendiri, tidak infringe. "New work only" muncul di catatan peserta, bukan halaman resmi | Jangan tampilkan hasil uji v1 sebagai demo seolah dibangun di event |
+| Tim | Indie: solo atau maks 4; setiap anggota harus accepted | Solo |
+
+## Status kontak kreator video CC BY
+
+Dilewati 28 Okt malam (keputusan eksekusi H1). CC BY sudah cukup secara hukum untuk demo. Tanpa restu kreator, **semua entri disebut "divalidasi oleh pendokumentasi"** — klaim "divalidasi oleh ahli" mati.
+
+| Kreator | Kontak | Dihubungi | Restu demo | Validasi | Catatan |
+|---|---|---|---|---|---|
+| TEBAK teras batik kaindra | belum dicari | tidak | — | — | Prioritas 1 kalau sempat malam ini; balasan butuh hari |
+| Batik Education | belum dicari | tidak | — | — | |
 
 ## Memenuhi kriteria Indie
 

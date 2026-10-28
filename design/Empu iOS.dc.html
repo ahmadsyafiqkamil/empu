@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#D8D2C6;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;color:#1C1813;-webkit-font-smoothing:antialiased}
+a{color:#22304F}
+a:hover{color:#1C1813}
+*:focus-visible{outline:2px solid #9E7330;outline-offset:2px}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="padding:72px;display:flex;flex-direction:column;gap:32px;min-width:max-content">
+  <div style="display:flex;align-items:baseline;gap:16px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:14px;background:#1C1813;color:#F5F0E6;padding:4px 10px">iOS</span>
+    <h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:36px">Empu for iPhone · public archive (Mori)</h2>
+    <span style="font-size:14px;color:#665D50">The Studio stays desktop-only · sample data</span>
+  </div>
+  <div style="display:flex;gap:56px;align-items:flex-start">
+
+    <!-- 1 Dictionary -->
+    <div data-screen-label="iOS 01 Dictionary" style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:14px;color:#665D50"><span style="font-family:'JetBrains Mono',monospace;color:#1C1813">01</span> Dictionary</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F5F0E6;display:flex;flex-direction:column;position:relative">
+          <div style="flex:1;overflow:auto;padding:58px 0 110px">
+            <div style="padding:0 16px;display:flex;justify-content:space-between;align-items:center;height:44px">
+              <div style="display:flex;align-items:flex-start;gap:2px"><span style="font-family:'Newsreader',serif;font-size:22px;font-weight:600;line-height:1">empu</span><span style="width:4px;height:4px;border-radius:50%;background:#9E7330;margin-top:2px"></span></div>
+              <button aria-label="Download" style="width:44px;height:44px;border:0;background:transparent;color:#22304F;display:flex;align-items:center;justify-content:flex-end"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></button>
+            </div>
+            <div style="padding:2px 16px 0">
+              <div style="font-size:13px;color:#665D50">Living Archive</div>
+              <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:38px;line-height:1.1">Batik Tulis</h1>
+              <div style="margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#665D50">14 entries · 2 recordings · v0.1.0</div>
+            </div>
+            <div style="margin:14px 16px 0;height:38px;border-radius:10px;background:#E9E2D4;display:flex;align-items:center;gap:8px;padding:0 10px;color:#665D50;font-size:17px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>Search terms
+              <span style="flex:1"></span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+            </div>
+            <div style="margin-top:12px;padding:0 16px;display:flex;gap:8px;overflow:hidden">
+              <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+                <span style="{{ c.style }}">{{ c.label }}</span>
+              </sc-for>
+            </div>
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+              <div style="margin-top:22px">
+                <div style="padding:0 32px 6px;font-size:13px;color:#665D50;display:flex;justify-content:space-between"><span style="text-transform:uppercase;letter-spacing:0.04em">{{ g.label }}</span><span style="font-family:'JetBrains Mono',monospace">{{ g.count }}</span></div>
+                <div style="margin:0 16px;background:#FBF8F2;border-radius:12px;overflow:hidden">
+                  <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+                    <div style="display:grid;grid-template-columns:48px minmax(0,1fr) 10px;gap:12px;align-items:center;padding:10px 14px 10px 12px;position:relative">
+                      <div style="width:48px;height:48px;border-radius:6px;background:#F5F0E6;border:0.5px solid #DDD4C4;position:relative;overflow:hidden"><div style="position:absolute;inset:3px"><image-slot id="{{ e.slot }}" shape="rect" fit="contain" placeholder=" "></image-slot></div></div>
+                      <div style="min-width:0">
+                        <div style="display:flex;align-items:center;gap:6px"><span style="font-family:'Newsreader',serif;font-size:20px;font-weight:500;line-height:1.15">{{ e.term }}</span><sc-if value="{{ e.novel }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:3px;height:18px;padding:0 5px;border-radius:4px;background:#EFE3CC;color:#5C4214;font-size:11px;font-weight:600"><span style="width:4px;height:4px;border-radius:50%;background:#9E7330"></span>New</span></sc-if></div>
+                        <div style="font-size:14px;color:#665D50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.gloss }}</div>
+                        <div style="{{ e.srcStyle }}">
+                          <sc-if value="{{ e.isSpeech }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg></sc-if>
+                          <sc-if value="{{ e.isOn }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg></sc-if>
+                          <sc-if value="{{ e.isVis }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+                          {{ e.srcLabel }}
+                        </div>
+                      </div>
+                      <svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#B5AB9B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      <span style="position:absolute;left:72px;right:0;bottom:0;height:0.5px;background:#DDD4C4"></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <nav style="position:absolute;left:16px;right:16px;bottom:24px;height:62px;border-radius:31px;background:rgba(251,248,242,0.92);backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(28,24,19,0.14),0 0 0 0.5px #DDD4C4;display:grid;grid-template-columns:repeat(3,1fr);align-items:center;padding:0 6px">
+            <div style="height:52px;border-radius:26px;background:#E9E2D4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#22304F;font-size:11px;font-weight:600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>Dictionary</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#665D50;font-size:11px;font-weight:500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>Process map</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#665D50;font-size:11px;font-weight:500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Evidence</div>
+          </nav>
+        </div>
+      </x-import>
+    </div>
+
+    <!-- 2 Entry detail -->
+    <div data-screen-label="iOS 02 Entry" style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:14px;color:#665D50"><span style="font-family:'JetBrains Mono',monospace;color:#1C1813">02</span> Entry detail · scrolls</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F5F0E6;display:flex;flex-direction:column">
+          <div style="flex:none;padding:54px 8px 4px;display:flex;justify-content:space-between;align-items:center;background:#F5F0E6">
+            <button style="height:44px;padding:0 8px;border:0;background:transparent;color:#22304F;font-size:17px;display:flex;align-items:center;gap:4px"><svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M10 2L2 10l8 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>Dictionary</button>
+            <button aria-label="Share" style="width:44px;height:44px;border:0;background:transparent;color:#22304F;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" x2="12" y1="2" y2="15"></line></svg></button>
+          </div>
+          <div style="flex:1;overflow:auto;padding:0 0 48px">
+            <div style="padding:4px 16px 0">
+              <div style="font-size:13px;color:#665D50">Tools · <em style="font-family:'Newsreader',serif;font-size:15px;color:#1C1813">nglowong</em> · outlining</div>
+              <div style="margin-top:6px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:40px;line-height:1.02;letter-spacing:-0.01em">canting klowongan</h1>
+                <button onClick="{{ togglePlay }}" aria-label="Hear pronunciation" style="{{ playStyle }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+              </div>
+              <div style="margin-top:8px;font-size:15px;color:#665D50">Also heard as: <em style="font-family:'Newsreader',serif;font-size:17px;color:#1C1813">klowongan, ngengreng</em></div>
+            </div>
+            <div style="margin-top:16px;aspect-ratio:16/9;background:#2A2621;position:relative"><image-slot id="f-canting122" shape="rect" placeholder="Clip 0:37–0:42"></image-slot>
+              <div style="position:absolute;left:12px;bottom:12px;width:40px;height:40px;border-radius:20px;background:rgba(18,17,15,0.7);display:flex;align-items:center;justify-content:center;color:#FFFFFF;pointer-events:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></div>
+            </div>
+            <div style="padding:10px 16px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px">0:37–0:42</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #22304F;border-radius:6px;color:#22304F;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span>
+              <span style="color:#665D50">Timed by speech recognition</span>
+            </div>
+            <div style="margin:16px 16px 0;background:#FBF8F2;border-radius:12px;padding:12px;display:grid;grid-template-columns:116px minmax(0,1fr);gap:14px">
+              <div style="aspect-ratio:4/5;border-radius:8px;background:#F5F0E6;border:0.5px solid #DDD4C4;position:relative;overflow:hidden"><div style="position:absolute;inset:8px"><image-slot id="crop-canting" shape="rect" fit="contain" placeholder="crop"></image-slot></div></div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <blockquote style="margin:0;font-family:'Newsreader',serif;font-style:italic;font-size:19px;line-height:1.3">“Ini canting klowongan, buat nglowong dulu, garis luarnya.”</blockquote>
+                <div style="font-size:12px;color:#665D50">said at <span style="font-family:'JetBrains Mono',monospace;color:#1C1813">0:37</span></div>
+                <div style="margin-top:auto;font-size:11px;color:#665D50">Original frame · cropped with SAM 3.1</div>
+                <button style="align-self:flex-start;height:32px;padding:0 12px;border:0;border-radius:16px;background:#E9E2D4;color:#22304F;font-size:13px;font-weight:600">Show in frame</button>
+              </div>
+            </div>
+            <div style="padding:22px 16px 0">
+              <div style="font-size:13px;color:#665D50;text-transform:uppercase;letter-spacing:0.04em">Meaning</div>
+              <p style="margin:6px 0 0;font-family:'Newsreader',serif;font-size:21px;line-height:1.35">A canting with a medium spout, used to draw the first wax outlines of a pattern on the cloth.</p>
+              <div style="margin-top:12px;font-size:13px;color:#665D50">Bahasa Indonesia</div>
+              <p style="margin:2px 0 0;font-size:16px;line-height:1.45">Canting bercucuk sedang untuk menggambar garis luar pola pertama di atas kain.</p>
+            </div>
+            <div style="margin:18px 16px 0;background:#FBF8F2;border-radius:12px;overflow:hidden;font-size:16px">
+              <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-bottom:0.5px solid #DDD4C4"><span style="display:flex;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span></span>High confidence</div>
+              <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;color:#3F6B45;font-weight:500"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Validated by the documenter</div>
+            </div>
+            <div style="padding:22px 32px 6px;font-size:13px;color:#665D50;text-transform:uppercase;letter-spacing:0.04em">Heard in 2 recordings</div>
+            <div style="margin:0 16px;background:#FBF8F2;border-radius:12px;overflow:hidden">
+              <sc-for list="{{ occurrences }}" as="o" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;position:relative">
+                  <span style="width:36px;height:36px;border-radius:18px;background:#E9E2D4;color:#22304F;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></span>
+                  <div style="min-width:0"><div style="font-size:16px">{{ o.title }}</div><div style="font-size:13px;color:#665D50">{{ o.srcLabel }}</div></div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#665D50">{{ o.time }}</span>
+                  <span style="position:absolute;left:62px;right:0;bottom:0;height:0.5px;background:#DDD4C4"></span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin:18px 16px 0;background:#FBF8F2;border-radius:12px;padding:14px;font-size:14px;line-height:1.5">
+              <div style="font-size:13px;color:#665D50;text-transform:uppercase;letter-spacing:0.04em">Source</div>
+              <div style="margin-top:4px">From “Nyanting batik tulis” by <strong style="font-weight:600">Creator name</strong></div>
+              <div style="color:#665D50">CC BY 3.0 · <a href="#">youtube.com/watch?v=…</a> · Trimmed by Empu</div>
+            </div>
+            <div style="margin:12px 16px 0;height:50px;border-radius:12px;background:#FBF8F2;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:16px;color:#22304F">Open process map<svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#B5AB9B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <!-- 3 Show in frame sheet -->
+    <div data-screen-label="iOS 03 Show in frame" style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:14px;color:#665D50"><span style="font-family:'JetBrains Mono',monospace;color:#1C1813">03</span> Show in frame · sheet</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#1C1813;position:relative;overflow:hidden">
+          <div style="position:absolute;left:10px;right:10px;top:48px;height:120px;border-radius:12px 12px 0 0;background:#DDD4C4;opacity:0.6"></div>
+          <div style="position:absolute;left:0;right:0;top:62px;bottom:0;background:#F5F0E6;border-radius:14px 14px 0 0;display:flex;flex-direction:column">
+            <div style="width:36px;height:5px;border-radius:3px;background:#C9BFAE;margin:6px auto 0"></div>
+            <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px">
+              <span style="width:60px"></span>
+              <span style="font-size:17px;font-weight:600">Original frame</span>
+              <button onClick="{{ noop }}" style="width:60px;height:44px;border:0;background:transparent;color:#22304F;font-size:17px;font-weight:600;text-align:right">Done</button>
+            </div>
+            <div style="margin:4px 16px 0;height:34px;border-radius:9px;background:#E9E2D4;padding:2px;display:grid;grid-template-columns:1fr 1fr">
+              <button onClick="{{ setCrop }}" style="{{ segCrop }}">Crop</button>
+              <button onClick="{{ setFrame }}" style="{{ segFrame }}">Show in frame</button>
+            </div>
+            <div style="margin-top:20px;flex:1;display:flex;flex-direction:column;padding:0 16px;gap:14px">
+              <sc-if value="{{ inFrame }}" hint-placeholder-val="{{ true }}">
+                <div style="aspect-ratio:16/9;background:#2A2621;border-radius:10px;overflow:hidden;position:relative"><image-slot id="overlay-canting" shape="rect" fit="contain" placeholder="aset/contoh-overlay-canting.jpg"></image-slot></div>
+                <div style="font-size:14px;line-height:1.5;color:#665D50">Keyframe at <span style="font-family:'JetBrains Mono',monospace;color:#1C1813">0:39</span>. The box marks where SAM 3.1 found the canting.</div>
+              </sc-if>
+              <sc-if value="{{ cropMode }}" hint-placeholder-val="{{ false }}">
+                <div style="height:420px;background:#FBF8F2;border-radius:10px;position:relative;overflow:hidden"><div style="position:absolute;inset:20px"><image-slot id="crop-canting" shape="rect" fit="contain" placeholder="aset/contoh-crop-canting.png"></image-slot></div></div>
+                <div style="font-size:14px;color:#665D50">Original frame · cropped with SAM 3.1</div>
+              </sc-if>
+              <div style="background:#FBF8F2;border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-family:'Newsreader',serif;font-size:22px;font-weight:500">canting klowongan</div><div style="font-size:13px;color:#665D50">Tool · from “Nyanting batik tulis”</div></div>
+                <span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #22304F;border-radius:6px;color:#22304F;font-size:13px;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <!-- 4 Process map -->
+    <div data-screen-label="iOS 04 Process map" style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:14px;color:#665D50"><span style="font-family:'JetBrains Mono',monospace;color:#1C1813">04</span> Process map</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F5F0E6;display:flex;flex-direction:column;position:relative">
+          <div style="flex:1;overflow:auto;padding:58px 0 110px">
+            <div style="padding:44px 16px 0">
+              <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:38px;line-height:1.1">Process map</h1>
+              <button style="margin-top:8px;height:36px;padding:0 12px;border:0;border-radius:18px;background:#E9E2D4;color:#1C1813;font-size:15px;display:flex;align-items:center;gap:6px">Nyanting batik tulis · 6:40<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></button>
+            </div>
+            <div style="margin-top:20px;padding:0 16px;display:flex;flex-direction:column">
+              <sc-for list="{{ stages }}" as="s" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px">
+                  <div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:12px;border-radius:50%;border:2px solid #9E7330;background:#F5F0E6;margin-top:6px"></span><span style="flex:1;width:2px;background:#DDD4C4"></span></div>
+                  <div style="padding-bottom:22px">
+                    <div style="display:flex;justify-content:space-between;align-items:baseline"><div><em style="font-family:'Newsreader',serif;font-size:24px">{{ s.id }}</em><span style="font-size:14px;color:#665D50;margin-left:6px">{{ s.en }}</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#665D50">{{ s.range }}</span></div>
+                    <button style="margin-top:6px;height:30px;padding:0 10px;border:0;border-radius:15px;background:#22304F;color:#FFFFFF;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>Play from {{ s.start }}</button>
+                    <div style="margin-top:10px;display:flex;gap:8px;overflow:hidden">
+                      <sc-for list="{{ s.terms }}" as="t" hint-placeholder-count="3">
+                        <div style="width:84px;flex:none">
+                          <div style="width:84px;height:84px;border-radius:8px;background:#FBF8F2;border:0.5px solid #DDD4C4;position:relative;overflow:hidden"><div style="position:absolute;inset:4px"><image-slot id="{{ t.slot }}" shape="rect" fit="contain" placeholder=" "></image-slot></div></div>
+                          <div style="margin-top:4px;font-family:'Newsreader',serif;font-size:15px;line-height:1.15">{{ t.term }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <nav style="position:absolute;left:16px;right:16px;bottom:24px;height:62px;border-radius:31px;background:rgba(251,248,242,0.92);backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(28,24,19,0.14),0 0 0 0.5px #DDD4C4;display:grid;grid-template-columns:repeat(3,1fr);align-items:center;padding:0 6px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#665D50;font-size:11px;font-weight:500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>Dictionary</div>
+            <div style="height:52px;border-radius:26px;background:#E9E2D4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#22304F;font-size:11px;font-weight:600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>Process map</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#665D50;font-size:11px;font-weight:500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Evidence</div>
+          </nav>
+        </div>
+      </x-import>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { playing: false, inFrame: true };
+  renderVals() {
+    const S = this.state;
+    const css = s => Object.fromEntries(s.split(';').filter(Boolean).map(p => { const i = p.indexOf(':'); return [p.slice(0, i).trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase()), p.slice(i + 1).trim()]; }));
+    const SRC = { speech: ['Spoken', '#22304F'], onscreen: ['On-screen text', '#8A4B22'], visual: ['Visual only', '#5E5A52'] };
+    const mk = ([term, gloss, src, novel, slot]) => ({ term, gloss, slot, novel: !!novel, isSpeech: src === 'speech', isOn: src === 'onscreen', isVis: src === 'visual', srcLabel: SRC[src][0], srcStyle: css(`margin-top:3px;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:${SRC[src][1]}`) });
+    const groups = [
+      ['Tools', [['canting klowongan', 'A canting with a medium spout for the first wax outlines.', 'speech', 0, 'crop-canting'], ['canting tembokan', 'A wide-spout canting for filling large areas.', 'speech', 0, 'f-tembokan100'], ['spangkring', 'A wooden stand used while waxing.', 'speech', 1, 'k-spangkring'], ['wajan', 'Small pan that keeps the wax liquid.', 'visual', 0, 'f-wajan272']]],
+      ['Tool parts', [['klowong', 'The outlining spout size of a canting.', 'onscreen', 0, 'f-klowong44'], ['cucuk', 'The spout through which the wax flows.', 'speech', 0, 'k-cucuk']]],
+      ['Materials', [['malam', 'Batik wax: beeswax, paraffin and resin.', 'speech', 0, 'k-malam'], ['mori', 'Plain white cotton cloth.', 'speech', 0, 'k-mori']]],
+    ].map(([label, items]) => ({ label, count: items.length, items: items.map(mk) }));
+    const cats = ['All', 'Tools', 'Tool parts', 'Materials', 'Dyes', 'Stages'].map((label, i) => ({ label, style: css(`flex:none;height:32px;padding:0 14px;border-radius:16px;display:inline-flex;align-items:center;font-size:14px;font-weight:500;background:${i === 0 ? '#22304F' : '#FBF8F2'};color:${i === 0 ? '#FFFFFF' : '#1C1813'};${i === 0 ? '' : 'box-shadow:inset 0 0 0 0.5px #DDD4C4'}`) }));
+    const seg = on => css(`border:0;border-radius:7px;font-size:13px;font-weight:600;color:#1C1813;background:${on ? '#FBF8F2' : 'transparent'};${on ? 'box-shadow:0 1px 3px rgba(28,24,19,0.15)' : ''}`);
+    return {
+      groups, cats,
+      playStyle: css(`flex:none;width:48px;height:48px;border:0;border-radius:24px;background:${S.playing ? '#9E7330' : '#22304F'};color:#FFFFFF;display:flex;align-items:center;justify-content:center;transition:background 150ms`),
+      togglePlay: () => { this.setState({ playing: true }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ playing: false }), 1600); },
+      occurrences: [{ title: 'Nyanting batik tulis', time: '0:37', srcLabel: 'Spoken' }, { title: 'Macam-macam canting', time: '0:44', srcLabel: 'On-screen text' }],
+      inFrame: S.inFrame, cropMode: !S.inFrame, segCrop: seg(!S.inFrame), segFrame: seg(S.inFrame),
+      setCrop: () => this.setState({ inFrame: false }), setFrame: () => this.setState({ inFrame: true }), noop: () => {},
+      stages: [
+        ['nglowong', 'outlining', '0:20–3:00', '0:20', [['canting klowongan', 'crop-canting'], ['klowong', 'f-klowong44'], ['spangkring', 'k-spangkring']]],
+        ['nembok', 'blocking', '3:00–5:00', '3:00', [['nembok', 'k-nembok'], ['canting tembokan', 'f-tembokan100'], ['cecek', 'k-cecek']]],
+        ['medel', 'dyeing', '5:00–6:00', '5:00', [['waterglass', 'k-waterglass']]],
+        ['nglorod', 'wax removal', '6:00–6:40', '6:00', [['nglorod', 'k-nglorod']]],
+      ].map(([id, en, range, start, terms]) => ({ id, en, range, start, terms: terms.map(([term, slot]) => ({ term, slot })) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

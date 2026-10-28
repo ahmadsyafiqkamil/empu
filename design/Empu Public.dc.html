@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#D8D2C6;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#1C1813;-webkit-font-smoothing:antialiased}
+a{color:#22304F;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:#1C1813}
+*:focus-visible{outline:2px solid #9E7330;outline-offset:2px}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="padding:72px;display:flex;flex-direction:column;gap:120px;min-width:max-content">
+
+<section id="s5b" data-screen-label="S5b Entry detail" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;align-items:baseline;gap:16px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:14px;background:#1C1813;color:#F5F0E6;padding:4px 10px">S5b</span>
+    <h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:36px">Entry detail · /d/hidup-batik/canting-klowongan</h2>
+    <span style="font-size:14px;color:#665D50">Priority 1 · desktop 1440 + mobile 390 · sample data</span>
+  </div>
+  <div style="display:flex;gap:72px;align-items:flex-start">
+
+    <!-- Desktop -->
+    <div data-screen-label="S5b desktop" style="width:1440px;background:#F5F0E6;box-shadow:0 1px 0 #DDD4C4">
+      <header style="height:64px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #DDD4C4">
+        <div style="display:flex;align-items:center;gap:20px">
+          <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:30px;font-weight:600;letter-spacing:-0.01em;line-height:1">empu</span><span style="width:6px;height:6px;border-radius:50%;background:#9E7330;margin-top:4px"></span></div>
+          <span style="width:1px;height:20px;background:#DDD4C4"></span>
+          <span style="font-size:14px;color:#665D50">Living Archive · Batik Tulis</span>
+        </div>
+        <nav style="display:flex;gap:28px;font-size:14px;align-items:center">
+          <a href="#s5" style="color:#1C1813;text-decoration:none;font-weight:500">Dictionary</a>
+          <a href="#" style="color:#665D50;text-decoration:none">Process map</a>
+          <a href="#" style="color:#665D50;text-decoration:none">Evidence</a>
+          <a href="Empu Studio.dc.html" style="color:#665D50;text-decoration:none;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Documenter studio</a>
+        </nav>
+      </header>
+      <main style="max-width:1100px;margin:0 auto;padding:36px 0 96px">
+        <div style="font-size:14px;color:#665D50;display:flex;gap:8px"><a href="#s5">Living Archive · Batik Tulis</a><span>→</span><span>Tools</span></div>
+        <div style="margin-top:20px;display:flex;align-items:flex-end;gap:20px">
+          <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:76px;line-height:0.95;letter-spacing:-0.02em">canting klowongan</h1>
+          <button onClick="{{ togglePlay }}" aria-label="Hear pronunciation" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border:1px solid #22304F;border-radius:6px;background:#22304F;color:#FFFFFF;font-size:14px;font-weight:500;margin-bottom:6px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>{{ playLabel }}
+          </button>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="height:26px;padding:0 10px;display:inline-flex;align-items:center;border:1px solid #DDD4C4;border-radius:4px;font-size:13px;font-weight:500;background:#FBF8F2">Tool</span>
+          <span style="height:26px;padding:0 10px;display:inline-flex;align-items:center;gap:6px;border:1px solid #DDD4C4;border-radius:4px;font-size:13px;background:#FBF8F2"><em style="font-family:'Newsreader',serif;font-size:15px">nglowong</em><span style="color:#665D50">· outlining</span></span>
+          <span style="margin-left:12px;font-size:15px;color:#665D50">Also heard as: <em style="font-family:'Newsreader',serif;font-size:17px;color:#1C1813">klowongan, ngengreng</em></span>
+        </div>
+
+        <div style="margin-top:40px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:56px;border-top:1px solid #1C1813;padding-top:28px">
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Evidence</div>
+            <div>
+              <div style="aspect-ratio:16/9;background:#2A2621;border-radius:6px;overflow:hidden;position:relative">
+                <image-slot id="f-canting122" shape="rect" placeholder="Clip 0:37–0:42 · aset/nyanting-canting-122s.jpg"></image-slot>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px">0:37–0:42</span><span style="color:#DDD4C4">|</span>
+                <span title="Heard in the recording's audio." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #22304F;border-radius:4px;color:#22304F;font-weight:500"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span>
+                <span title="Muse found the term; the timestamp was aligned to a word-level transcript." style="display:inline-flex;align-items:center;gap:5px;color:#665D50"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Timed by speech recognition</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;align-items:start">
+              <div>
+                <div style="aspect-ratio:4/5;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;overflow:hidden;position:relative">
+                  <sc-if value="{{ cropMode }}" hint-placeholder-val="{{ true }}">
+                    <div style="position:absolute;inset:16px"><image-slot id="crop-canting" shape="rect" fit="contain" placeholder="aset/contoh-crop-canting.png"></image-slot></div>
+                  </sc-if>
+                  <sc-if value="{{ showInFrame }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;inset:0;background:#2A2621;display:flex;align-items:center"><div style="width:100%;aspect-ratio:16/9;position:relative"><image-slot id="overlay-canting" shape="rect" fit="contain" placeholder="aset/contoh-overlay-canting.jpg"></image-slot></div></div>
+                  </sc-if>
+                </div>
+                <div style="margin-top:10px;font-size:12px;color:#665D50">Original frame · cropped with SAM 3.1</div>
+                <div role="group" aria-label="Crop view" style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;border:1px solid #DDD4C4;border-radius:6px;overflow:hidden;font-size:13px">
+                  <button onClick="{{ setCrop }}" style="{{ cropBtnStyle }}">Crop</button>
+                  <button onClick="{{ setFrame }}" style="{{ frameBtnStyle }}">Show in frame</button>
+                </div>
+              </div>
+              <figure style="margin:0;padding-top:4px">
+                <blockquote style="margin:0;font-family:'Newsreader',serif;font-size:28px;line-height:1.3;font-style:italic;text-wrap:pretty">“Ini canting klowongan, buat nglowong dulu, garis luarnya.”</blockquote>
+                <figcaption style="margin-top:14px;font-size:13px;color:#665D50;display:flex;gap:6px;align-items:center">said at <span style="font-family:'JetBrains Mono',monospace;color:#1C1813">0:37</span> · the maker, in Javanese-Indonesian</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <aside style="display:flex;flex-direction:column;gap:28px">
+            <div>
+              <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Meaning</div>
+              <p style="margin:12px 0 0;font-family:'Newsreader',serif;font-size:26px;line-height:1.3;text-wrap:pretty">A canting with a medium spout, used to draw the first wax outlines of a pattern on the cloth.</p>
+              <div style="margin-top:18px;font-size:12px;color:#665D50">Bahasa Indonesia</div>
+              <p style="margin:4px 0 0;font-size:16px;line-height:1.5;color:#1C1813">Canting bercucuk sedang untuk menggambar garis luar pola pertama di atas kain.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;padding:16px 0;border-top:1px solid #DDD4C4;border-bottom:1px solid #DDD4C4;font-size:14px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="display:flex;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span></span>High confidence</div>
+              <div style="display:flex;align-items:center;gap:8px;color:#3F6B45;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Validated by the documenter</div>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600">Heard in 2 recordings</div>
+              <div style="margin-top:10px;display:flex;flex-direction:column">
+                <sc-for list="{{ occurrences }}" as="o" hint-placeholder-count="2">
+                  <div style="display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #DDD4C4">
+                    <button aria-label="Play occurrence" style="width:36px;height:36px;border:1px solid #DDD4C4;border-radius:6px;background:#FBF8F2;display:flex;align-items:center;justify-content:center;color:#22304F"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></button>
+                    <div style="min-width:0"><div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.title }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#665D50;margin-top:2px">{{ o.time }}</div></div>
+                    <sc-if value="{{ o.isSpeech }}" hint-placeholder-val="{{ true }}"><span title="Heard in the recording's audio." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #22304F;border-radius:4px;color:#22304F;font-size:12px;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span></sc-if>
+                    <sc-if value="{{ o.isOn }}" hint-placeholder-val="{{ false }}"><span title="Read from text shown in the video, not spoken." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #8A4B22;border-radius:4px;color:#8A4B22;font-size:12px;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg>On-screen text</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;padding:16px;font-size:13px;line-height:1.55">
+              <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Source</div>
+              <div style="margin-top:8px">From “Nyanting batik tulis” by <strong style="font-weight:600">{{ creator }}</strong></div>
+              <div style="color:#665D50">CC BY 3.0 · <a href="#">youtube.com/watch?v=…</a> · Trimmed by Empu</div>
+            </div>
+            <a href="#" style="font-size:14px;font-weight:500">See this term in the process map of “Nyanting batik tulis” →</a>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile -->
+    <div data-screen-label="S5b mobile" style="width:390px;background:#F5F0E6;box-shadow:0 1px 0 #DDD4C4">
+      <header style="height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #DDD4C4">
+        <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:26px;font-weight:600;line-height:1">empu</span><span style="width:5px;height:5px;border-radius:50%;background:#9E7330;margin-top:3px"></span></div>
+        <button aria-label="Search" style="width:44px;height:44px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;color:#1C1813"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button>
+      </header>
+      <div style="padding:16px 20px 48px">
+        <div style="font-size:13px;color:#665D50"><a href="#s5">Living Archive · Batik Tulis</a> → Tools</div>
+        <div style="margin-top:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+          <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:44px;line-height:1;letter-spacing:-0.02em">canting klowongan</h1>
+          <button onClick="{{ togglePlay }}" aria-label="Hear pronunciation" style="flex:none;width:48px;height:48px;border:0;border-radius:6px;background:#22304F;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="height:26px;padding:0 10px;display:inline-flex;align-items:center;border:1px solid #DDD4C4;border-radius:4px;font-size:13px;font-weight:500;background:#FBF8F2">Tool</span>
+          <span style="height:26px;padding:0 10px;display:inline-flex;align-items:center;gap:5px;border:1px solid #DDD4C4;border-radius:4px;font-size:13px;background:#FBF8F2"><em style="font-family:'Newsreader',serif;font-size:15px">nglowong</em><span style="color:#665D50">· outlining</span></span>
+        </div>
+        <div style="margin-top:10px;font-size:14px;color:#665D50">Also heard as: <em style="font-family:'Newsreader',serif;font-size:16px;color:#1C1813">klowongan, ngengreng</em></div>
+
+        <div style="margin:20px -20px 0;aspect-ratio:16/9;background:#2A2621;position:relative"><image-slot id="f-canting122" shape="rect" placeholder="Clip 0:37–0:42"></image-slot></div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px">
+          <span style="font-family:'JetBrains Mono',monospace">0:37–0:42</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #22304F;border-radius:4px;color:#22304F;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span>
+          <span style="color:#665D50">Timed by speech recognition</span>
+        </div>
+        <div style="margin-top:20px;display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;align-items:start">
+          <div>
+            <div style="aspect-ratio:4/5;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;position:relative;overflow:hidden"><div style="position:absolute;inset:10px"><image-slot id="crop-canting" shape="rect" fit="contain" placeholder="Crop"></image-slot></div></div>
+            <div style="margin-top:6px;font-size:11px;line-height:1.35;color:#665D50">Original frame · cropped with SAM 3.1</div>
+            <button onClick="{{ setFrame }}" style="margin-top:6px;width:100%;height:44px;border:1px solid #DDD4C4;border-radius:6px;background:#FBF8F2;font-size:13px;color:#1C1813">Show in frame</button>
+          </div>
+          <figure style="margin:0">
+            <blockquote style="margin:0;font-family:'Newsreader',serif;font-size:20px;line-height:1.3;font-style:italic">“Ini canting klowongan, buat nglowong dulu, garis luarnya.”</blockquote>
+            <figcaption style="margin-top:8px;font-size:12px;color:#665D50">said at <span style="font-family:'JetBrains Mono',monospace;color:#1C1813">0:37</span></figcaption>
+          </figure>
+        </div>
+        <div style="margin-top:24px;padding-top:18px;border-top:1px solid #1C1813">
+          <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Meaning</div>
+          <p style="margin:8px 0 0;font-family:'Newsreader',serif;font-size:21px;line-height:1.35">A canting with a medium spout, used to draw the first wax outlines of a pattern on the cloth.</p>
+          <div style="margin-top:14px;font-size:12px;color:#665D50">Bahasa Indonesia</div>
+          <p style="margin:2px 0 0;font-size:15px;line-height:1.5">Canting bercucuk sedang untuk menggambar garis luar pola pertama di atas kain.</p>
+        </div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px;padding:14px 0;border-top:1px solid #DDD4C4;border-bottom:1px solid #DDD4C4;font-size:14px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="display:flex;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span><span style="width:7px;height:7px;border-radius:50%;background:#1C1813"></span></span>High confidence</div>
+          <div style="display:flex;align-items:center;gap:8px;color:#3F6B45;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Validated by the documenter</div>
+        </div>
+        <div style="margin-top:18px;font-size:14px;font-weight:600">Heard in 2 recordings</div>
+        <sc-for list="{{ occurrences }}" as="o" hint-placeholder-count="2">
+          <div style="display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #DDD4C4">
+            <button aria-label="Play occurrence" style="width:44px;height:44px;border:1px solid #DDD4C4;border-radius:6px;background:#FBF8F2;display:flex;align-items:center;justify-content:center;color:#22304F"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></button>
+            <div style="min-width:0"><div style="font-size:14px">{{ o.title }}</div><div style="margin-top:3px;font-size:12px;color:#665D50;display:flex;gap:6px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;color:#1C1813">{{ o.time }}</span>· {{ o.srcLabel }}</div></div>
+          </div>
+        </sc-for>
+        <div style="margin-top:20px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;padding:14px;font-size:13px;line-height:1.55">
+          From “Nyanting batik tulis” by <strong style="font-weight:600">{{ creator }}</strong><br><span style="color:#665D50">CC BY 3.0 · <a href="#">youtube.com/watch?v=…</a> · Trimmed by Empu</span>
+        </div>
+        <a href="#" style="display:block;margin-top:18px;font-size:14px;font-weight:500">Open the process map →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s5" data-screen-label="S5 Dictionary" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;align-items:baseline;gap:16px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:14px;background:#1C1813;color:#F5F0E6;padding:4px 10px">S5</span>
+    <h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:36px">Dictionary · /d/hidup-batik</h2>
+    <span style="font-size:14px;color:#665D50">Grouped by category · search, chips and “New terms only” are live</span>
+  </div>
+  <div style="display:flex;gap:72px;align-items:flex-start">
+    <div data-screen-label="S5 desktop" style="width:1440px;background:#F5F0E6">
+      <header style="height:64px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #DDD4C4">
+        <div style="display:flex;align-items:center;gap:20px">
+          <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:30px;font-weight:600;line-height:1">empu</span><span style="width:6px;height:6px;border-radius:50%;background:#9E7330;margin-top:4px"></span></div>
+          <span style="width:1px;height:20px;background:#DDD4C4"></span>
+          <span style="font-size:14px;color:#665D50">Living Archive · Batik Tulis</span>
+        </div>
+        <nav style="display:flex;gap:28px;font-size:14px;align-items:center">
+          <a href="#s5" style="color:#1C1813;text-decoration:none;font-weight:500">Dictionary</a>
+          <a href="#" style="color:#665D50;text-decoration:none">Process map</a>
+          <a href="#" style="color:#665D50;text-decoration:none">Evidence</a>
+          <a href="Empu Studio.dc.html" style="color:#665D50;text-decoration:none">Documenter studio</a>
+        </nav>
+      </header>
+      <main style="max-width:1100px;margin:0 auto;padding:44px 0 96px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:end;padding-bottom:28px;border-bottom:1px solid #1C1813">
+          <div>
+            <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Living Archive</div>
+            <h1 style="margin:8px 0 0;font-family:'Newsreader',serif;font-weight:500;font-size:64px;line-height:1;letter-spacing:-0.02em">Batik Tulis</h1>
+            <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#665D50">14 validated entries · 2 recordings · batik_tulis v0.1.0</div>
+            <div style="margin-top:10px;font-size:13px;color:#665D50;line-height:1.6">From “Nyanting batik tulis” and “Macam-macam canting” by {{ creator }} · CC BY 3.0</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <a href="#" style="height:40px;padding:0 16px;display:flex;align-items:center;border:1px solid #DDD4C4;border-radius:6px;background:#FBF8F2;color:#1C1813;text-decoration:none;font-size:14px;font-weight:500">Process map</a>
+            <a href="#" style="height:40px;padding:0 16px;display:flex;align-items:center;gap:8px;border:1px solid #DDD4C4;border-radius:6px;background:#FBF8F2;color:#1C1813;text-decoration:none;font-size:14px;font-weight:500"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Download (public)</a>
+          </div>
+        </div>
+        <div style="margin-top:28px;display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#665D50" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search terms, meanings, variants" aria-label="Search" style="flex:1;border:0;background:transparent;font:inherit;font-size:16px;color:#1C1813;outline:none">
+        </div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="8">
+            <button onClick="{{ c.pick }}" aria-pressed="{{ c.active }}" style="{{ c.style }}">{{ c.label }}</button>
+          </sc-for>
+          <span style="flex:1"></span>
+          <select aria-label="Stage" style="height:34px;padding:0 10px;border:1px solid #DDD4C4;border-radius:4px;background:#FBF8F2;font:inherit;font-size:13px;color:#1C1813"><option>All stages</option><option>nglowong · outlining</option><option>nembok · blocking</option><option>medel · dyeing</option><option>nglorod · wax removal</option></select>
+          <button onClick="{{ toggleNovel }}" aria-pressed="{{ novelOnly }}" style="height:34px;display:flex;align-items:center;gap:8px;padding:0 10px;border:1px solid #DDD4C4;border-radius:4px;background:#FBF8F2;font-size:13px;color:#1C1813">
+            <span style="{{ switchTrack }}"><span style="{{ switchKnob }}"></span></span>New terms only
+          </button>
+        </div>
+        <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:48px;padding:40px;border:1px dashed #DDD4C4;border-radius:6px;font-size:16px">No terms match ‘{{ q }}’. <button onClick="{{ clear }}" style="margin-left:8px;border:0;background:transparent;color:#22304F;text-decoration:underline;font-size:16px">Clear filters</button></div>
+        </sc-if>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+          <div style="margin-top:44px">
+            <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid #DDD4C4"><h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:30px">{{ g.label }}</h2><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#665D50">{{ g.count }}</span></div>
+            <div style="margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+              <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+                <a href="#s5b" style="display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:14px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;color:#1C1813;text-decoration:none" style-hover="border-color:#22304F">
+                  <div style="width:88px;aspect-ratio:4/5;background:#F5F0E6;border:1px solid #DDD4C4;border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;inset:4px"><image-slot id="{{ e.slot }}" shape="rect" fit="contain" placeholder="frame"></image-slot></div></div>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+                    <div style="font-family:'Newsreader',serif;font-size:24px;line-height:1.05;font-weight:500">{{ e.term }}</div>
+                    <div style="font-size:13px;line-height:1.45;color:#665D50;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ e.gloss }}</div>
+                    <div style="margin-top:auto;display:flex;gap:6px;flex-wrap:wrap">
+                      <sc-if value="{{ e.isSpeech }}" hint-placeholder-val="{{ true }}"><span title="Heard in the recording's audio." style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 6px;border:1px solid #22304F;border-radius:4px;color:#22304F;font-size:11px;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span></sc-if>
+                      <sc-if value="{{ e.isOn }}" hint-placeholder-val="{{ false }}"><span title="Read from text shown in the video, not spoken." style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 6px;border:1px solid #8A4B22;border-radius:4px;color:#8A4B22;font-size:11px;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg>On-screen text</span></sc-if>
+                      <sc-if value="{{ e.isVis }}" hint-placeholder-val="{{ false }}"><span title="Seen in the video; not spoken or written." style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 6px;border:1px solid #5E5A52;border-radius:4px;color:#5E5A52;font-size:11px;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>Visual only</span></sc-if>
+                      <sc-if value="{{ e.novel }}" hint-placeholder-val="{{ false }}"><span title="Not in the Batik Tulis craft pack yet. Check with the maker." style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 6px;border-radius:4px;background:#EFE3CC;color:#5C4214;font-size:11px;font-weight:600"><span style="width:5px;height:5px;border-radius:50%;background:#9E7330"></span>New term</span></sc-if>
+                    </div>
+                  </div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </main>
+    </div>
+
+    <div data-screen-label="S5 mobile" style="width:390px;background:#F5F0E6">
+      <header style="height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #DDD4C4">
+        <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:26px;font-weight:600;line-height:1">empu</span><span style="width:5px;height:5px;border-radius:50%;background:#9E7330;margin-top:3px"></span></div>
+        <a href="#" style="font-size:14px;color:#1C1813;text-decoration:none">Process map</a>
+      </header>
+      <div style="padding:20px 20px 40px">
+        <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Living Archive</div>
+        <h1 style="margin:4px 0 0;font-family:'Newsreader',serif;font-weight:500;font-size:44px;line-height:1">Batik Tulis</h1>
+        <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#665D50">14 entries · 2 recordings · v0.1.0</div>
+        <div style="margin-top:16px;display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#665D50" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search terms" aria-label="Search" style="flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;color:#1C1813;outline:none">
+        </div>
+        <div style="margin:12px -20px 0;padding:0 20px;display:flex;gap:6px;overflow-x:auto">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.pick }}" style="{{ c.styleM }}">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+          <div style="margin-top:26px">
+            <div style="display:flex;align-items:baseline;gap:8px;padding-bottom:6px;border-bottom:1px solid #1C1813"><h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:22px">{{ g.label }}</h2><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#665D50">{{ g.count }}</span></div>
+            <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+              <a href="#s5b" style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #DDD4C4;color:#1C1813;text-decoration:none">
+                <div style="width:56px;height:56px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;inset:3px"><image-slot id="{{ e.slot }}" shape="rect" fit="contain" placeholder=" "></image-slot></div></div>
+                <div style="min-width:0">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Newsreader',serif;font-size:20px;font-weight:500">{{ e.term }}</span><sc-if value="{{ e.novel }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 6px;border-radius:4px;background:#EFE3CC;color:#5C4214;font-size:11px;font-weight:600"><span style="width:5px;height:5px;border-radius:50%;background:#9E7330"></span>New</span></sc-if></div>
+                  <div style="font-size:13px;color:#665D50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.gloss }}</div>
+                  <div style="{{ e.srcStyle }}">
+                    <sc-if value="{{ e.isSpeech }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg></sc-if>
+                    <sc-if value="{{ e.isOn }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg></sc-if>
+                    <sc-if value="{{ e.isVis }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+                    {{ e.srcLabel }}
+                  </div>
+                </div>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s1" data-screen-label="S1 Home" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;align-items:baseline;gap:16px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:14px;background:#1C1813;color:#F5F0E6;padding:4px 10px">S1</span>
+    <h2 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:36px">Home · /</h2>
+    <span style="font-size:14px;color:#665D50">Desktop 1440</span>
+  </div>
+  <div data-screen-label="S1 desktop" style="width:1440px;background:#F5F0E6">
+    <header style="height:64px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #DDD4C4">
+      <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:30px;font-weight:600;line-height:1">empu</span><span style="width:6px;height:6px;border-radius:50%;background:#9E7330;margin-top:4px"></span></div>
+      <nav style="display:flex;gap:28px;font-size:14px"><a href="#s5" style="color:#665D50;text-decoration:none">Dictionary</a><a href="#" style="color:#665D50;text-decoration:none">Evidence</a><a href="#" style="color:#665D50;text-decoration:none">Try</a></nav>
+    </header>
+    <div style="max-width:1200px;margin:0 auto;padding:72px 0 0;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:center">
+      <div>
+        <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Batik Tulis Edition</div>
+        <h1 style="margin:16px 0 0;font-family:'Newsreader',serif;font-weight:500;font-size:64px;line-height:1.02;letter-spacing:-0.02em;text-wrap:balance">Capture what masters know, before it’s gone.</h1>
+        <p style="margin:24px 0 0;font-size:18px;line-height:1.6;color:#1C1813;text-wrap:pretty">Empu turns a master’s narrated work video into a watchable craft dictionary. Every term links to the original speech, a short clip of the movement, and the real tool, cropped from the original frame. AI proposes; a person decides.</p>
+        <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+          <a href="#s5" style="height:52px;padding:0 22px;display:flex;align-items:center;gap:10px;background:#22304F;color:#FFFFFF;border-radius:6px;text-decoration:none;font-size:16px;font-weight:500" style-hover="background:#1C1813">Open the Batik Tulis archive →</a>
+          <div style="display:flex;gap:10px">
+            <a href="#" style="height:44px;padding:0 16px;display:flex;align-items:center;border:1px solid #DDD4C4;background:#FBF8F2;color:#1C1813;border-radius:6px;text-decoration:none;font-size:14px;font-weight:500">Try it with a 3-minute clip</a>
+            <a href="#" style="height:44px;padding:0 16px;display:flex;align-items:center;border:1px solid #DDD4C4;background:#FBF8F2;color:#1C1813;border-radius:6px;text-decoration:none;font-size:14px;font-weight:500">See the evidence</a>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative;padding-bottom:64px">
+        <div style="aspect-ratio:16/9;background:#2A2621;border-radius:6px;overflow:hidden;position:relative"><image-slot id="f-canting122" shape="rect" placeholder="aset/nyanting-canting-122s.jpg"></image-slot></div>
+        <div style="position:absolute;left:-32px;bottom:0;width:360px;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;box-shadow:0 12px 32px rgba(28,24,19,0.14);padding:16px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px">
+          <div style="width:76px;aspect-ratio:4/5;background:#F5F0E6;border:1px solid #DDD4C4;border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;inset:4px"><image-slot id="crop-canting" shape="rect" fit="contain" placeholder="crop"></image-slot></div></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Newsreader',serif;font-size:26px;line-height:1;font-weight:500">canting klowongan</div>
+            <div style="font-size:13px;color:#665D50;line-height:1.4">Medium-spout canting for the first wax outlines.</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 6px;border:1px solid #22304F;border-radius:4px;color:#22304F;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span><span style="font-family:'JetBrains Mono',monospace">said at 0:37</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:80px auto 0;border-top:1px solid #1C1813;padding-top:28px">
+      <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">How it works</div>
+      <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+          <div>
+            <div style="aspect-ratio:16/9;background:#2A2621;border-radius:6px;overflow:hidden;position:relative"><image-slot id="{{ s.slot }}" shape="rect" placeholder="{{ s.ph }}"></image-slot></div>
+            <div style="margin-top:14px;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#665D50">{{ s.n }}</span><span style="font-family:'Newsreader',serif;font-size:22px;line-height:1.3">{{ s.text }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:72px auto 0;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px">
+      <div>
+        <div style="font-family:'Newsreader',serif;font-size:34px;line-height:1.15">AI proposes. A person decides.</div>
+        <div style="margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px">
+          <sc-for list="{{ principles }}" as="p" hint-placeholder-count="4">
+            <div style="padding:14px 0;border-top:1px solid #DDD4C4;font-size:16px;line-height:1.5">{{ p }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <a href="#s5" style="display:block;background:#FBF8F2;border:1px solid #DDD4C4;border-radius:6px;padding:24px;color:#1C1813;text-decoration:none" style-hover="border-color:#22304F">
+        <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#665D50;font-weight:500">Living Archive</div>
+        <div style="margin-top:6px;font-family:'Newsreader',serif;font-size:36px;font-weight:500">Batik Tulis</div>
+        <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #DDD4C4">
+          <div style="padding-top:12px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px">14</div><div style="font-size:13px;color:#665D50">entries</div></div>
+          <div style="padding-top:12px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px">2</div><div style="font-size:13px;color:#665D50">recordings</div></div>
+          <div style="padding-top:12px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px">1</div><div style="font-size:13px;color:#665D50">creator</div></div>
+        </div>
+        <div style="margin-top:20px;font-size:14px;font-weight:500;color:#22304F">Open the archive →</div>
+      </a>
+    </div>
+    <div style="max-width:1200px;margin:72px auto 0;padding:28px 0;border-top:1px solid #1C1813;font-family:'Newsreader',serif;font-size:26px;font-style:italic">Batik today. Weaving and gamelan next. Every craft that was never written down.</div>
+    <footer style="padding:28px 48px;border-top:1px solid #DDD4C4;display:flex;justify-content:space-between;gap:32px;font-size:13px;color:#665D50;line-height:1.55">
+      <div style="max-width:720px">Built for the Meta Global AI Developer Hackathon 2026 with Muse Spark 1.3 and SAM 3.1. Demo clips are CC BY videos, credited on every entry.</div>
+      <a href="Empu Studio.dc.html">Documenter studio</a>
+    </footer>
+  </div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { showInFrame: false, playing: false, q: '', cat: 'all', novelOnly: false };
+  renderVals() {
+    const S = this.state;
+    const E = [
+      ['canting klowongan','tool','A canting with a medium spout, used to draw the first wax outlines of a pattern.','speech',0,'crop-canting'],
+      ['canting tembokan','tool','A wide-spout canting for filling large areas with wax.','speech',0,'f-tembokan100'],
+      ['wajan','tool','Small pan that keeps the wax liquid over a low flame.','visual',0,'f-wajan272'],
+      ['spangkring','tool','A wooden stand used while waxing. Meaning to confirm with the maker.','speech',1,'k-spangkring'],
+      ['klowong','tool_part','The outlining spout size of a canting, labelled on a diagram.','onscreen',0,'f-klowong44'],
+      ['cucuk','tool_part','The spout of the canting through which the wax flows.','speech',0,'k-cucuk'],
+      ['malam','material','Batik wax, a blend of beeswax, paraffin and resin.','speech',0,'k-malam'],
+      ['mori','material','Plain white cotton cloth that is waxed and dyed.','speech',0,'k-mori'],
+      ['waterglass','dye','Sodium silicate solution brushed on to fix the dye.','speech',0,'k-waterglass'],
+      ['nglowong','stage','Drawing the first wax outlines of the pattern.','speech',0,'f-caption362'],
+      ['nglorod','stage','Boiling the cloth to remove the wax.','speech',0,'k-nglorod'],
+      ['nembok','technique','Covering large areas with wax so they resist the dye.','speech',0,'k-nembok'],
+      ['isen-isen','motif','Small filler marks inside a pattern, such as dots.','speech',0,'k-isen'],
+      ['cecek','motif','Fine dots made with a small canting; a common isen-isen.','visual',1,'k-cecek'],
+    ].map(([term,cat,gloss,src,novel,slot]) => ({
+      term, cat, gloss, slot, novel: !!novel,
+      isSpeech: src==='speech', isOn: src==='onscreen', isVis: src==='visual',
+      srcLabel: {speech:'Spoken',onscreen:'On-screen text',visual:'Visual only'}[src],
+      srcStyle: {marginTop:'4px',display:'flex',alignItems:'center',gap:'5px',fontSize:'11px',fontWeight:500,color:{speech:'#22304F',onscreen:'#8A4B22',visual:'#5E5A52'}[src]},
+    }));
+    const CATS = [['all','All'],['tool','Tools'],['tool_part','Tool parts'],['material','Materials'],['dye','Dyes'],['stage','Stages'],['technique','Techniques'],['motif','Motifs']];
+    const q = S.q.trim().toLowerCase();
+    const list = E.filter(e => (S.cat==='all'||e.cat===S.cat) && (!S.novelOnly||e.novel) && (!q||e.term.includes(q)||e.gloss.toLowerCase().includes(q)));
+    const groups = CATS.slice(1).map(([id,label]) => { const items = list.filter(e=>e.cat===id); return { label, items, count: items.length }; }).filter(g=>g.items.length);
+    const css = s => Object.fromEntries(s.split(';').filter(Boolean).map(p => { const i = p.indexOf(':'); return [p.slice(0,i).trim().replace(/-([a-z])/g,(_,c)=>c.toUpperCase()), p.slice(i+1).trim()]; }));
+    const chip = (on, h) => css(`height:${h}px;padding:0 12px;border:1px solid ${on?'#22304F':'#DDD4C4'};border-radius:4px;background:${on?'#22304F':'#FBF8F2'};color:${on?'#FFFFFF':'#1C1813'};font-size:13px;font-weight:500;white-space:nowrap;flex:none`);
+    const seg = on => css(`height:40px;border:0;background:${on?'#22304F':'#FBF8F2'};color:${on?'#FFFFFF':'#1C1813'};font-size:13px;font-weight:500`);
+    return {
+      creator: 'Creator name',
+      showInFrame: S.showInFrame, cropMode: !S.showInFrame,
+      setCrop: () => this.setState({ showInFrame: false }),
+      setFrame: () => this.setState({ showInFrame: true }),
+      cropBtnStyle: seg(!S.showInFrame), frameBtnStyle: seg(S.showInFrame),
+      playLabel: S.playing ? 'Playing…' : 'Hear it',
+      togglePlay: () => { this.setState({ playing: true }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ playing: false }), 1600); },
+      occurrences: [
+        { title: 'Nyanting batik tulis', time: '0:37–0:42', isSpeech: true, isOn: false, srcLabel: 'Spoken' },
+        { title: 'Macam-macam canting', time: '0:44', isSpeech: false, isOn: true, srcLabel: 'On-screen text' },
+      ],
+      q: S.q, onQ: e => this.setState({ q: e.target.value }),
+      cats: CATS.map(([id,label]) => ({ label, active: S.cat===id, style: chip(S.cat===id,34), styleM: chip(S.cat===id,40), pick: () => this.setState({ cat: id }) })),
+      novelOnly: S.novelOnly, toggleNovel: () => this.setState({ novelOnly: !S.novelOnly }),
+      switchTrack: css(`width:28px;height:16px;border-radius:8px;position:relative;background:${S.novelOnly?'#9E7330':'#DDD4C4'};transition:background 150ms`),
+      switchKnob: css(`position:absolute;top:2px;left:${S.novelOnly?14:2}px;width:12px;height:12px;border-radius:50%;background:#FFFFFF;transition:left 150ms`),
+      groups, empty: groups.length === 0,
+      clear: () => this.setState({ q: '', cat: 'all', novelOnly: false }),
+      steps: [
+        { n: '01', text: 'A master works and explains.', slot: 'f-caption362', ph: 'aset/nyanting-caption-362s.jpg' },
+        { n: '02', text: 'Muse Spark 1.3 watches and listens; SAM 3.1 finds the tool.', slot: 'overlay-canting', ph: 'aset/contoh-overlay-canting.jpg' },
+        { n: '03', text: 'A person accepts, edits, or rejects. Only accepted terms go public.', slot: 'f-tembokan100', ph: 'aset/macamcanting-canting-100s.jpg' },
+      ],
+      principles: ['Evidence behind every term.', 'Every source is labelled.', 'Nothing goes public without a person’s approval.', 'Only original frames, never generated images.'],
+    };
+  }
+}
+</script>
+</body>
+</html>

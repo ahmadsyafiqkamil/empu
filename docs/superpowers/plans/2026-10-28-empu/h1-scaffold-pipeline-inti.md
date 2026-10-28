@@ -21,6 +21,7 @@ Semua butir di `00-ikhtisar.md` bagian "Global Constraints" berlaku. Yang paling
 
 ## Prasyarat
 - H0 selesai: `docs/reference/hasil-gate0.md` berisi nilai env awal.
+- **H0-2 Step 3 dan 4 selesai** (kreator CC BY sudah dihubungi, persyaratan submission sudah dicek dan dicatat di `docs/00-konteks-hackathon.md`). Per 28 Okt sore keduanya belum. Kerjakan sebelum H1-1 (30 menit): balasan kreator butuh hari, dan persyaratan submission bisa mengubah H6–H7.
 - `ffmpeg`, `ffprobe`, `uv` tersedia (`which ffmpeg ffprobe uv`).
 
 ## File yang disentuh di fase ini
@@ -864,7 +865,7 @@ git commit -m "feat(api): craft pack loader with validation; move pack to packs/
   - `MuseTerm` (field persis skema v3), `MuseProcessStep(step, t_start, t_end, tools)`, `MuseSegmentOutput(speech_heard, language_notes, transcript_excerpt, terms, process_steps)`
   - `load_json_schema(variant: Literal["full","stripped"] = "full") -> dict`
   - `upgrade_v1(d: dict) -> dict`
-  - Fixture: `fixtures/muse/v1/{nglowong,kontrol-musik-nglorod,proses-lengkap-ngertibatik}.json`, `fixtures/muse/v1/nglowong.raw.json`, `fixtures/muse/gate0/*.raw.json`, `fixtures/sam/sam-canting.raw.json`
+  - Fixture: `fixtures/muse/v1/{nglowong,kontrol-musik-nglorod,proses-lengkap-ngertibatik}.json`, `fixtures/muse/v1/nglowong.raw.json`, `fixtures/muse/gate0/*.raw.json`, `fixtures/sam/sam-canting-{closeup,row}.raw.json`
 
 - [ ] **Step 1: Salin skema dan fixture**
 
@@ -876,10 +877,10 @@ cp docs/reference/muse-output.schema.json api/empu/resources/
 for f in nglowong kontrol-musik-nglorod proses-lengkap-ngertibatik; do cp docs/reference/uji-kelayakan/hasil-v1/$f.json api/tests/fixtures/muse/v1/; done
 cp docs/reference/uji-kelayakan/hasil-v1/nglowong.raw.json api/tests/fixtures/muse/v1/
 cp docs/reference/uji-kelayakan/hasil-gate0/recall-seg*.raw.json docs/reference/uji-kelayakan/hasil-gate0/structured.raw.json api/tests/fixtures/muse/gate0/ 2>/dev/null
-cp docs/reference/uji-kelayakan/hasil-gate0/sam-canting.raw.json api/tests/fixtures/sam/ 2>/dev/null
+cp docs/reference/uji-kelayakan/hasil-gate0/sam-canting-closeup.raw.json docs/reference/uji-kelayakan/hasil-gate0/sam-canting-row.raw.json api/tests/fixtures/sam/
 ls -R api/tests/fixtures
 ```
-Expected: tiga JSON dan satu raw di `v1/`; file Gate 0 yang tersedia di `gate0/` dan `sam/`.
+Expected: tiga JSON dan satu raw di `v1/`; `recall-seg0..3.raw.json` dan `structured.raw.json` di `gate0/`; `sam-canting-closeup.raw.json` dan `sam-canting-row.raw.json` di `sam/`. Fixture SAM dibungkus `{"status": 200, "response": {...}}` (format spike); respons Responses API-nya ada di kunci `response`.
 
 - [ ] **Step 2: Tulis tes yang gagal**
 
@@ -1707,7 +1708,7 @@ git commit -m "feat(api): raw response cache"
   - `FFmpegError(RuntimeError)`, `run_ffmpeg(args: list[str]) -> None`, `ffmpeg_to(dst: Path, args: list[str]) -> Path` (tulis ke file sementara lalu rename), `probe_duration(path) -> float`, `probe_height(path) -> int`, `has_audio(path) -> bool`
   - `NormalizedMedia(analysis_path: Path, display_path: Path, duration_s: float)`, `normalize_recording(src, out_dir, *, strip_audio=False) -> NormalizedMedia`; konstanta `ANALYSIS_VIDEO`, `ANALYSIS_AUDIO`
   - `ChunkSpec(idx: int, start_s: float, end_s: float)` dengan properti `duration_s`; `plan_chunks(duration_s, window_s=75.0, overlap_s=10.0) -> list[ChunkSpec]`; `cut_chunk(src, spec, dst) -> Path`; `cut_chunks(src, specs, out_dir) -> list[Path]` (nama file `<idx>.mp4`)
-  - Fixture `sample_video` (video 12 detik 640×360 + nada sinus), `requires_ffmpeg`
+  - Fixture `sample_video` (video 12 detik 1280×720 + nada sinus), `requires_ffmpeg`
 
 - [ ] **Step 1: Tambahkan fixture ke `api/tests/conftest.py`**
 
@@ -1725,7 +1726,7 @@ def sample_video(tmp_path_factory) -> Path:
     out = tmp_path_factory.mktemp("media") / "sample.mp4"
     subprocess.run([
         "ffmpeg", "-y", "-loglevel", "error",
-        "-f", "lavfi", "-i", "testsrc=size=640x360:rate=25",
+        "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=25",
         "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=44100",
         "-t", "12", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", str(out),
     ], check=True)
@@ -1786,4 +1787,972 @@ def test_cut_chunks_real_video(sample_video, tmp_path):
     assert abs(probe_duration(paths[2]) - 4) < 0.3
 ```
 
-<!-- H1-7c -->
+- [ ] **Step 3: Tulis tes yang gagal untuk normalisasi**
+
+```python
+# api/tests/test_normalize.py
+import pytest
+
+from conftest import requires_ffmpeg
+from empu.pipeline.ffmpeg import FFmpegError, has_audio, probe_height, run_ffmpeg
+from empu.pipeline.normalize import normalize_recording
+
+
+@requires_ffmpeg
+def test_normalize_makes_two_derivatives(sample_video, tmp_path):
+    m = normalize_recording(sample_video, tmp_path / "rec")
+    assert m.analysis_path == tmp_path / "rec" / "analysis.mp4"
+    assert m.display_path == tmp_path / "rec" / "display.mp4"
+    assert probe_height(m.analysis_path) == 480
+    assert probe_height(m.display_path) == 720
+    assert has_audio(m.analysis_path) and has_audio(m.display_path)
+    assert abs(m.duration_s - 12) < 0.3
+
+
+@requires_ffmpeg
+def test_strip_audio_only_affects_analysis(sample_video, tmp_path):
+    m = normalize_recording(sample_video, tmp_path / "rec", strip_audio=True)
+    assert not has_audio(m.analysis_path)
+    assert has_audio(m.display_path)
+
+
+@requires_ffmpeg
+def test_normalize_is_idempotent_and_leaves_no_tmp(sample_video, tmp_path):
+    m = normalize_recording(sample_video, tmp_path / "rec")
+    before = m.analysis_path.stat().st_mtime_ns
+    normalize_recording(sample_video, tmp_path / "rec")
+    assert m.analysis_path.stat().st_mtime_ns == before
+    assert list((tmp_path / "rec").glob("*.tmp*")) == []
+
+
+@requires_ffmpeg
+def test_ffmpeg_error_carries_stderr(tmp_path):
+    with pytest.raises(FFmpegError, match="No such file"):
+        run_ffmpeg(["-i", str(tmp_path / "missing.mp4"), str(tmp_path / "out.mp4")])
+```
+
+- [ ] **Step 4: Jalankan, pastikan gagal**
+
+Run: `cd api && uv run pytest tests/test_chunk.py tests/test_normalize.py -q`
+Expected: FAIL dengan `ModuleNotFoundError: No module named 'empu.pipeline'`.
+
+- [ ] **Step 5: Tulis `api/empu/pipeline/__init__.py` (kosong) dan `api/empu/pipeline/ffmpeg.py`**
+
+```python
+"""Thin subprocess wrappers around ffmpeg/ffprobe."""
+
+from __future__ import annotations
+
+import os
+import subprocess
+from pathlib import Path
+
+
+class FFmpegError(RuntimeError):
+    pass
+
+
+def run_ffmpeg(args: list[str]) -> None:
+    proc = subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *args],
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise FFmpegError(proc.stderr.strip()[-2000:] or f"ffmpeg exited {proc.returncode}")
+
+
+def ffmpeg_to(dst: Path, args: list[str]) -> Path:
+    """Run ffmpeg writing to a temp file next to dst, then rename (no half-written outputs)."""
+    dst = Path(dst)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dst.with_name(f"{dst.stem}.tmp{dst.suffix}")
+    try:
+        run_ffmpeg([*args, str(tmp)])
+        os.replace(tmp, dst)
+    finally:
+        tmp.unlink(missing_ok=True)
+    return dst
+
+
+def _probe(path: Path, *args: str) -> str:
+    proc = subprocess.run(["ffprobe", "-v", "error", *args, "-of", "default=nw=1:nk=1", str(path)],
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise FFmpegError(proc.stderr.strip()[-2000:] or f"ffprobe failed on {path}")
+    return proc.stdout.strip()
+
+
+def probe_duration(path: Path) -> float:
+    return float(_probe(path, "-show_entries", "format=duration"))
+
+
+def probe_height(path: Path) -> int:
+    return int(_probe(path, "-select_streams", "v:0", "-show_entries", "stream=height"))
+
+
+def has_audio(path: Path) -> bool:
+    return bool(_probe(path, "-select_streams", "a", "-show_entries", "stream=index"))
+```
+
+- [ ] **Step 6: Tulis `api/empu/pipeline/normalize.py`**
+
+```python
+"""Two derivatives per recording: analysis.mp4 (for Muse) and display.mp4 (clips, keyframes)."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+from empu.pipeline.ffmpeg import ffmpeg_to, has_audio, probe_duration
+
+# Height is capped, never upscaled. The comma inside min() must be escaped for the filter graph.
+ANALYSIS_VIDEO = ["-vf", "scale=-2:min(480\\,ih)", "-c:v", "libx264", "-preset", "veryfast",
+                  "-crf", "28", "-pix_fmt", "yuv420p"]
+ANALYSIS_AUDIO = ["-c:a", "aac", "-ac", "1", "-b:a", "64k"]
+DISPLAY_VIDEO = ["-vf", "scale=-2:min(720\\,ih)", "-c:v", "libx264", "-preset", "veryfast",
+                 "-crf", "23", "-pix_fmt", "yuv420p", "-movflags", "+faststart"]
+DISPLAY_AUDIO = ["-c:a", "aac", "-b:a", "128k"]
+
+
+@dataclass(frozen=True)
+class NormalizedMedia:
+    analysis_path: Path
+    display_path: Path
+    duration_s: float
+
+
+def normalize_recording(src: Path, out_dir: Path, *, strip_audio: bool = False) -> NormalizedMedia:
+    src, out_dir = Path(src), Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    audio_in = has_audio(src)
+    analysis = out_dir / "analysis.mp4"
+    display = out_dir / "display.mp4"
+    if not analysis.exists():
+        audio = ANALYSIS_AUDIO if audio_in and not strip_audio else ["-an"]
+        ffmpeg_to(analysis, ["-i", str(src), *ANALYSIS_VIDEO, *audio])
+    if not display.exists():
+        ffmpeg_to(display, ["-i", str(src), *DISPLAY_VIDEO, *(DISPLAY_AUDIO if audio_in else ["-an"])])
+    return NormalizedMedia(analysis, display, probe_duration(display))
+```
+
+- [ ] **Step 7: Tulis `api/empu/pipeline/chunk.py`**
+
+```python
+"""Fixed-window segmentation with overlap. Cuts are re-encoded so timestamps are exact."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+from empu.pipeline.ffmpeg import ffmpeg_to, has_audio
+from empu.pipeline.normalize import ANALYSIS_AUDIO
+
+
+@dataclass(frozen=True)
+class ChunkSpec:
+    idx: int
+    start_s: float
+    end_s: float
+
+    @property
+    def duration_s(self) -> float:
+        return self.end_s - self.start_s
+
+
+def plan_chunks(duration_s: float, window_s: float = 75.0, overlap_s: float = 10.0) -> list[ChunkSpec]:
+    if duration_s <= 0:
+        raise ValueError("duration must be positive")
+    if not 0 <= overlap_s < window_s:
+        raise ValueError("overlap must be >= 0 and smaller than the window")
+    step = window_s - overlap_s
+    specs: list[ChunkSpec] = []
+    start = 0.0
+    while True:
+        end = min(start + window_s, duration_s)
+        specs.append(ChunkSpec(len(specs), start, end))
+        if end >= duration_s:
+            return specs
+        start += step
+
+
+def cut_chunk(src: Path, spec: ChunkSpec, dst: Path) -> Path:
+    audio = ANALYSIS_AUDIO if has_audio(src) else ["-an"]
+    return ffmpeg_to(dst, [
+        "-ss", f"{spec.start_s:.3f}", "-i", str(src), "-t", f"{spec.duration_s:.3f}",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p", *audio,
+    ])
+
+
+def cut_chunks(src: Path, specs: list[ChunkSpec], out_dir: Path) -> list[Path]:
+    paths = []
+    for spec in specs:
+        dst = Path(out_dir) / f"{spec.idx}.mp4"
+        paths.append(dst if dst.exists() else cut_chunk(src, spec, dst))
+    return paths
+```
+
+- [ ] **Step 8: Jalankan tes**
+
+Run: `cd api && uv run pytest tests/test_chunk.py tests/test_normalize.py -q`
+Expected: `10 passed` (tes ber-ffmpeg di-skip kalau ffmpeg tidak ada; di mesin ini ffmpeg 9 tersedia, jadi tidak ada yang di-skip).
+
+- [ ] **Step 9: Commit**
+
+```bash
+git add api/empu/pipeline api/tests
+git commit -m "feat(pipeline): ffmpeg wrappers, normalization, 75s/10s chunking"
+```
+
+---
+
+### Task H1-8: Prompt v3 (`prompts.py`)
+
+**Files:**
+- Create: `api/empu/pipeline/prompts.py`
+- Test: `api/tests/test_prompts.py`
+
+**Interfaces:**
+- Consumes: `CraftPack`, `load_json_schema`, `TranscriptSegment`
+- Produces: `PROMPT_VERSION = "analyze-v3"`, `NOSEED_VERSION = "analyze-v3-noseed"`, `ASR_VERSION = "analyze-v3-asr"`; `prompt_version_for(seeds: bool, *, transcript: bool = False) -> str`; `build_prompt(pack, *, seg_index: int, seg_total: int, seg_duration: float, seeds: bool = True, transcript: list[TranscriptSegment] | None = None) -> str`. `seg_index` **dimulai dari 1** (yang dilihat model); pemanggil mengirim `spec.idx + 1`.
+
+Teks template disalin **persis** dari `spikes/gate0/prompt_v3.py` (prompt yang diuji di Gate 0). Bedanya hanya sumber data: `CraftPack`, bukan YAML mentah.
+
+- [ ] **Step 1: Tulis tes yang gagal**
+
+```python
+# api/tests/test_prompts.py
+from empu.meta_client import TranscriptSegment
+from empu.pipeline.prompts import build_prompt, prompt_version_for
+
+
+def prompt(pack, **kw):
+    return build_prompt(pack, seg_index=2, seg_total=5, seg_duration=75.0, **kw)
+
+
+def test_versions():
+    assert prompt_version_for(True) == "analyze-v3"
+    assert prompt_version_for(False) == "analyze-v3-noseed"
+    assert prompt_version_for(True, transcript=True) == "analyze-v3-asr"
+    assert prompt_version_for(False, transcript=True) == "analyze-v3-asr-noseed"
+
+
+def test_prompt_has_segment_info_context_stages_and_schema(pack):
+    p = prompt(pack)
+    assert "segmen 2/5" in p and "berdurasi 75 detik" in p
+    assert pack.name.id in p
+    assert pack.prompt_context.strip() in p
+    for s in pack.stages:
+        assert f"- {s.id} — {s.label.id}" in p
+    assert '"evidence_quote"' in p
+    assert "TRANSKRIP OTOMATIS" not in p
+
+
+def test_seed_block_lists_terms_with_variants(pack):
+    p = prompt(pack)
+    assert "CONTOH ISTILAH YANG MUNGKIN MUNCUL" in p
+    first = pack.terms[0]
+    others = [v for v in first.variants if v.casefold() != first.label.casefold()]
+    assert f"- {first.label} (varian: {', '.join(others)})" in p
+
+
+def test_noseed_drops_only_the_seed_block(pack):
+    p = prompt(pack, seeds=False)
+    assert "CONTOH ISTILAH" not in p
+    assert all(f"- {s.id} — " in p for s in pack.stages)
+
+
+def test_pack_glosses_never_in_prompt(pack):
+    p = prompt(pack)
+    assert not [t.id for t in pack.terms if t.gloss_id in p or t.gloss_en in p]
+
+
+def test_transcript_block_before_task_and_uses_pack_examples(pack):
+    tr = [TranscriptSegment(1.0, 3.5, "ini namanya spang King")]
+    p = prompt(pack, transcript=tr)
+    ex = pack.asr_error_examples[0]
+    assert f'"{ex.correct}" ditulis "{ex.heard}"' in p
+    assert "[1.0–3.5] ini namanya spang King" in p
+    assert p.index("TRANSKRIP OTOMATIS") < p.index("TUGAS")
+```
+
+- [ ] **Step 2: Jalankan, pastikan gagal**
+
+Run: `cd api && uv run pytest tests/test_prompts.py -q`
+Expected: FAIL dengan `ModuleNotFoundError: No module named 'empu.pipeline.prompts'`.
+
+- [ ] **Step 3: Tulis `api/empu/pipeline/prompts.py`**
+
+```python
+"""Muse analysis prompt (docs/reference/prompt-analisis.md).
+
+Any change to TEMPLATE, SEED_BLOCK, TRANSCRIPT_BLOCK or analyze.RETRY_SUFFIX must bump the
+version constants: they are part of the cache key and of every evaluation result.
+"""
+
+from __future__ import annotations
+
+import json
+
+from empu.meta_client import TranscriptSegment
+from empu.muse_schema import load_json_schema
+from empu.packs import CraftPack
+
+PROMPT_VERSION = "analyze-v3"
+NOSEED_VERSION = "analyze-v3-noseed"
+ASR_VERSION = "analyze-v3-asr"
+
+TEMPLATE = """Kamu membantu mendokumentasikan pengetahuan seorang ahli {pack_name}.
+Video ini adalah segmen {seg_index}/{seg_total} dari sebuah rekaman, berdurasi {seg_duration} detik.
+Semua waktu dihitung dalam detik dari AWAL SEGMEN INI.
+
+KONTEKS KETERAMPILAN
+{prompt_context}
+
+KERANGKA TAHAPAN (urutan umum, rekaman nyata bisa berbeda):
+{stages}
+
+{seed_block}{transcript_block}TUGAS
+Tonton DAN dengarkan segmen ini sampai detik terakhir.
+1. Catat setiap istilah keahlian (alat, bagian alat, bahan, pewarna, tahap, teknik, motif).
+   Untuk setiap istilah, tentukan sumbernya dengan tegas:
+   - "speech": terdengar diucapkan di audio.
+   - "on_screen_text": hanya terbaca sebagai tulisan di layar (judul, diagram, subtitle tertanam).
+   - "visual_only": bendanya terlihat, tapi tidak diucapkan dan tidak tertulis.
+   Kalau sebuah istilah diucapkan DAN tertulis, pakai "speech" dengan waktu saat diucapkan.
+   Kalau istilah yang sama diucapkan berulang dalam 5 detik, cukup laporkan sekali.
+2. Beri waktu mulai dan selesai ucapan (t_start, t_end).
+3. Untuk "speech", tulis kalimat yang diucapkan di sekitar istilah itu di evidence_quote.
+4. Jelaskan apa yang TERLIHAT saat itu (visible), apakah cocok dengan istilahnya (visual_match),
+   dan tulis frasa benda pendek dalam bahasa Inggris (visible_object_en) kalau ada benda yang relevan.
+5. Beri arti singkat dalam bahasa Indonesia (gloss_id) dan Inggris (gloss_en).
+   Kalau tidak yakin artinya, katakan begitu dan turunkan confidence.
+6. Susun urutan tahapan proses yang terlihat di segmen ini (process_steps).
+
+Jangan mengarang. Kalau segmen hanya berisi musik atau tidak ada ucapan, speech_heard = false
+dan jangan laporkan istilah "speech".
+
+Jawab HANYA dengan JSON valid sesuai skema berikut, tanpa teks lain:
+{schema}
+"""
+
+SEED_BLOCK = """CONTOH ISTILAH YANG MUNGKIN MUNCUL
+Ini hanya contoh, BUKAN daftar yang harus ditemukan. Jangan laporkan istilah dari daftar ini
+kalau tidak benar-benar diucapkan, tertulis, atau terlihat di segmen ini.
+Istilah di luar daftar justru sangat penting, terutama istilah bahasa Jawa atau istilah lokal: laporkan juga.
+{seeds}
+
+"""
+
+TRANSCRIPT_BLOCK = """TRANSKRIP OTOMATIS (dengan timestamp, dari awal segmen)
+Transkrip ini dibuat mesin pengenal suara umum dan SERING SALAH menulis istilah keahlian
+(contoh: {examples}).
+Pakai timestamp-nya sebagai jangkar waktu, lalu perbaiki ejaan istilah berdasarkan apa yang
+kamu dengar dan lihat di video.
+{lines}
+
+"""
+
+
+def prompt_version_for(seeds: bool, *, transcript: bool = False) -> str:
+    base = ASR_VERSION if transcript else PROMPT_VERSION
+    if seeds:
+        return base
+    return NOSEED_VERSION if not transcript else f"{ASR_VERSION}-noseed"
+
+
+def _variants(label: str, variants: list[str]) -> str:
+    rest = [v for v in variants if v.casefold() != label.casefold()]
+    return f" (varian: {', '.join(rest)})" if rest else ""
+
+
+def _transcript_block(pack: CraftPack, transcript: list[TranscriptSegment]) -> str:
+    examples = ", ".join(f'"{e.correct}" ditulis "{e.heard}"' for e in pack.asr_error_examples)
+    lines = "\n".join(f"[{s.t_start:.1f}–{s.t_end:.1f}] {s.text.strip()}" for s in transcript)
+    return TRANSCRIPT_BLOCK.format(examples=examples, lines=lines)
+
+
+def build_prompt(pack: CraftPack, *, seg_index: int, seg_total: int, seg_duration: float,
+                 seeds: bool = True, transcript: list[TranscriptSegment] | None = None) -> str:
+    stages = "\n".join(f"- {s.id} — {s.label.id}{_variants(s.id, s.variants)}" for s in pack.stages)
+    seed_block = ""
+    if seeds:
+        seed_block = SEED_BLOCK.format(
+            seeds="\n".join(f"- {t.label}{_variants(t.label, t.variants)}" for t in pack.terms))
+    return TEMPLATE.format(
+        pack_name=pack.name.id,
+        seg_index=seg_index,
+        seg_total=seg_total,
+        seg_duration=round(seg_duration),
+        prompt_context=pack.prompt_context.strip(),
+        stages=stages,
+        seed_block=seed_block,
+        transcript_block=_transcript_block(pack, transcript) if transcript else "",
+        schema=json.dumps(load_json_schema(), ensure_ascii=False),
+    )
+```
+
+- [ ] **Step 4: Cek kesetaraan dengan prompt Gate 0** (sekali, tidak jadi tes karena spike tidak boleh diimpor dari paket)
+
+```bash
+cd /Users/ahmadsyafiqkamil/Documents/Project/Empu
+uv run --with pyyaml python -c "
+import sys; sys.path.insert(0, 'spikes/gate0'); import prompt_v3
+sys.path.insert(0, 'api')
+from empu.packs import load_pack; from empu.pipeline.prompts import build_prompt
+from pathlib import Path
+a = prompt_v3.build(1, 4, 75); b = build_prompt(load_pack('batik_tulis', Path('packs')), seg_index=1, seg_total=4, seg_duration=75)
+print('SAMA' if a == b else 'BEDA')"
+```
+Expected: `BEDA` hanya kalau pack sudah berubah sejak Gate 0 (mis. `sam_prompt`, yang tidak masuk prompt, tidak berpengaruh). Kalau `BEDA`, bandingkan dengan `difflib` dan pastikan bedanya hanya dari isi pack, bukan dari teks template. (Jalankan dari root repo dengan `uv run --project api`, kalau `empu` tidak bisa diimpor.)
+
+- [ ] **Step 5: Jalankan tes**
+
+Run: `cd api && uv run pytest tests/test_prompts.py tests/test_no_hardcoded_terms.py -q`
+Expected: `7 passed`. Kalau `test_no_craft_terms_in_package` gagal karena kata di template, itu tanda template berisi istilah keahlian: pindahkan ke pack.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add api/empu/pipeline/prompts.py api/tests/test_prompts.py
+git commit -m "feat(pipeline): analyze-v3 prompt builder from craft pack"
+```
+
+---
+
+### Task H1-9: Analisis per segmen (`analyze.py`)
+
+**Files:**
+- Create: `api/empu/pipeline/analyze.py`
+- Test: `api/tests/test_analyze.py`
+
+**Interfaces:**
+- Consumes: `MetaClient`/`FakeClient` (`upload_file`, `analyze_video`), `ResponseCache`, `sha256_file`, `build_prompt`, `prompt_version_for`, `load_json_schema`, `MuseTerm`, `MuseProcessStep`, `MuseSegmentOutput`, `output_text`, `extract_json`, `ChunkSpec`
+- Produces:
+  - `AnalyzeOptions(model: str, seeds: bool = True, structured: bool = False, schema_variant: Literal["full","stripped"] = "full", max_output_tokens: int = 16000)`
+  - `ChunkAnalysis(spec, path, sha256, cache_key, prompt_version, output: MuseSegmentOutput | None, raw_path: Path | None, parsed_path: Path | None, usage: dict, latency_s: float, file_id: str | None, cached: bool, attempts: int, dropped: int, error: str | None)`
+  - `coerce_segment(parsed: dict | None) -> tuple[MuseSegmentOutput | None, int, str | None]` (output, jumlah item dibuang, error)
+  - `usage_totals(usages: list[dict]) -> dict` dengan kunci `input_tokens`, `output_tokens`, `reasoning_tokens`
+  - `analyze_chunk(client, cache, pack, spec, path, opts, *, seg_total: int, out_dir: Path, transcript: list[TranscriptSegment] | None = None) -> ChunkAnalysis`
+  - `analyze_chunks(client, cache, pack, items: list[tuple[ChunkSpec, Path]], opts, *, out_dir: Path, concurrency: int = 3, on_done: Callable[[ChunkAnalysis], None] | None = None, transcripts: dict[int, list[TranscriptSegment]] | None = None) -> list[ChunkAnalysis]` (urut `idx`)
+  - File: `<out_dir>/<idx>.raw.json` (respons mentah terakhir), `<out_dir>/<idx>.json` (hasil validasi)
+
+Aturan:
+- **Kunci cache memakai mode permintaan Muse**, bukan mode pipeline. Mode B versi koreksi waktu (D10) memanggil Muse persis seperti Mode A, jadi kuncinya `…__A` dan cache dipakai bersama. Hanya varian transkrip-di-prompt yang memakai `…__B` (dan versi `analyze-v3-asr`).
+- Hanya respons yang **lolos validasi** yang masuk cache. Respons gagal tetap ditulis ke `<idx>.raw.json` untuk diperiksa, sehingga proses ulang bisa mencoba lagi.
+- Satu istilah atau tahap yang rusak dibuang dan dihitung di `dropped`, tidak menggagalkan segmen. Segmen gagal hanya kalau tidak ada JSON, atau `terms` bukan list. Dalam kasus itu ulangi **sekali** dengan pesan galat.
+- Error API (`MetaAPIError`, error transport) ditangkap per segmen dan dicatat di `error`. Segmen lain tetap jalan.
+
+- [ ] **Step 1: Tulis tes yang gagal**
+
+```python
+# api/tests/test_analyze.py
+import json
+
+import pytest
+
+from conftest import load_fixture
+from empu.cache import ResponseCache
+from empu.legacy import upgrade_v1
+from empu.meta_client import MetaAPIError
+from empu.pipeline.analyze import AnalyzeOptions, analyze_chunk, analyze_chunks, usage_totals
+from empu.pipeline.chunk import ChunkSpec
+from fakes import FakeClient, make_raw
+
+GOOD = upgrade_v1(load_fixture("muse/v1/nglowong.json"))
+OPTS = AnalyzeOptions(model="muse-spark-1.3")
+SPEC = ChunkSpec(0, 0.0, 75.0)
+
+
+@pytest.fixture
+def cache(tmp_path):
+    return ResponseCache(tmp_path / "cache")
+
+
+def chunk_file(tmp_path, idx=0):
+    p = tmp_path / "chunks" / f"{idx}.mp4"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(f"chunk-{idx}".encode())
+    return p
+
+
+def run(client, cache, pack, tmp_path, opts=OPTS, spec=SPEC, **kw):
+    return analyze_chunk(client, cache, pack, spec, chunk_file(tmp_path, spec.idx), opts,
+                         seg_total=1, out_dir=tmp_path / "muse", **kw)
+
+
+def test_writes_raw_and_parsed(tmp_path, pack, cache):
+    client = FakeClient([make_raw(GOOD)])
+    res = run(client, cache, pack, tmp_path)
+    assert res.error is None and not res.cached and res.attempts == 1
+    assert len(res.output.terms) == 12
+    assert json.loads((tmp_path / "muse/0.json").read_text())["terms"][0]["source"] == "speech"
+    assert (tmp_path / "muse/0.raw.json").exists()
+    assert "segmen 1/1" in client.prompts[0] and client.schemas == [None]
+    assert res.cache_key.endswith("__muse-spark-1.3__analyze-v3__A")
+
+
+def test_cache_hit_skips_api(tmp_path, pack, cache):
+    run(FakeClient([make_raw(GOOD)]), cache, pack, tmp_path)
+    client = FakeClient([])
+    res = run(client, cache, pack, tmp_path)
+    assert res.cached and client.uploads == [] and len(res.output.terms) == 12
+
+
+def test_invalid_then_valid_retries_once_same_upload(tmp_path, pack, cache):
+    client = FakeClient([make_raw("not json"), make_raw(GOOD)])
+    res = run(client, cache, pack, tmp_path)
+    assert res.error is None and res.attempts == 2
+    assert len(client.uploads) == 1
+    assert "tidak valid" in client.prompts[1]
+    assert res.usage["input_tokens"] == 200
+
+
+def test_invalid_twice_is_error_and_not_cached(tmp_path, pack, cache):
+    client = FakeClient([make_raw("nope"), make_raw({"no_terms": 1})])
+    res = run(client, cache, pack, tmp_path)
+    assert res.output is None and "terms" in res.error
+    assert cache.get(res.cache_key) is None
+    assert (tmp_path / "muse/0.raw.json").exists()
+
+
+def test_bad_items_dropped_not_fatal(tmp_path, pack, cache):
+    bad = {"term": " ", "source": "speech", "t_start": 1, "t_end": 2}
+    payload = GOOD | {"terms": GOOD["terms"][:2] + [bad],
+                      "process_steps": [{"step": "x", "t_start": "?", "t_end": 1}]}
+    res = run(FakeClient([make_raw(payload)]), cache, pack, tmp_path)
+    assert len(res.output.terms) == 2 and res.output.process_steps == [] and res.dropped == 2
+
+
+def test_structured_sends_schema(tmp_path, pack, cache):
+    client = FakeClient([make_raw(GOOD)])
+    run(client, cache, pack, tmp_path, opts=AnalyzeOptions(model="m", structured=True))
+    assert client.schemas[0]["type"] == "object"
+
+
+def test_noseed_uses_own_version_and_cache_key(tmp_path, pack, cache):
+    client = FakeClient([make_raw(GOOD), make_raw(GOOD)])
+    a = run(client, cache, pack, tmp_path)
+    b = run(client, cache, pack, tmp_path, opts=AnalyzeOptions(model="muse-spark-1.3", seeds=False))
+    assert b.prompt_version == "analyze-v3-noseed" and a.cache_key != b.cache_key
+    assert "CONTOH ISTILAH" not in client.prompts[1]
+
+
+def test_api_error_captured(tmp_path, pack, cache):
+    class Boom(FakeClient):
+        def upload_file(self, path, mime="video/mp4"):
+            raise MetaAPIError(503, "down")
+
+    res = run(Boom(), cache, pack, tmp_path)
+    assert res.output is None and "503" in res.error
+
+
+def test_analyze_chunks_parallel_ordered_with_callback(tmp_path, pack, cache):
+    items = [(ChunkSpec(i, i * 65.0, i * 65.0 + 75), chunk_file(tmp_path, i)) for i in range(3)]
+    done = []
+    res = analyze_chunks(FakeClient([make_raw(GOOD)] * 3), cache, pack, items, OPTS,
+                         out_dir=tmp_path / "muse", concurrency=3, on_done=done.append)
+    assert [r.spec.idx for r in res] == [0, 1, 2] and len(done) == 3
+
+
+def test_usage_totals():
+    u = [{"input_tokens": 10, "output_tokens": 3, "output_tokens_details": {"reasoning_tokens": 2}},
+         {"input_tokens": 5}]
+    assert usage_totals(u) == {"input_tokens": 15, "output_tokens": 3, "reasoning_tokens": 2}
+```
+
+- [ ] **Step 2: Jalankan, pastikan gagal**
+
+Run: `cd api && uv run pytest tests/test_analyze.py -q`
+Expected: FAIL dengan `ModuleNotFoundError: No module named 'empu.pipeline.analyze'`.
+
+- [ ] **Step 3: Tulis `api/empu/pipeline/analyze.py`**
+
+```python
+"""Per-segment Muse analysis with raw-response cache, one repair retry, and parallelism."""
+
+from __future__ import annotations
+
+import json
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, Literal
+
+import httpx
+from pydantic import ValidationError
+
+from empu.cache import ResponseCache, sha256_file
+from empu.meta_client import MetaAPIError, TranscriptSegment, extract_json, output_text
+from empu.muse_schema import MuseProcessStep, MuseSegmentOutput, MuseTerm, load_json_schema
+from empu.packs import CraftPack
+from empu.pipeline.chunk import ChunkSpec
+from empu.pipeline.prompts import build_prompt, prompt_version_for
+
+RETRY_SUFFIX = (
+    "\n\nJawaban sebelumnya tidak valid: {error}\n"
+    "Ulangi. Jawab HANYA dengan satu objek JSON sesuai skema di atas."
+)
+NO_JSON = "no JSON object in model output"
+
+
+@dataclass(frozen=True)
+class AnalyzeOptions:
+    model: str
+    seeds: bool = True
+    structured: bool = False
+    schema_variant: Literal["full", "stripped"] = "full"
+    max_output_tokens: int = 16000
+
+
+@dataclass
+class ChunkAnalysis:
+    spec: ChunkSpec
+    path: Path
+    sha256: str
+    cache_key: str
+    prompt_version: str
+    output: MuseSegmentOutput | None
+    raw_path: Path | None
+    parsed_path: Path | None
+    usage: dict
+    latency_s: float
+    file_id: str | None
+    cached: bool
+    attempts: int
+    dropped: int
+    error: str | None
+
+
+def coerce_segment(parsed: dict | None) -> tuple[MuseSegmentOutput | None, int, str | None]:
+    if parsed is None:
+        return None, 0, NO_JSON
+    if not isinstance(parsed.get("terms"), list):
+        return None, 0, "missing 'terms' list"
+    dropped = 0
+    items: dict[str, list[Any]] = {"terms": [], "process_steps": []}
+    for key, model in (("terms", MuseTerm), ("process_steps", MuseProcessStep)):
+        for raw in parsed.get(key) or []:
+            try:
+                items[key].append(model.model_validate(raw))
+            except ValidationError:
+                dropped += 1
+    try:
+        out = MuseSegmentOutput.model_validate({**parsed, "terms": [], "process_steps": []})
+    except ValidationError as e:
+        return None, 0, str(e)[:1000]
+    out.terms, out.process_steps = items["terms"], items["process_steps"]
+    return out, dropped, None
+
+
+def usage_totals(usages: list[dict]) -> dict:
+    total = {"input_tokens": 0, "output_tokens": 0, "reasoning_tokens": 0}
+    for u in usages:
+        total["input_tokens"] += int(u.get("input_tokens") or 0)
+        total["output_tokens"] += int(u.get("output_tokens") or 0)
+        total["reasoning_tokens"] += int(
+            (u.get("output_tokens_details") or {}).get("reasoning_tokens") or u.get("reasoning_tokens") or 0)
+    return total
+
+
+def _write_json(path: Path, obj: Any) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=1))
+    return path
+
+
+def analyze_chunk(client: Any, cache: ResponseCache, pack: CraftPack, spec: ChunkSpec, path: Path,
+                  opts: AnalyzeOptions, *, seg_total: int, out_dir: Path,
+                  transcript: list[TranscriptSegment] | None = None) -> ChunkAnalysis:
+    sha = sha256_file(path)
+    version = prompt_version_for(opts.seeds, transcript=bool(transcript))
+    request_mode = "B" if transcript else "A"
+    key = ResponseCache.key(sha, opts.model, version, request_mode)
+    raw_path, parsed_path = out_dir / f"{spec.idx}.raw.json", out_dir / f"{spec.idx}.json"
+
+    def result(output, raw, usage, latency, file_id, cached, attempts, dropped, error):
+        if raw is not None:
+            _write_json(raw_path, raw)
+        if output is not None:
+            _write_json(parsed_path, output.model_dump(mode="json"))
+        return ChunkAnalysis(spec, Path(path), sha, key, version, output,
+                             raw_path if raw is not None else None,
+                             parsed_path if output is not None else None,
+                             usage, latency, file_id, cached, attempts, dropped, error)
+
+    if (hit := cache.get(key)) is not None:
+        output, dropped, err = coerce_segment(_parse_raw(hit["raw"]))
+        return result(output, hit["raw"], hit.get("usage", {}), hit.get("latency_s", 0.0),
+                      hit.get("file_id"), True, hit.get("attempts", 1), dropped, err)
+
+    prompt = build_prompt(pack, seg_index=spec.idx + 1, seg_total=seg_total,
+                          seg_duration=spec.duration_s, seeds=opts.seeds, transcript=transcript)
+    schema = load_json_schema(opts.schema_variant) if opts.structured else None
+    usages: list[dict] = []
+    latency, file_id, raw, err = 0.0, None, None, None
+    try:
+        file_id = client.upload_file(path)
+        for attempt in (1, 2):
+            text = prompt if attempt == 1 else prompt + RETRY_SUFFIX.format(error=err)
+            res = client.analyze_video(file_id, text, model=opts.model, schema=schema,
+                                       max_output_tokens=opts.max_output_tokens)
+            usages.append(res.usage)
+            latency += res.latency_s
+            raw = res.raw
+            output, dropped, err = coerce_segment(res.parsed)
+            if output is None and err == NO_JSON and res.parse_error:
+                err = res.parse_error
+            if output is not None:
+                usage = usage_totals(usages)
+                cache.put(key, {"raw": raw, "usage": usage, "latency_s": latency, "file_id": file_id,
+                                "model": opts.model, "prompt_version": version, "mode": request_mode,
+                                "attempts": attempt, "created_at": datetime.now(UTC).isoformat()})
+                return result(output, raw, usage, latency, file_id, False, attempt, dropped, None)
+        return result(None, raw, usage_totals(usages), latency, file_id, False, 2, 0, err)
+    except (MetaAPIError, httpx.HTTPError) as e:
+        return result(None, raw, usage_totals(usages), latency, file_id, False, len(usages), 0, str(e))
+
+
+def _parse_raw(raw: dict) -> dict | None:
+    try:
+        return extract_json(output_text(raw))
+    except ValueError:
+        return None
+
+
+def analyze_chunks(client: Any, cache: ResponseCache, pack: CraftPack, items: list[tuple[ChunkSpec, Path]],
+                   opts: AnalyzeOptions, *, out_dir: Path, concurrency: int = 3,
+                   on_done: Callable[[ChunkAnalysis], None] | None = None,
+                   transcripts: dict[int, list[TranscriptSegment]] | None = None) -> list[ChunkAnalysis]:
+    total = len(items)
+    results: list[ChunkAnalysis] = []
+    with ThreadPoolExecutor(max_workers=max(1, concurrency)) as pool:
+        futures = [pool.submit(analyze_chunk, client, cache, pack, spec, path, opts, seg_total=total,
+                               out_dir=out_dir, transcript=(transcripts or {}).get(spec.idx))
+                   for spec, path in items]
+        for fut in as_completed(futures):
+            res = fut.result()
+            results.append(res)
+            if on_done is not None:
+                on_done(res)
+    return sorted(results, key=lambda r: r.spec.idx)
+```
+
+- [ ] **Step 4: Jalankan tes**
+
+Run: `cd api && uv run pytest tests/test_analyze.py -q`
+Expected: `10 passed`.
+
+- [ ] **Step 5: Jalankan seluruh tes dan lint**
+
+Run: `cd api && uv run pytest -q && uv run ruff check . && uv run ruff format --check .`
+Expected: semua lulus. Kalau `ruff format --check` gagal, jalankan `uv run ruff format .` lalu ulangi.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add api/empu/pipeline/analyze.py api/tests/test_analyze.py
+git commit -m "feat(pipeline): per-chunk Muse analysis with cache, repair retry, parallelism"
+```
+
+---
+
+### Task H1-10: CLI `empu analyze`, uji nyata, dokumen
+
+**Files:**
+- Create: `api/empu/cli.py`
+- Test: `api/tests/test_cli.py`
+- Modify: `docs/reference/hasil-gate0.md` (bagian "Catatan H1"), `CLAUDE.md` (Perintah, Status)
+
+**Interfaces:**
+- Consumes: semua modul H1
+- Produces: `app: typer.Typer` (dengan `@app.callback()` supaya subperintah H2 bisa ditambahkan); `make_client(settings) -> MetaClient`; perintah `empu analyze VIDEO --pack ID --out DIR [--no-seeds] [--strip-audio] [--structured/--no-structured] [--max-chunks N]`. Keluaran: `<out>/media/{analysis,display}.mp4`, `<out>/chunks/<idx>.mp4`, `<out>/muse/<idx>.{raw.json,json}`, `<out>/summary.json` dengan bentuk `{video, pack, model, prompt_version, duration_s, chunks: [{idx, start_s, end_s, n_terms, by_source: {speech, on_screen_text, visual_only}, cached, latency_s, error}], usage: {input_tokens, output_tokens, reasoning_tokens}, wall_s}`
+
+- [ ] **Step 1: Tulis tes yang gagal**
+
+```python
+# api/tests/test_cli.py
+import json
+
+from typer.testing import CliRunner
+
+import empu.cli as cli
+from conftest import load_fixture
+from empu.legacy import upgrade_v1
+from fakes import FakeClient, make_raw
+
+GOOD = upgrade_v1(load_fixture("muse/v1/nglowong.json"))
+
+
+def test_analyze_end_to_end_with_fake(sample_video, tmp_path, settings, monkeypatch):
+    fake = FakeClient([make_raw(GOOD)])
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    monkeypatch.setattr(cli, "make_client", lambda s: fake)
+    out = tmp_path / "run"
+    r = CliRunner().invoke(cli.app, ["analyze", str(sample_video), "--pack", "batik_tulis", "--out", str(out)])
+    assert r.exit_code == 0, r.output
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["prompt_version"] == "analyze-v3"
+    assert summary["chunks"][0]["n_terms"] == 12
+    assert summary["chunks"][0]["by_source"]["speech"] == 12
+    assert (out / "muse/0.json").exists() and (out / "media/display.mp4").exists()
+    assert len(fake.uploads) == 1
+
+
+def test_analyze_unknown_pack_fails_cleanly(sample_video, tmp_path, settings, monkeypatch):
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    r = CliRunner().invoke(cli.app, ["analyze", str(sample_video), "--pack", "nope", "--out", str(tmp_path)])
+    assert r.exit_code != 0 and "not found" in r.output
+```
+
+- [ ] **Step 2: Jalankan, pastikan gagal**
+
+Run: `cd api && uv run pytest tests/test_cli.py -q`
+Expected: FAIL dengan `ModuleNotFoundError: No module named 'empu.cli'`.
+
+- [ ] **Step 3: Tulis `api/empu/cli.py`**
+
+```python
+"""Command line entry point: `empu analyze` (H1). Later phases add sub-commands."""
+
+from __future__ import annotations
+
+import json
+import time
+from collections import Counter
+from pathlib import Path
+
+import typer
+
+from empu.cache import ResponseCache
+from empu.config import Settings, get_settings
+from empu.meta_client import MetaClient
+from empu.packs import PackError, load_pack
+from empu.pipeline.analyze import AnalyzeOptions, ChunkAnalysis, analyze_chunks, usage_totals
+from empu.pipeline.chunk import cut_chunks, plan_chunks
+from empu.pipeline.normalize import normalize_recording
+from empu.pipeline.prompts import prompt_version_for
+
+app = typer.Typer(no_args_is_help=True, add_completion=False)
+
+
+@app.callback()
+def main() -> None:
+    """Empu: craft dictionary pipeline."""
+
+
+def make_client(settings: Settings) -> MetaClient:
+    return MetaClient.from_settings(settings)
+
+
+def _chunk_row(r: ChunkAnalysis) -> dict:
+    by_source = Counter(t.source.value for t in (r.output.terms if r.output else []))
+    return {
+        "idx": r.spec.idx, "start_s": r.spec.start_s, "end_s": r.spec.end_s,
+        "n_terms": sum(by_source.values()),
+        "by_source": {k: by_source.get(k, 0) for k in ("speech", "on_screen_text", "visual_only")},
+        "cached": r.cached, "latency_s": round(r.latency_s, 1), "dropped": r.dropped, "error": r.error,
+    }
+
+
+@app.command()
+def analyze(
+    video: Path = typer.Argument(..., exists=True, dir_okay=False),
+    pack_id: str = typer.Option("batik_tulis", "--pack"),
+    out: Path = typer.Option(..., "--out"),
+    seeds: bool = typer.Option(True, "--seeds/--no-seeds"),
+    strip_audio: bool = typer.Option(False, "--strip-audio"),
+    structured: bool | None = typer.Option(None, "--structured/--no-structured"),
+    max_chunks: int | None = typer.Option(None, "--max-chunks"),
+) -> None:
+    """Normalize, chunk and analyze one video with Muse. Writes JSON per chunk."""
+    settings = get_settings()
+    try:
+        pack = load_pack(pack_id, settings.packs_dir)
+    except PackError as e:
+        typer.echo(f"error: {e}", err=True)
+        raise typer.Exit(2) from e
+    t0 = time.monotonic()
+    media = normalize_recording(video, out / "media", strip_audio=strip_audio)
+    specs = plan_chunks(media.duration_s, settings.chunk_window_s, settings.chunk_overlap_s)
+    specs = specs[:max_chunks] if max_chunks else specs
+    paths = cut_chunks(media.analysis_path, specs, out / "chunks")
+    opts = AnalyzeOptions(model=settings.muse_model, seeds=seeds,
+                          structured=settings.structured_output if structured is None else structured,
+                          schema_variant=settings.structured_schema_variant)
+    client = make_client(settings)
+    cache = ResponseCache(settings.data_dir / "cache" / "muse")
+
+    def report(r: ChunkAnalysis) -> None:
+        row = _chunk_row(r)
+        typer.echo(f"chunk {row['idx']} {row['start_s']:.0f}-{row['end_s']:.0f}s terms={row['n_terms']} "
+                   f"{row['by_source']} cached={row['cached']} {row['latency_s']}s"
+                   + (f" ERROR {row['error']}" if row["error"] else ""))
+
+    results = analyze_chunks(client, cache, pack, list(zip(specs, paths, strict=True)), opts,
+                             out_dir=out / "muse", concurrency=settings.analyze_concurrency,
+                             on_done=report)
+    summary = {
+        "video": video.name, "pack": f"{pack.id}@{pack.version}", "model": opts.model,
+        "prompt_version": prompt_version_for(seeds), "duration_s": round(media.duration_s, 2),
+        "strip_audio": strip_audio, "chunks": [_chunk_row(r) for r in results],
+        "usage": usage_totals([r.usage for r in results if not r.cached]),
+        "wall_s": round(time.monotonic() - t0, 1),
+    }
+    (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1))
+    failed = [r.spec.idx for r in results if r.error]
+    typer.echo(f"done: {len(results)} chunks, failed={failed}, wall={summary['wall_s']}s -> {out}")
+    if failed:
+        raise typer.Exit(1)
+```
+
+- [ ] **Step 4: Jalankan tes**
+
+Run: `cd api && uv run pytest -q && uv run ruff check .`
+Expected: semua lulus.
+
+- [ ] **Step 5: Uji nyata pada satu video CC BY** (berbayar, sekitar USD 0,10; 4 segmen)
+
+```bash
+cd /Users/ahmadsyafiqkamil/Documents/Project/Empu/api
+uv run empu analyze "../data-uji/cc-by/Macam Canting dalam Batik Tulis [FodqwNTWOrQ].mp4" \
+  --pack batik_tulis --out ../data/runs/macam-canting
+uv run empu analyze "../data-uji/cc-by/Macam Canting dalam Batik Tulis [FodqwNTWOrQ].mp4" \
+  --pack batik_tulis --out ../data/runs/macam-canting
+```
+Expected: run pertama mencetak 4 baris `chunk …` dengan `cached=False` dan `done: 4 chunks, failed=[]`. Run kedua `cached=True` untuk semua segmen dan selesai dalam beberapa detik (bukti cache bekerja, tanpa biaya). Kalau run pertama gagal di satu segmen, jalankan ulang: segmen yang sudah berhasil diambil dari cache.
+
+Buka `../data/runs/macam-canting/muse/*.json` dan catat: jumlah istilah per sumber, apakah *canting* muncul sebagai `speech` di waktu yang masuk akal (bandingkan dengan subtitle `.id.vtt` yang menulisnya "cantik"/"cacing"), dan ada tidaknya istilah `speech` yang jelas karangan.
+
+- [ ] **Step 6: Isi `docs/reference/hasil-gate0.md` bagian "Catatan H1"**
+
+```markdown
+## Catatan H1
+- `empu analyze` pada *Macam Canting* (246 s, 4 segmen): istilah speech/on_screen_text/visual_only = a/b/c; token input/output = …/…; wall … s; run kedua 100% cache.
+- *canting* sebagai `speech`: ya/tidak, pada detik … (subtitle otomatis: "cantik" @…, "cacing" @…).
+- Istilah `speech` yang jelas salah: … (atau "tidak ada").
+- Masalah yang ditemukan dan perbaikannya: …
+```
+
+- [ ] **Step 7: Perbarui `CLAUDE.md`.** Ganti isi bagian "Perintah" dengan blok "Cara menjalankan" dari `00-ikhtisar.md` (bagian Python saja; web ditambahkan di H3), ditambah `uv run empu analyze <video> --pack batik_tulis --out ../data/runs/<nama>`. Tambahkan satu baris Status:
+
+```markdown
+- H1 (Kam 29 Okt): paket `empu` + `empu analyze` jalan; uji *Macam Canting* 4 segmen (speech a, cache bekerja). Berikutnya: H2 (Gate 1).
+```
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add api/empu/cli.py api/tests/test_cli.py docs/reference/hasil-gate0.md CLAUDE.md
+git commit -m "feat(cli): empu analyze; record first real run"
+```
+
+---
+
+## Selesai kalau
+- [ ] `cd api && uv run pytest -q` lulus tanpa memanggil jaringan, dan `uv run ruff check .` bersih.
+- [ ] `empu analyze` menghasilkan JSON per segmen untuk satu video uji, dan run kedua 100% dari cache.
+- [ ] `test_no_craft_terms_in_package` dan `test_only_config_reads_environment` lulus.
+- [ ] Catatan H1 di `hasil-gate0.md` terisi dengan angka asli.
+- [ ] Kalau sampai pukul 17:00 WIB H1-9 belum lulus: hentikan pekerjaan lain, selesaikan `analyze` + CLI. Penggabungan dan DB (H2) tidak bisa jalan tanpa ini.

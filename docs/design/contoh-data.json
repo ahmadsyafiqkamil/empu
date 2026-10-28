@@ -1,0 +1,368 @@
+{
+  "_catatan": "Data contoh untuk mockup Claude Design. Bentuknya mengikuti web/lib/types.ts. Isi diambil dari dua video CC BY (istilah, kutipan, dan waktu dikira-kira dari subtitle dan isi video), BUKAN hasil pipeline. Pasangan klip dan crop tidak harus konsisten. clip_url dan audio_url belum ada filenya: pakai keyframe_url sebagai poster. Field bantu yang tidak ada di API: recordings[].poster, archive.craft_pack_version (dari /api/packs), steps[].label_en (dari label.en tahap di craft pack). Angka di eval_summary adalah hasil Gate 0 yang sungguhan (Mode A, klip evaluasi internal), sebelum kunci jawaban resmi, dan harus diberi label 'sample' di mockup.",
+
+  "archive": {
+    "id": 1,
+    "slug": "hidup-batik",
+    "title": "Living Archive · Batik Tulis",
+    "craft_pack_id": "batik_tulis",
+    "craft_pack_version": "0.1.0",
+    "description": "Craft terms of hand-drawn batik, each tied to the maker's own words, movement, and tools.",
+    "is_demo": true,
+    "recording_count": 2,
+    "validated_count": 6
+  },
+
+  "recordings": [
+    {
+      "id": 1,
+      "archive_id": 1,
+      "title": "Macam Canting dalam Batik Tulis",
+      "duration_s": 246,
+      "status": "ready",
+      "display_url": "/media/archives/1/recordings/1/display.mp4",
+      "source_kind": "cc_by_video",
+      "source_creator": "Batik Education",
+      "source_url": "https://www.youtube.com/watch?v=FodqwNTWOrQ",
+      "license": "CC BY 3.0",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "poster": "aset/macamcanting-canting-100s.jpg"
+    },
+    {
+      "id": 2,
+      "archive_id": 1,
+      "title": "Proses nyanting batik tulis",
+      "duration_s": 508,
+      "status": "ready",
+      "display_url": "/media/archives/1/recordings/2/display.mp4",
+      "source_kind": "cc_by_video",
+      "source_creator": "TEBAK teras batik kaindra",
+      "source_url": "https://www.youtube.com/watch?v=zyscgcTHtq8",
+      "license": "CC BY 3.0",
+      "attribution": "From \"Proses nyanting batik tulis\" by TEBAK teras batik kaindra · CC BY 3.0 · youtube.com/watch?v=zyscgcTHtq8 · Trimmed by Empu",
+      "poster": "aset/nyanting-canting-122s.jpg"
+    }
+  ],
+
+  "entries": [
+    {
+      "id": 1, "term": "canting", "category": "tool", "stage_id": "nglowong",
+      "gloss_en": "Small copper pen with a bamboo handle, used to draw with hot wax.",
+      "gloss_id": "Alat pena kecil dari tembaga bergagang bambu untuk menorehkan malam cair.",
+      "variants": ["tjanting", "mencanting"], "is_novel": false, "pack_term_id": "canting",
+      "status": "accepted", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 3, "sam_status": "ok",
+      "crop_url": "aset/contoh-crop-canting.png", "overlay_url": "aset/contoh-overlay-canting.jpg",
+      "keyframe_url": "aset/nyanting-canting-122s.jpg", "clip_url": "/media/demo/canting.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 11, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "canting", "source": "speech",
+         "t_start": 27.4, "t_end": 28.8, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "di dalam membatik tulis, alat untuk membatik itu sendiri adalah canting",
+         "visible": "hands drawing on cloth with a canting", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"},
+        {"id": 12, "recording_id": 2, "recording_title": "Proses nyanting batik tulis", "spoken": "Cara Mencanting", "source": "on_screen_text",
+         "t_start": 15.0, "t_end": 19.0, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "", "visible": "title text over a wide shot of the maker at the cloth rack", "visual_match": "yes",
+         "keyframe_url": "aset/nyanting-canting-122s.jpg"},
+        {"id": 13, "recording_id": 2, "recording_title": "Proses nyanting batik tulis", "spoken": "", "source": "visual_only",
+         "t_start": 121.0, "t_end": 124.0, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "", "visible": "copper canting held over a pencil pattern on white cloth", "visual_match": "yes",
+         "keyframe_url": "aset/nyanting-canting-122s.jpg"}
+      ]
+    },
+    {
+      "id": 2, "term": "canting klowongan", "category": "tool", "stage_id": "nglowong",
+      "gloss_en": "Canting for drawing the main outline of a motif. 'Klowong' comes from 'lowong', empty.",
+      "gloss_id": "Canting untuk membuat garis utama (klowongan) motif. 'Klowong' berasal dari kata 'lowong', kosong.",
+      "variants": ["canting klowong"], "is_novel": false, "pack_term_id": "canting_klowongan",
+      "status": "edited", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "empty",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg", "clip_url": "/media/demo/canting-klowongan.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 21, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "canting klowong", "source": "speech",
+         "t_start": 37.0, "t_end": 39.6, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "di antaranya adalah canting klowong, asal kata dari kata lowong",
+         "visible": "drawing of a canting labelled KLOWONG", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg"}
+      ]
+    },
+    {
+      "id": 3, "term": "klowong", "category": "stage", "stage_id": "nglowong",
+      "gloss_en": "From 'lowong' (empty): the outline drawn before the areas are filled.",
+      "gloss_id": "Dari kata 'lowong' (kosong): garis luar yang dibuat sebelum bidang diisi.",
+      "variants": [], "is_novel": false, "pack_term_id": "nglowong",
+      "status": "proposed", "access_level": "public", "source": "on_screen_text", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "skipped",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg", "clip_url": "/media/demo/klowong.mp4",
+      "maestro_note": "", "validation_label": "Proposed by AI · not yet reviewed",
+      "contributor_name": "Batik Education", "attribution": null,
+      "occurrences": [
+        {"id": 31, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "Klowong -> Lowong/Kosong", "source": "on_screen_text",
+         "t_start": 40.0, "t_end": 44.0, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "", "visible": "title card 'Klowong -> Lowong/Kosong'", "visual_match": "not_visible",
+         "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg"}
+      ]
+    },
+    {
+      "id": 4, "term": "cucuk", "category": "tool_part", "stage_id": null,
+      "gloss_en": "The spout of the canting, where the wax flows out.",
+      "gloss_id": "Ujung pipa kecil pada canting, tempat malam keluar.",
+      "variants": [], "is_novel": false, "pack_term_id": "cucuk",
+      "status": "proposed", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "ok",
+      "crop_url": "aset/contoh-crop-canting.png", "overlay_url": "aset/contoh-overlay-canting.jpg",
+      "keyframe_url": "aset/macamcanting-canting-100s.jpg", "clip_url": "/media/demo/cucuk.mp4",
+      "maestro_note": "", "validation_label": "Proposed by AI · not yet reviewed",
+      "contributor_name": "Batik Education", "attribution": null,
+      "occurrences": [
+        {"id": 41, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "cucuk", "source": "speech",
+         "t_start": 64.6, "t_end": 65.8, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "jika membatik pasaran biasanya menggunakan cucuk atau paruh yang lebih besar",
+         "visible": "close-up of a canting tip", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"}
+      ]
+    },
+    {
+      "id": 5, "term": "paruh", "category": "tool_part", "stage_id": null,
+      "gloss_en": "'Beak': another name the maker uses for the canting spout (cucuk).",
+      "gloss_id": "'Paruh': sebutan lain untuk cucuk, ujung canting tempat malam keluar.",
+      "variants": [], "is_novel": true, "pack_term_id": null,
+      "status": "proposed", "access_level": "public", "source": "speech", "confidence": "medium",
+      "n_occurrences": 2, "sam_status": "empty",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-canting-100s.jpg", "clip_url": "/media/demo/paruh.mp4",
+      "maestro_note": "", "validation_label": "Proposed by AI · not yet reviewed",
+      "contributor_name": "Batik Education", "attribution": null,
+      "occurrences": [
+        {"id": 51, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "paruh", "source": "speech",
+         "t_start": 66.0, "t_end": 67.0, "time_source": "asr", "confidence": "medium",
+         "evidence_quote": "menggunakan cucuk atau paruh yang lebih besar",
+         "visible": "close-up of a canting tip", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"},
+        {"id": 52, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "paruh", "source": "speech",
+         "t_start": 89.0, "t_end": 90.0, "time_source": "muse", "confidence": "medium",
+         "evidence_quote": "jumlah paruhnya ada yang memiliki lebih dari satu",
+         "visible": "sketch of canting types", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg"}
+      ]
+    },
+    {
+      "id": 6, "term": "canting cecekan", "category": "tool", "stage_id": "ngiseni",
+      "gloss_en": "Fine-spout canting for dotted fillings (isen-isen cecek).",
+      "gloss_id": "Canting bercucuk kecil untuk isen-isen berupa titik (cecek).",
+      "variants": ["canting cecek"], "is_novel": false, "pack_term_id": "canting_cecekan",
+      "status": "accepted", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "empty",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-canting-100s.jpg", "clip_url": "/media/demo/canting-cecekan.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 61, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "canting cecek", "source": "speech",
+         "t_start": 70.2, "t_end": 71.8, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "ada canting cecek, biasanya digunakan untuk memberi isen-isen cecek pada batik",
+         "visible": "drawing of two canting types labelled CECEK and KLOWONG", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"}
+      ]
+    },
+    {
+      "id": 7, "term": "cecek", "category": "technique", "stage_id": "ngiseni",
+      "gloss_en": "Dotted filling: tiny wax dots that fill the space inside a motif.",
+      "gloss_id": "Isen-isen berupa titik-titik malam kecil untuk mengisi bidang motif.",
+      "variants": ["nyecek"], "is_novel": false, "pack_term_id": "cecek",
+      "status": "accepted", "access_level": "public", "source": "on_screen_text", "confidence": "high",
+      "n_occurrences": 2, "sam_status": "skipped",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg", "clip_url": "/media/demo/cecek.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 71, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "CECEK", "source": "on_screen_text",
+         "t_start": 80.0, "t_end": 84.0, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "", "visible": "large caption 'CECEK' above a canting drawing", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg"},
+        {"id": 72, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "isen-isen cecek", "source": "speech",
+         "t_start": 76.0, "t_end": 77.5, "time_source": "asr", "confidence": "medium",
+         "evidence_quote": "untuk memberi isen-isen cecek pada batik",
+         "visible": "drawing of a canting", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-diagram-klowong-44s.jpg"}
+      ]
+    },
+    {
+      "id": 8, "term": "canting tembokan", "category": "tool", "stage_id": "nembok",
+      "gloss_en": "Wide-spout canting for covering large areas with wax.",
+      "gloss_id": "Canting bercucuk besar untuk menutup bidang luas dengan malam.",
+      "variants": ["canting tembok"], "is_novel": false, "pack_term_id": "canting_tembokan",
+      "status": "accepted", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "empty",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-canting-100s.jpg", "clip_url": "/media/demo/canting-tembokan.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 81, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "canting tembok", "source": "speech",
+         "t_start": 122.0, "t_end": 123.4, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "selain canting klowong dan canting cecek, ada canting tembok",
+         "visible": "canting with a wide spout on coloured cloth", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"}
+      ]
+    },
+    {
+      "id": 9, "term": "nembok", "category": "stage", "stage_id": "nembok",
+      "gloss_en": "Covering areas with a thick layer of wax so they stay undyed.",
+      "gloss_id": "Menutup bidang dengan lapisan malam tebal supaya tidak terkena warna.",
+      "variants": ["tembokan", "nemboki"], "is_novel": false, "pack_term_id": "nembok",
+      "status": "accepted", "access_level": "public", "source": "speech", "confidence": "high",
+      "n_occurrences": 2, "sam_status": "skipped",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/macamcanting-canting-100s.jpg", "clip_url": "/media/demo/nembok.mp4",
+      "maestro_note": "", "validation_label": "Validated by the documenter",
+      "contributor_name": "Batik Education",
+      "attribution": "From \"Macam Canting dalam Batik Tulis\" by Batik Education · CC BY 3.0 · youtube.com/watch?v=FodqwNTWOrQ · Trimmed by Empu",
+      "occurrences": [
+        {"id": 91, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "nembok", "source": "speech",
+         "t_start": 140.6, "t_end": 141.5, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "di dalam menutup bidang ini biasanya kami menyebutnya nembok",
+         "visible": "wax covering the background of a motif", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"},
+        {"id": 92, "recording_id": 1, "recording_title": "Macam Canting dalam Batik Tulis", "spoken": "tembokan", "source": "speech",
+         "t_start": 145.8, "t_end": 146.9, "time_source": "asr", "confidence": "high",
+         "evidence_quote": "bagian kain batik yang ditutupi lilin biasanya disebut bagian tembokan",
+         "visible": "wax-covered areas of the cloth", "visual_match": "yes",
+         "keyframe_url": "aset/macamcanting-canting-100s.jpg"}
+      ]
+    },
+    {
+      "id": 10, "term": "wajan", "category": "tool", "stage_id": null,
+      "gloss_en": "Small pan for melting the wax.",
+      "gloss_id": "Wajan kecil untuk mencairkan malam.",
+      "variants": [], "is_novel": false, "pack_term_id": "wajan",
+      "status": "proposed", "access_level": "public", "source": "visual_only", "confidence": "medium",
+      "n_occurrences": 1, "sam_status": "empty",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/nyanting-wajan-272s.jpg", "clip_url": "/media/demo/wajan.mp4",
+      "maestro_note": "", "validation_label": "Proposed by AI · not yet reviewed",
+      "contributor_name": "TEBAK teras batik kaindra", "attribution": null,
+      "occurrences": [
+        {"id": 101, "recording_id": 2, "recording_title": "Proses nyanting batik tulis", "spoken": "", "source": "visual_only",
+         "t_start": 270.0, "t_end": 274.0, "time_source": "muse", "confidence": "medium",
+         "evidence_quote": "", "visible": "black pot of melted wax next to a box of canting", "visual_match": "yes",
+         "keyframe_url": "aset/nyanting-wajan-272s.jpg"}
+      ]
+    },
+    {
+      "id": 11, "term": "malam", "category": "material", "stage_id": null,
+      "gloss_en": "Batik wax, used to resist the dye.",
+      "gloss_id": "Lilin batik yang dipakai sebagai perintang warna.",
+      "variants": ["lilin"], "is_novel": false, "pack_term_id": "malam",
+      "status": "proposed", "access_level": "public", "source": "on_screen_text", "confidence": "medium",
+      "n_occurrences": 1, "sam_status": "skipped",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/nyanting-caption-362s.jpg", "clip_url": "/media/demo/malam.mp4",
+      "maestro_note": "", "validation_label": "Proposed by AI · not yet reviewed",
+      "contributor_name": "TEBAK teras batik kaindra", "attribution": null,
+      "occurrences": [
+        {"id": 111, "recording_id": 2, "recording_title": "Proses nyanting batik tulis", "spoken": "lilin", "source": "on_screen_text",
+         "t_start": 430.0, "t_end": 434.0, "time_source": "muse", "confidence": "medium",
+         "evidence_quote": "", "visible": "burnt-in caption 'cek suhu dan volume lilin' over a canting", "visual_match": "yes",
+         "keyframe_url": "aset/nyanting-caption-362s.jpg"}
+      ]
+    },
+    {
+      "id": 12, "term": "kain", "category": "material", "stage_id": null,
+      "gloss_en": "Cloth.",
+      "gloss_id": "Kain.",
+      "variants": [], "is_novel": false, "pack_term_id": null,
+      "status": "rejected", "access_level": "public", "source": "visual_only", "confidence": "high",
+      "n_occurrences": 1, "sam_status": "skipped",
+      "crop_url": null, "overlay_url": null,
+      "keyframe_url": "aset/nyanting-canting-122s.jpg", "clip_url": "/media/demo/kain.mp4",
+      "maestro_note": "Too generic for the dictionary.", "validation_label": "Rejected by the documenter",
+      "contributor_name": "TEBAK teras batik kaindra", "attribution": null,
+      "occurrences": [
+        {"id": 121, "recording_id": 2, "recording_title": "Proses nyanting batik tulis", "spoken": "", "source": "visual_only",
+         "t_start": 118.0, "t_end": 121.0, "time_source": "muse", "confidence": "high",
+         "evidence_quote": "", "visible": "white cloth draped over the rack", "visual_match": "yes",
+         "keyframe_url": "aset/nyanting-canting-122s.jpg"}
+      ]
+    }
+  ],
+
+  "studio_counts_recording_1": {"proposed": 3, "accepted": 5, "edited": 1, "rejected": 0, "total": 9, "reviewed": 6},
+
+  "job_running": {
+    "id": 7, "recording_id": 1, "status": "analyzing", "progress": 0.46, "mode": "B",
+    "detail": "segment 3 of 4", "error": null,
+    "stages": [
+      {"name": "normalizing", "status": "done", "seconds": 6.2},
+      {"name": "chunking", "status": "done", "seconds": 1.1},
+      {"name": "analyzing", "status": "running", "seconds": null},
+      {"name": "merging", "status": "waiting", "seconds": null},
+      {"name": "grounding", "status": "waiting", "seconds": null},
+      {"name": "cutting", "status": "waiting", "seconds": null},
+      {"name": "ready", "status": "waiting", "seconds": null}
+    ]
+  },
+
+  "job_failed": {
+    "id": 8, "recording_id": 2, "status": "failed", "progress": 0.31, "mode": "B",
+    "detail": "segment 2 of 7", "error": "Meta API returned 429 (rate limited) after 4 retries.",
+    "stages": [
+      {"name": "normalizing", "status": "done", "seconds": 11.8},
+      {"name": "chunking", "status": "done", "seconds": 1.9},
+      {"name": "analyzing", "status": "failed", "seconds": 64.0},
+      {"name": "merging", "status": "waiting", "seconds": null},
+      {"name": "grounding", "status": "waiting", "seconds": null},
+      {"name": "cutting", "status": "waiting", "seconds": null},
+      {"name": "ready", "status": "waiting", "seconds": null}
+    ]
+  },
+
+  "process_map_recording_2": {
+    "recording_id": 2, "title": "Proses nyanting batik tulis", "duration_s": 508,
+    "_catatan": "Contoh. Tahap tanpa pack_stage_id ditampilkan sebagai 'other'.",
+    "steps": [
+      {"pack_stage_id": "nglowong", "name": "nglowong", "label_en": "Outlining with wax", "t_start": 18, "t_end": 250,
+       "entries": [{"id": 1, "term": "canting", "keyframe_url": "aset/nyanting-canting-122s.jpg"}]},
+      {"pack_stage_id": null, "name": "refilling the wax", "label_en": "Other", "t_start": 255, "t_end": 295,
+       "entries": [{"id": 10, "term": "wajan", "keyframe_url": "aset/nyanting-wajan-272s.jpg"},
+                   {"id": 11, "term": "malam", "keyframe_url": "aset/nyanting-caption-362s.jpg"}]},
+      {"pack_stage_id": "nglowong", "name": "nglowong", "label_en": "Outlining with wax", "t_start": 295, "t_end": 470,
+       "entries": [{"id": 1, "term": "canting", "keyframe_url": "aset/nyanting-caption-362s.jpg"}]},
+      {"pack_stage_id": null, "name": "showing the result", "label_en": "Other", "t_start": 470, "t_end": 508, "entries": []}
+    ]
+  },
+
+  "eval_summary": {
+    "_catatan": "SAMPLE. Angka sungguhan dari Gate 0 (28 Okt, Mode A, klip evaluasi internal #NgertiBatik dan klip kontrol), sebelum kunci jawaban resmi H5. Kolom yang belum diukur = null, tampilkan '—'.",
+    "headline": {
+      "speech_terms_found_content": "7 of 8",
+      "speech_terms_found_with_timing": "4 of 8",
+      "median_time_error_s": 1.2,
+      "music_only_control_spoken_terms": 0,
+      "audio_removed_spoken_terms": "7 → 0"
+    },
+    "clips": {
+      "ngertibatik-proses": {"speech_recall": 0.5, "speech_precision": null, "median_time_error_s": 1.2, "source_accuracy": null, "baseline_speech_recall": null, "n_pred_speech": 14},
+      "kontrol-musik-nglorod": {"speech_recall": null, "speech_precision": null, "median_time_error_s": null, "source_accuracy": null, "baseline_speech_recall": null, "n_pred_speech": 0}
+    },
+    "captions_vs_empu": [
+      {"said": "spangkring", "auto_captions": "spang King", "empu": "spangkring", "verified": true},
+      {"said": "canting", "auto_captions": "cantik", "empu": "canting", "verified": false},
+      {"said": "canting klowong", "auto_captions": "cacing cowok", "empu": "canting klowong", "verified": false},
+      {"said": "waterglass", "auto_captions": "watera gelas", "empu": "waterglass", "verified": false}
+    ],
+    "_catatan_captions": "verified=true berarti sudah terbukti di Gate 0 (spangkring, @123 s, source speech). Baris lain masih contoh dan harus dibuktikan dengan hasil pipeline sebelum dipakai di demo."
+  }
+}

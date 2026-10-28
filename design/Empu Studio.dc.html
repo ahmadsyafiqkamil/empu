@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#12110F;color:#ECE8DF;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#C9A15B}
+a:hover{color:#ECE8DF}
+*:focus-visible{outline:2px solid #C9A15B;outline-offset:2px}
+button{font:inherit;cursor:pointer}
+input,textarea{font:inherit}
+kbd{font-family:'JetBrains Mono',monospace}
+</style>
+</helmet>
+<div data-theme="malam" data-screen-label="S4 Studio validation" style="min-width:1280px;min-height:100vh;background:#12110F;display:flex;flex-direction:column">
+
+<sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:50;background:#12110F;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div style="max-width:360px;display:flex;flex-direction:column;gap:16px">
+      <div style="font-family:'Newsreader',serif;font-size:28px">Studio works best on a desktop screen</div>
+      <div style="color:#A39C8E;font-size:15px;line-height:1.5">Open this page on a screen at least 1280 px wide to review proposals.</div>
+      <button onClick="{{ forceWide }}" style="align-self:flex-start;height:40px;padding:0 14px;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;color:#ECE8DF">Continue anyway</button>
+    </div>
+  </div>
+</sc-if>
+
+<header style="height:64px;flex:none;display:flex;align-items:center;gap:24px;padding:0 24px;border-bottom:1px solid #2E2B26;background:#12110F;position:sticky;top:0;z-index:10">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="display:flex;align-items:flex-start;gap:3px"><span style="font-family:'Newsreader',serif;font-size:26px;font-weight:600;line-height:1">empu</span><span style="width:5px;height:5px;border-radius:50%;background:#C9A15B;margin-top:3px"></span></div>
+    <span style="font-size:12px;color:#A39C8E;display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Studio</span>
+  </div>
+  <span style="width:1px;height:28px;background:#2E2B26"></span>
+  <div style="min-width:0">
+    <div style="font-size:15px;font-weight:600">Nyanting batik tulis</div>
+    <div style="font-size:12px;color:#A39C8E">From “Nyanting batik tulis” by {{ creator }} · CC BY 3.0 · Trimmed by Empu</div>
+  </div>
+  <span style="flex:1"></span>
+  <div style="display:flex;gap:14px;font-size:13px;font-family:'JetBrains Mono',monospace">
+    <span style="color:#A39C8E">Proposed <span style="color:#ECE8DF">{{ c.proposed }}</span></span>
+    <span style="color:#A39C8E">Accepted <span style="color:#7FB384">{{ c.accepted }}</span></span>
+    <span style="color:#A39C8E">Edited <span style="color:#7FB384">{{ c.edited }}</span></span>
+    <span style="color:#A39C8E">Rejected <span style="color:#E57373">{{ c.rejected }}</span></span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:5px;width:150px">
+    <div style="font-size:12px;color:#A39C8E"><span style="color:#ECE8DF;font-family:'JetBrains Mono',monospace">{{ c.reviewed }} of {{ c.total }}</span> reviewed</div>
+    <div style="height:4px;background:#2E2B26;border-radius:2px;overflow:hidden"><div style="{{ progressStyle }}"></div></div>
+  </div>
+  <div style="position:relative">
+    <button onClick="{{ toggleMenu }}" aria-label="Recording menu" aria-expanded="{{ menuOpen }}" style="width:40px;height:40px;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;color:#ECE8DF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;right:0;top:46px;width:260px;background:#1B1916;border:1px solid #2E2B26;border-radius:6px;box-shadow:0 16px 40px rgba(0,0,0,0.5);padding:6px;z-index:20">
+        <button style="width:100%;text-align:left;height:38px;padding:0 10px;border:0;background:transparent;color:#ECE8DF;border-radius:4px" style-hover="background:#2E2B26">Open process map</button>
+        <button style="width:100%;text-align:left;height:38px;padding:0 10px;border:0;background:transparent;color:#ECE8DF;border-radius:4px" style-hover="background:#2E2B26">Export…</button>
+        <div style="height:1px;background:#2E2B26;margin:6px 0"></div>
+        <button onClick="{{ openWithdraw }}" style="width:100%;text-align:left;height:38px;padding:0 10px;border:0;background:transparent;color:#E57373;border-radius:4px" style-hover="background:#2A1A18">Withdraw consent…</button>
+      </div>
+    </sc-if>
+  </div>
+</header>
+
+<div style="flex:1;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);min-height:0">
+  <section aria-label="Recording" style="padding:20px 24px 24px;border-right:1px solid #2E2B26;display:flex;flex-direction:column;gap:16px">
+    <div style="aspect-ratio:16/9;background:#000000;border-radius:6px;overflow:hidden;position:relative">
+      <image-slot id="f-canting122" shape="rect" placeholder="Recording · display_url (aset/nyanting-canting-122s.jpg)"></image-slot>
+      <div style="position:absolute;left:12px;bottom:12px;pointer-events:none;background:rgba(18,17,15,0.85);padding:4px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px">{{ now }} / 6:40</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#A39C8E">
+      <div style="display:flex;gap:16px;align-items:center">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#9DB0E3"></span>Spoken</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;background:#DDA272"></span>On-screen text</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:9px;background:#B3AC9F;clip-path:polygon(50% 0,100% 100%,0 100%)"></span>Visual only</span>
+      </div>
+      <span>Click a marker to jump to its time</span>
+    </div>
+    <div aria-label="Timeline" style="position:relative;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;padding:10px 12px 8px">
+      <div style="position:relative;height:30px">
+        <sc-for list="{{ bands }}" as="b" hint-placeholder-count="4">
+          <div style="{{ b.style }}"><em style="font-family:'Newsreader',serif;font-size:14px;color:#ECE8DF">{{ b.id }}</em><span style="font-size:11px;color:#A39C8E;margin-left:5px">{{ b.en }}</span></div>
+        </sc-for>
+      </div>
+      <div style="position:relative;height:48px;margin-top:6px;border-top:1px dashed #2E2B26">
+        <sc-for list="{{ markers }}" as="m" hint-placeholder-count="12">
+          <button onClick="{{ m.go }}" title="{{ m.title }}" aria-label="{{ m.title }}" style="{{ m.style }}"><span style="{{ m.shape }}"></span></button>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#A39C8E;margin-top:2px"><span>0:00</span><span>1:40</span><span>3:20</span><span>5:00</span><span>6:40</span></div>
+    </div>
+    <div style="display:flex;gap:18px;font-size:12px;color:#A39C8E;align-items:center;flex-wrap:wrap">
+      <span><kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">A</kbd> accept</span>
+      <span><kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">E</kbd> edit</span>
+      <span><kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">R</kbd> reject</span>
+      <span><kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">J</kbd> / <kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">K</kbd> next / previous</span>
+      <span><kbd style="color:#ECE8DF;border:1px solid #2E2B26;border-radius:3px;padding:1px 5px">Esc</kbd> cancel</span>
+      <span style="flex:1"></span>
+      <span>Mode B · retimed with speech recognition</span>
+    </div>
+  </section>
+
+  <aside aria-label="Review" style="display:flex;flex-direction:column;min-width:0">
+    <div style="padding:14px 20px;border-bottom:1px solid #2E2B26;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <sc-for list="{{ statusFilters }}" as="f" hint-placeholder-count="5">
+        <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="{{ f.style }}">{{ f.label }}</button>
+      </sc-for>
+      <span style="width:1px;height:20px;background:#2E2B26;margin:0 4px"></span>
+      <sc-for list="{{ srcFilters }}" as="f" hint-placeholder-count="3">
+        <button onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="{{ f.style }}">{{ f.label }}</button>
+      </sc-for>
+      <button onClick="{{ toggleNovel }}" aria-pressed="{{ novelOnly }}" style="{{ novelStyle }}">New terms</button>
+    </div>
+
+    <sc-if value="{{ noActive }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:40px 20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <div style="font-size:16px">Nothing left in this filter.</div>
+        <button onClick="{{ showAccepted }}" style="height:36px;padding:0 12px;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;color:#ECE8DF">Show accepted</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hasActive }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:20px;border-bottom:1px solid #2E2B26;display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:12px">
+          <div style="aspect-ratio:16/9;background:#000000;border-radius:6px;overflow:hidden;position:relative">
+            <image-slot id="{{ a.clipSlot }}" shape="rect" placeholder="clip_url"></image-slot>
+            <div style="position:absolute;left:8px;bottom:8px;pointer-events:none;background:rgba(18,17,15,0.85);padding:2px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:12px">{{ a.time }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="flex:1;background:#1B1916;border:1px solid #2E2B26;border-radius:6px;position:relative;overflow:hidden">
+              <sc-if value="{{ cropMode }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:6px"><image-slot id="{{ a.cropSlot }}" shape="rect" fit="contain" placeholder="crop"></image-slot></div></sc-if>
+              <sc-if value="{{ inFrame }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;background:#000"><div style="width:100%;aspect-ratio:16/9;position:relative"><image-slot id="overlay-canting" shape="rect" fit="contain" placeholder="frame + bbox"></image-slot></div></div></sc-if>
+            </div>
+            <button onClick="{{ toggleFrame }}" aria-pressed="{{ inFrame }}" style="height:28px;border:1px solid #2E2B26;border-radius:4px;background:#1B1916;color:#ECE8DF;font-size:11px">{{ frameLabel }}</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#A39C8E;margin-top:-8px">Original frame · cropped with SAM 3.1</div>
+
+        <sc-if value="{{ viewing }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+              <h1 style="margin:0;font-family:'Newsreader',serif;font-weight:500;font-size:40px;line-height:1">{{ a.term }}</h1>
+              <span style="font-size:14px;color:#A39C8E">heard as <em style="font-family:'Newsreader',serif;font-size:17px;color:#ECE8DF">{{ a.spoken }}</em></span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px">
+              <sc-if value="{{ a.isSpeech }}" hint-placeholder-val="{{ true }}"><span title="Heard in the recording's audio." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #9DB0E3;border-radius:4px;color:#9DB0E3;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Spoken</span></sc-if>
+              <sc-if value="{{ a.isOn }}" hint-placeholder-val="{{ false }}"><span title="Read from text shown in the video, not spoken." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #DDA272;border-radius:4px;color:#DDA272;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg>On-screen text</span></sc-if>
+              <sc-if value="{{ a.isVis }}" hint-placeholder-val="{{ false }}"><span title="Seen in the video; not spoken or written." style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border:1px solid #B3AC9F;border-radius:4px;color:#B3AC9F;font-weight:500"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>Visual only</span></sc-if>
+              <span title="{{ a.tsTip }}" style="height:24px;display:inline-flex;align-items:center;padding:0 8px;border:1px solid #2E2B26;border-radius:4px;color:#A39C8E">{{ a.tsLabel }}</span>
+              <span style="height:24px;display:inline-flex;align-items:center;gap:6px;padding:0 8px;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF"><span style="display:flex;gap:2px"><sc-for list="{{ a.dots }}" as="d" hint-placeholder-count="3"><span style="{{ d }}"></span></sc-for></span>{{ a.confLabel }}</span>
+              <sc-if value="{{ a.novel }}" hint-placeholder-val="{{ false }}"><span title="Not in the Batik Tulis craft pack yet. Check with the maker." style="height:24px;display:inline-flex;align-items:center;gap:5px;padding:0 8px;border-radius:4px;background:#C9A15B;color:#12110F;font-weight:600"><span style="width:5px;height:5px;border-radius:50%;background:#12110F"></span>New term</span></sc-if>
+            </div>
+            <blockquote style="margin:0;padding-left:14px;border-left:2px solid #2E2B26;font-family:'Newsreader',serif;font-style:italic;font-size:19px;line-height:1.4">{{ a.quoteText }}<span style="display:block;margin-top:4px;font-family:'IBM Plex Sans',sans-serif;font-style:normal;font-size:12px;color:#A39C8E">{{ a.quoteMeta }}</span></blockquote>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14px;line-height:1.5">
+              <div><div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#A39C8E">English</div><div style="margin-top:3px">{{ a.gloss_en }}</div></div>
+              <div><div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#A39C8E">Bahasa Indonesia</div><div style="margin-top:3px">{{ a.gloss_id }}</div></div>
+            </div>
+            <div style="display:flex;gap:20px;font-size:13px;color:#A39C8E;flex-wrap:wrap">
+              <span>Stage <em style="font-family:'Newsreader',serif;font-size:15px;color:#ECE8DF">{{ a.stage }}</em></span>
+              <span>Maker’s note <span style="color:#ECE8DF">{{ a.noteText }}</span></span>
+            </div>
+            <div style="{{ a.statusStyle }}">{{ a.statusLabel }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:14px;border:1px solid #C9A15B;border-radius:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+              <span style="color:#C9A15B;font-weight:600;letter-spacing:0.06em;text-transform:uppercase">Editing</span>
+              <span style="{{ a.srcBadgeStyle }}">{{ a.srcLabel }} · {{ a.time }}</span>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#A39C8E">Term<input value="{{ d.term }}" onChange="{{ onTerm }}" style="height:40px;padding:0 10px;background:#12110F;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF;font-family:'Newsreader',serif;font-size:20px"></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#A39C8E">Meaning (English)<textarea rows="2" onChange="{{ onEn }}" value="{{ d.gloss_en }}" style="padding:8px 10px;background:#12110F;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF;font-size:14px;resize:vertical"></textarea></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#A39C8E">Arti (Bahasa Indonesia)<textarea rows="2" onChange="{{ onId }}" value="{{ d.gloss_id }}" style="padding:8px 10px;background:#12110F;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF;font-size:14px;resize:vertical"></textarea></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#A39C8E">Maker’s note<input value="{{ d.note }}" onChange="{{ onNote }}" placeholder="e.g. confirmed by the maker at 2:10" style="height:38px;padding:0 10px;background:#12110F;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF;font-size:14px"></label>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ saveEdit }}" style="height:40px;padding:0 16px;border:0;border-radius:6px;background:#C9A15B;color:#12110F;font-weight:600">Save edit</button>
+              <button onClick="{{ cancelEdit }}" style="height:40px;padding:0 16px;border:1px solid #2E2B26;border-radius:6px;background:transparent;color:#ECE8DF">Cancel</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ viewing }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;position:relative">
+            <button onClick="{{ accept }}" style="height:44px;padding:0 14px;border:0;border-radius:6px;background:#7FB384;color:#12110F;font-weight:600;display:flex;align-items:center;gap:8px" style-hover="background:#93C397"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Accept <kbd style="margin-left:auto;font-size:12px;opacity:0.7">A</kbd></button>
+            <button onClick="{{ startEdit }}" style="height:44px;padding:0 14px;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;color:#ECE8DF;font-weight:500;display:flex;align-items:center;gap:8px" style-hover="border-color:#A39C8E"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Edit <kbd style="margin-left:auto;font-size:12px;color:#A39C8E">E</kbd></button>
+            <button onClick="{{ reject }}" style="height:44px;padding:0 14px;border:1px solid #E57373;border-radius:6px;background:transparent;color:#E57373;font-weight:500;display:flex;align-items:center;gap:8px" style-hover="background:#2A1A18"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>Reject <kbd style="margin-left:auto;font-size:12px;opacity:0.7">R</kbd></button>
+            <button onClick="{{ toggleMerge }}" aria-expanded="{{ mergeOpen }}" style="height:44px;padding:0 14px;border:1px solid #2E2B26;border-radius:6px;background:#1B1916;color:#ECE8DF;font-weight:500;display:flex;align-items:center;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6 4-4 4 4"></path><path d="M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22"></path><path d="m20 22-5-5"></path></svg>Merge…</button>
+            <sc-if value="{{ mergeOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;right:0;bottom:52px;width:340px;background:#1B1916;border:1px solid #2E2B26;border-radius:6px;box-shadow:0 16px 40px rgba(0,0,0,0.55);padding:12px;z-index:5;display:flex;flex-direction:column;gap:10px">
+                <input value="{{ mq }}" onChange="{{ onMq }}" placeholder="Find the entry to merge into" aria-label="Merge target" style="height:38px;padding:0 10px;background:#12110F;border:1px solid #2E2B26;border-radius:4px;color:#ECE8DF;font-size:14px">
+                <div style="display:flex;flex-direction:column;max-height:180px;overflow:auto">
+                  <sc-for list="{{ mergeList }}" as="t" hint-placeholder-count="3">
+                    <button onClick="{{ t.pick }}" style="{{ t.style }}"><span style="font-family:'Newsreader',serif;font-size:17px">{{ t.term }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A39C8E">{{ t.time }}</span></button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ mergeTarget }}" hint-placeholder-val="{{ false }}">
+                  <div style="border-top:1px solid #2E2B26;padding-top:10px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:14px">Merge <em style="font-family:'Newsreader',serif;font-size:17px">{{ a.term }}</em> into <em style="font-family:'Newsreader',serif;font-size:17px">{{ mergeTargetTerm }}</em>?</div>
+                    <div style="display:flex;gap:8px"><button onClick="{{ doMerge }}" style="height:36px;padding:0 14px;border:0;border-radius:6px;background:#C9A15B;color:#12110F;font-weight:600">Merge</button><button onClick="{{ toggleMerge }}" style="height:36px;padding:0 14px;border:1px solid #2E2B26;border-radius:6px;background:transparent;color:#ECE8DF">Cancel</button></div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <div style="padding:12px 20px 6px;display:flex;justify-content:space-between;font-size:12px;color:#A39C8E"><span>Queue · {{ queueCount }} in filter</span><span>Sorted by time</span></div>
+    <div style="display:flex;flex-direction:column;padding:0 12px 24px">
+      <sc-for list="{{ queue }}" as="q" hint-placeholder-count="8">
+        <button onClick="{{ q.pick }}" style="{{ q.style }}">
+          <span style="{{ q.dot }}"></span>
+          <span style="font-family:'Newsreader',serif;font-size:17px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.term }}</span>
+          <span style="{{ q.srcStyle }}">{{ q.srcLabel }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A39C8E">{{ q.time }}</span>
+          <span style="{{ q.chip }}">{{ q.status }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </aside>
+</div>
+
+<sc-if value="{{ withdrawOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:40;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center">
+    <div role="dialog" aria-modal="true" aria-labelledby="wd-title" style="width:460px;background:#1B1916;border:1px solid #2E2B26;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 24px 60px rgba(0,0,0,0.6)">
+      <div id="wd-title" style="font-family:'Newsreader',serif;font-size:26px">Withdraw consent for this recording</div>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:#ECE8DF">All entries from this recording will disappear from the public dictionary and from exports. Files are kept but hidden. Withdraw consent?</p>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button onClick="{{ closeWithdraw }}" style="height:42px;padding:0 16px;border:0;border-radius:6px;background:#E57373;color:#12110F;font-weight:600">Withdraw consent</button>
+        <button onClick="{{ closeWithdraw }}" style="height:42px;padding:0 16px;border:1px solid #2E2B26;border-radius:6px;background:transparent;color:#ECE8DF">Cancel</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { items: null, idx: 0, editing: false, draft: {}, inFrame: false, mergeOpen: false, mq: '', mergeId: null, menuOpen: false, withdrawOpen: false, fStatus: 'all', fSrc: null, novelOnly: false, narrow: false, forced: false };
+  seed() {
+    const raw = [
+      ['mori','mori','speech','asr','high',15,19,'accepted','Plain white cotton cloth that is waxed and dyed.','Kain katun putih yang dibatik.','Ini kain mori, sudah dicuci dulu.'],
+      ['canting','canting','speech','asr','high',22,25,'accepted','Hand tool with a copper bowl and spout for drawing with hot wax.','Alat tulis lilin panas dengan nyamplung dan cucuk.','Cantingnya dicelup ke malam.'],
+      ['malam','malam','speech','asr','high',30,33,'accepted','Batik wax, a blend of beeswax, paraffin and resin.','Lilin batik.','Malamnya harus panas, jangan sampai mendidih.'],
+      ['canting klowongan','klowongan','speech','asr','high',37,42,'proposed','A canting with a medium spout, used to draw the first wax outlines.','Canting bercucuk sedang untuk garis luar pola.','Ini canting klowongan, buat nglowong dulu, garis luarnya.',0,'crop-canting','f-canting122'],
+      ['wajan','','visual','muse','medium',72,78,'proposed','Small pan that keeps the wax liquid over a low flame.','Wajan kecil untuk memanaskan malam.','',0,'f-wajan272','f-wajan272'],
+      ['klowong','KLOWONG','onscreen','muse','high',90,94,'proposed','Outlining spout size, labelled on screen.','Ukuran cucuk untuk klowongan.','KLOWONG',0,'f-klowong44','f-klowong44'],
+      ['klowong','klowong','speech','muse','low',108,110,'proposed','Outline (short form).','Garis luar.','Terus klowong lagi di sini.'],
+      ['spangkring','spangkring','speech','asr','medium',122,125,'proposed','A wooden stand used while waxing. Meaning to confirm with the maker.','Penyangga kayu saat membatik. Perlu dicek ke pembuat.','Taruh di spangkring dulu biar nggak netes.',1],
+      ['cucuk','cucuk','speech','asr','high',140,142,'edited','The spout of the canting through which the wax flows.','Ujung canting tempat malam keluar.','Cucuknya kecil, jadi garisnya tipis.'],
+      ['nembok','nembok','speech','asr','high',185,189,'proposed','Covering large areas with wax so they resist the dye.','Menutup bidang luas dengan malam.','Sekarang nembok, yang luas ditutup semua.'],
+      ['canting tembokan','tembokan','speech','asr','high',200,204,'accepted','A wide-spout canting for filling large areas with wax.','Canting bercucuk besar untuk nembok.','Pakai canting tembokan yang besar.',0,'f-tembokan100','f-tembokan100'],
+      ['cecek','','visual','muse','low',250,256,'proposed','Fine dots made with a small canting.','Titik-titik halus.','',1],
+      ['tutup','tutup','speech','muse','low',280,281,'rejected','To cover.','Menutup.','Ditutup pelan-pelan.'],
+      ['waterglass','waterglass','speech','asr','medium',320,324,'proposed','Sodium silicate solution brushed on to fix the dye.','Larutan untuk mengunci warna.','Habis itu dikasih waterglass.'],
+      ['nglorod','nglorod','speech','asr','high',365,369,'proposed','Boiling the cloth to remove the wax.','Merebus kain untuk meluruhkan malam.','Terakhir nglorod, direbus sampai malamnya lepas.'],
+    ];
+    return raw.map((r, i) => ({ id: i, term: r[0], spoken: r[1], src: r[2], ts: r[3], conf: r[4], t0: r[5], t1: r[6], status: r[7], gloss_en: r[8], gloss_id: r[9], quote: r[10], novel: !!r[11], cropSlot: r[12] || ('crop-' + i), clipSlot: r[13] || ('clip-' + i), note: '', stage: r[5] < 180 ? 'nglowong' : r[5] < 300 ? 'nembok' : r[5] < 360 ? 'medel' : 'nglorod' }));
+  }
+  componentDidMount() {
+    this.setState({ items: this.seed(), idx: 3 });
+    this._key = e => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (e.key === 'Escape') { this.setState({ editing: false, mergeOpen: false, menuOpen: false, withdrawOpen: false }); return; }
+      if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || this.state.editing || this.state.withdrawOpen) return;
+      const k = e.key.toLowerCase();
+      if (k === 'a') this.setStatus('accepted');
+      else if (k === 'r') this.setStatus('rejected');
+      else if (k === 'e') { e.preventDefault(); this.startEdit(); }
+      else if (k === 'j') this.step(1);
+      else if (k === 'k') this.step(-1);
+    };
+    window.addEventListener('keydown', this._key);
+    this._rs = () => this.setState({ narrow: window.innerWidth < 1280 });
+    this._rs(); window.addEventListener('resize', this._rs);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this._key); window.removeEventListener('resize', this._rs); }
+  visible() {
+    const S = this.state;
+    return (S.items || []).filter(e => e.status !== 'merged' && (S.fStatus === 'all' || e.status === S.fStatus) && (!S.fSrc || e.src === S.fSrc) && (!S.novelOnly || e.novel));
+  }
+  step(d) {
+    const v = this.visible(); if (!v.length) return;
+    let p = v.findIndex(e => e.id === this.state.idx);
+    p = p < 0 ? 0 : Math.max(0, Math.min(v.length - 1, p + d));
+    this.setState({ idx: v[p].id, editing: false, mergeOpen: false, inFrame: false });
+  }
+  update(id, patch) { this.setState(s => ({ items: s.items.map(e => e.id === id ? { ...e, ...patch } : e) })); }
+  setStatus(st) {
+    const cur = this.state.idx;
+    const v = this.visible(); const p = v.findIndex(e => e.id === cur);
+    this.update(cur, { status: st });
+    const nxt = v.slice(p + 1).find(e => e.status === 'proposed') || v[p + 1];
+    if (nxt) this.setState({ idx: nxt.id, inFrame: false, mergeOpen: false });
+  }
+  startEdit() { const a = (this.state.items || []).find(e => e.id === this.state.idx); if (a) this.setState({ editing: true, mergeOpen: false, draft: { term: a.term, gloss_en: a.gloss_en, gloss_id: a.gloss_id, note: a.note } }); }
+  renderVals() {
+    const S = this.state, items = S.items || [];
+    const css = s => Object.fromEntries(s.split(';').filter(Boolean).map(p => { const i = p.indexOf(':'); return [p.slice(0, i).trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase()), p.slice(i + 1).trim()]; }));
+    const fmt = t => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0');
+    const SRC = { speech: ['Spoken', '#9DB0E3'], onscreen: ['On-screen text', '#DDA272'], visual: ['Visual only', '#B3AC9F'] };
+    const ST = { proposed: ['Proposed by AI · not yet reviewed', '#A39C8E', 'transparent'], accepted: ['Accepted', '#7FB384', '#18241A'], edited: ['Edited', '#7FB384', '#18241A'], rejected: ['Rejected', '#E57373', '#2A1A18'], merged: ['Merged', '#A39C8E', 'transparent'] };
+    const SHORT = { proposed: 'Proposed', accepted: 'Accepted', edited: 'Edited', rejected: 'Rejected', merged: 'Merged' };
+    const live = items.filter(e => e.status !== 'merged');
+    const cnt = k => live.filter(e => e.status === k).length;
+    const c = { proposed: cnt('proposed'), accepted: cnt('accepted'), edited: cnt('edited'), rejected: cnt('rejected'), total: live.length };
+    c.reviewed = c.total - c.proposed;
+    const vis = this.visible();
+    const aRaw = vis.find(e => e.id === S.idx) || null;
+    const D = 400;
+    const a = aRaw ? (() => {
+      const [srcLabel, srcColor] = SRC[aRaw.src]; const [sl, sc, sb] = ST[aRaw.status];
+      const n = { high: 3, medium: 2, low: 1 }[aRaw.conf];
+      return { ...aRaw, srcLabel, srcColor, srcBadgeStyle: css(`display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 7px;border:1px solid ${srcColor};border-radius:4px;color:${srcColor};font-weight:500`), isSpeech: aRaw.src === 'speech', isOn: aRaw.src === 'onscreen', isVis: aRaw.src === 'visual',
+        time: fmt(aRaw.t0) + '–' + fmt(aRaw.t1),
+        tsLabel: aRaw.ts === 'asr' ? 'Timed by speech recognition' : 'Timed by Muse',
+        tsTip: aRaw.ts === 'asr' ? 'Muse found the term; the timestamp was aligned to a word-level transcript.' : 'Timestamp from Muse; no transcript match.',
+        confLabel: aRaw.conf[0].toUpperCase() + aRaw.conf.slice(1) + ' confidence',
+        dots: [0, 1, 2].map(i => css(`width:6px;height:6px;border-radius:50%;background:${i < n ? '#ECE8DF' : '#2E2B26'}`)),
+        quoteText: aRaw.src === 'visual' ? 'Not spoken or written; seen in the video.' : aRaw.src === 'onscreen' ? aRaw.quote : '“' + aRaw.quote + '”',
+        quoteMeta: aRaw.src === 'onscreen' ? 'shown on screen at ' + fmt(aRaw.t0) : aRaw.src === 'visual' ? 'seen at ' + fmt(aRaw.t0) : 'said at ' + fmt(aRaw.t0),
+        noteText: aRaw.note || 'None',
+        statusLabel: sl, statusStyle: css(`align-self:flex-start;font-size:13px;font-weight:500;padding:5px 10px;border-radius:4px;border:1px solid ${sc};color:${sc};background:${sb}`),
+      };
+    })() : null;
+    const chip = on => css(`height:30px;padding:0 10px;border:1px solid ${on ? '#C9A15B' : '#2E2B26'};border-radius:4px;background:${on ? '#C9A15B' : '#1B1916'};color:${on ? '#12110F' : '#ECE8DF'};font-size:12px;font-weight:500`);
+    const bands = [['nglowong', 'outlining', 20, 180], ['nembok', 'blocking', 180, 300], ['medel', 'dyeing', 300, 360], ['nglorod', 'wax removal', 360, 400]].map(([id, en, s, e], i) => ({ id, en, style: css(`position:absolute;top:0;bottom:0;left:${s / D * 100}%;width:calc(${(e - s) / D * 100}% - 2px);background:${['#26231E', '#2B2721', '#26231E', '#2B2721'][i]};border-left:2px solid #4A443A;padding:0 8px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;border-radius:2px`) }));
+    const markers = live.map(e => {
+      const on = a && e.id === a.id, sz = on ? 16 : 11, col = on ? '#C9A15B' : SRC[e.src][1];
+      const sh = e.src === 'speech' ? 'border-radius:50%' : e.src === 'visual' ? 'clip-path:polygon(50% 0,100% 100%,0 100%)' : '';
+      return { title: e.term + ' · ' + fmt(e.t0) + ' · ' + SRC[e.src][0] + ' · ' + SHORT[e.status], go: () => this.setState({ idx: e.id, fStatus: 'all', fSrc: null, novelOnly: false, editing: false, inFrame: false }),
+        style: css(`position:absolute;left:calc(${e.t0 / D * 100}% - 12px);top:${e.src === 'speech' ? 4 : e.src === 'onscreen' ? 16 : 28}px;width:24px;height:20px;padding:0;border:0;background:transparent;display:flex;align-items:center;justify-content:center;opacity:${e.status === 'rejected' ? 0.35 : 1};z-index:${on ? 2 : 1}`),
+        shape: css(`width:${sz}px;height:${sz}px;background:${col};${sh};${on ? 'box-shadow:0 0 0 3px #12110F,0 0 0 4px #C9A15B' : ''}`) };
+    });
+    const others = live.filter(e => a && e.id !== a.id && e.status !== 'rejected' && (!S.mq || e.term.includes(S.mq.toLowerCase())));
+    const tgt = items.find(e => e.id === S.mergeId);
+    return {
+      creator: 'Creator name', narrow: S.narrow && !S.forced, forceWide: () => this.setState({ forced: true }),
+      c, progressStyle: css(`height:100%;width:${c.total ? c.reviewed / c.total * 100 : 0}%;background:#C9A15B;transition:width 150ms`),
+      menuOpen: S.menuOpen, toggleMenu: () => this.setState({ menuOpen: !S.menuOpen }),
+      withdrawOpen: S.withdrawOpen, openWithdraw: () => this.setState({ withdrawOpen: true, menuOpen: false }), closeWithdraw: () => this.setState({ withdrawOpen: false }),
+      now: a ? fmt(a.t0) : '0:00', bands, markers,
+      statusFilters: [['all', 'All'], ['proposed', 'Proposed'], ['accepted', 'Accepted'], ['edited', 'Edited'], ['rejected', 'Rejected']].map(([k, l]) => ({ label: l, on: S.fStatus === k, style: chip(S.fStatus === k), pick: () => this.setState({ fStatus: k }, () => this.step(0)) })),
+      srcFilters: [['speech', 'Spoken'], ['onscreen', 'On-screen'], ['visual', 'Visual']].map(([k, l]) => ({ label: l, on: S.fSrc === k, style: chip(S.fSrc === k), pick: () => this.setState({ fSrc: S.fSrc === k ? null : k }, () => this.step(0)) })),
+      novelOnly: S.novelOnly, novelStyle: chip(S.novelOnly), toggleNovel: () => this.setState({ novelOnly: !S.novelOnly }, () => this.step(0)),
+      hasActive: !!a, noActive: items.length > 0 && !a, showAccepted: () => this.setState({ fStatus: 'accepted' }, () => this.step(0)),
+      a: a || {}, viewing: !!a && !S.editing, editing: !!a && S.editing,
+      inFrame: S.inFrame, cropMode: !S.inFrame, frameLabel: S.inFrame ? 'Show crop' : 'Show in frame', toggleFrame: () => this.setState({ inFrame: !S.inFrame }),
+      accept: () => this.setStatus('accepted'), reject: () => this.setStatus('rejected'), startEdit: () => this.startEdit(),
+      d: S.draft,
+      onTerm: e => this.setState({ draft: { ...S.draft, term: e.target.value } }), onEn: e => this.setState({ draft: { ...S.draft, gloss_en: e.target.value } }),
+      onId: e => this.setState({ draft: { ...S.draft, gloss_id: e.target.value } }), onNote: e => this.setState({ draft: { ...S.draft, note: e.target.value } }),
+      saveEdit: () => { this.update(S.idx, { ...S.draft, status: 'edited' }); this.setState({ editing: false }); },
+      cancelEdit: () => this.setState({ editing: false }),
+      mergeOpen: S.mergeOpen, toggleMerge: () => this.setState({ mergeOpen: !S.mergeOpen, mergeId: null, mq: '' }),
+      mq: S.mq, onMq: e => this.setState({ mq: e.target.value }),
+      mergeList: others.map(e => ({ term: e.term, time: fmt(e.t0), pick: () => this.setState({ mergeId: e.id }), style: css(`display:flex;justify-content:space-between;align-items:center;height:38px;padding:0 8px;border:0;border-radius:4px;background:${S.mergeId === e.id ? '#2E2B26' : 'transparent'};color:#ECE8DF;text-align:left`) })),
+      mergeTarget: !!tgt, mergeTargetTerm: tgt ? tgt.term : '',
+      doMerge: () => { this.update(S.idx, { status: 'merged' }); this.setState({ mergeOpen: false, mergeId: null }, () => this.step(1)); },
+      queueCount: vis.length,
+      queue: vis.map(e => {
+        const on = a && e.id === a.id, [sl, sc] = SRC[e.src], stc = ST[e.status][1];
+        return { term: e.term, srcLabel: sl, srcStyle: css(`font-size:12px;color:${sc}`), time: fmt(e.t0), status: SHORT[e.status], pick: () => this.setState({ idx: e.id, editing: false, inFrame: false, mergeOpen: false }),
+          dot: css(`width:8px;height:8px;background:${sc};${e.src === 'speech' ? 'border-radius:50%' : e.src === 'visual' ? 'clip-path:polygon(50% 0,100% 100%,0 100%)' : ''}`),
+          chip: css(`font-size:11px;font-weight:500;color:${stc};justify-self:end`),
+          style: css(`display:grid;grid-template-columns:12px minmax(0,1fr) 96px 44px 70px;gap:10px;align-items:center;height:42px;padding:0 10px;border:0;border-left:2px solid ${on ? '#C9A15B' : 'transparent'};border-radius:0 4px 4px 0;background:${on ? '#1B1916' : 'transparent'};color:#ECE8DF;opacity:${e.status === 'rejected' ? 0.6 : 1}`) };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>

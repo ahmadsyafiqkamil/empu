@@ -6,7 +6,7 @@
 
 **Architecture:** Satu paket Python `empu` (di `api/`) berisi pustaka pipeline, server FastAPI, worker berbasis tabel `job`, dan CLI Typer. Semua panggilan Meta lewat `api/empu/meta_client.py` dengan cache respons mentah. Frontend Next.js (App Router) di `web/` memanggil API lewat rewrite same-origin. Deploy Docker Compose (web, api, worker, caddy).
 
-**Tech Stack:** Python 3.12 (uv), FastAPI 0.16x, SQLModel + SQLite, Pydantic v2 + pydantic-settings, httpx, tenacity, rapidfuzz, pympi-ling, PyYAML, Pillow, Typer, pytest + respx, ruff. ffmpeg/ffprobe via subprocess. Next.js 16, TypeScript, Tailwind 4, vitest. Docker Compose + Caddy.
+**Tech Stack:** Python 3.12 (uv), FastAPI 0.16x, SQLModel + SQLite, Pydantic v2 + pydantic-settings, httpx, tenacity, rapidfuzz, pympi-ling, PyYAML, Pillow, Typer, pytest + respx, ruff. ffmpeg/ffprobe via subprocess. Next.js 16, TypeScript, Tailwind 4, next/font (Fraunces, Inter, JetBrains Mono), lucide-react, vitest. Docker Compose + Caddy. Dua tema: Mori (publik) dan Malam (`[data-theme="malam"]` di `/studio`).
 
 ---
 
@@ -15,6 +15,7 @@
 | File | Hari | Isi | Gate |
 |---|---|---|---|
 | `00-ikhtisar.md` | – | Dokumen ini: konstanta global, peta file, kontrak antarmodul, gate, aturan potong | – |
+| `desain.md` | – | Kontrak UI Mori/Malam: token, copy, komponen, layout S1–S8. Sumber `docs/design/`. **Menang** atas kerangka visual di H3–H6 kalau bentrok | – |
 | `h0-gate0-spike.md` | Rab 28 Okt | Init repo, akses video uji, spike Gate 0 (structured output, audio, recall, SAM, model transkripsi), catat keputusan | **Gate 0** |
 | `h1-scaffold-pipeline-inti.md` | Kam 29 Okt | Scaffold `api/`, config, craft pack loader, skema Muse, `meta_client`, cache, normalisasi, segmen, prompt, analisis, CLI `empu analyze` | – |
 | `h2-gabung-bukti-sam-worker.md` | Jum 30 Okt | Model DB, kanonisasi + dedup + entri, peta tahapan, klip/audio/keyframe, SAM, orkestrator, worker, Mode B (kondisional) | **Gate 1** |
@@ -24,7 +25,7 @@
 | `h6-izin-sandbox-deploy.md` | Sel 3 Nov | Cabut izin end-to-end, level akses, sandbox juri, arsip demo, polesan, Docker + Caddy, deploy VPS, README | – |
 | `h7-demo-submission.md` | Rab 4 Nov | Video demo, teks submission, pemeriksaan akhir, kirim | **Kirim 22:00 WIB** |
 
-Kerjakan berurutan. Setiap file berdiri sendiri: implementer cukup membaca `00-ikhtisar.md` + file fase yang sedang dikerjakan.
+Kerjakan berurutan. Setiap file berdiri sendiri: implementer cukup membaca `00-ikhtisar.md` + file fase yang sedang dikerjakan. **H3–H7 juga baca `desain.md`** (kontrak UI). Jangan menunggu mockup Claude Design.
 
 ---
 
@@ -44,7 +45,8 @@ Berlaku untuk **setiap task** di semua fase. Disalin dari `CLAUDE.md` dan spec.
 - **Klaim validasi:** "divalidasi oleh ahli" hanya untuk entri dengan `review_event.actor` = kreator/ahli. Selain itu "divalidasi oleh pendokumentasi".
 - **Tes tidak boleh memanggil API sungguhan.** Pakai fixture di `api/tests/fixtures/` dan `respx`/fake client.
 - Setiap perubahan teks prompt menaikkan `PROMPT_VERSION`.
-- Kode, identifier, nama tabel, enum, pesan commit: bahasa Inggris. Teks UI: bahasa Inggris (istilah keahlian tetap asli; glosa ID dan EN). Dokumen `docs/`: bahasa Indonesia.
+- Kode, identifier, nama tabel, enum, pesan commit: bahasa Inggris. Teks UI: bahasa Inggris (istilah keahlian tetap asli; glosa ID dan EN). **Microcopy persis** `docs/design/brief-claude-design.md` bagian 8 / `desain.md` — jangan parafrase. Dokumen `docs/`: bahasa Indonesia.
+- UI mengikuti `desain.md` (D11): Mori untuk publik, Malam untuk Studio; `SourceBadge` ikon+teks; `CropView` bingkai tetap + "Show in frame"; tidak ada `window.prompt`; tidak ada motif batik klasik/keris; gambar hanya frame asli.
 - Batas unggah: 500 MB dan 20 menit per rekaman. Sandbox: 3 menit + kuota harian.
 - Segmen default 75 detik, overlap 10 detik. Dedup overlap |Δt| ≤ 4 detik. Fuzzy kanonisasi rapidfuzz rasio ≥ 90. Klip bukti `t_start − 1,0` s.d. `t_end + 1,5`, min 3 s, maks 8 s. Padding crop SAM 15%.
 - Retry Meta API: backoff eksponensial untuk 429 dan 5xx (dan error transport), maksimal 4 kali retry. 4xx lain tidak di-retry.
@@ -65,6 +67,7 @@ Berlaku untuk **setiap task** di semua fase. Disalin dari `CLAUDE.md` dan spec.
 | D9 | **Demo memakai video YouTube CC BY dengan atribusi**, bukan rekaman sanggar (rekam sanggar opsional). `recording` menambah `source_kind` (`own_recording`/`cc_by_video`/`internal_eval`), `source_url`, `source_creator`, `license`, `attribution`. `internal_eval` tidak pernah publik. Klaim "divalidasi oleh ahli" hanya untuk entri yang dicek kreator. Daftar video: `docs/eval/test-set.yaml` bagian `demo_cc_by` | Syafiq, 28 Okt (spec sudah diperbarui) |
 | D10 | **Mode B = koreksi waktu (realign).** Muse dipanggil seperti Mode A; `evidence_quote` istilah `speech` dicocokkan (rapidfuzz `partial_ratio` ≥ 80, jendela ±30 s) ke transkrip faster-whisper per kata untuk mengganti `t_start`/`t_end`. Kolom baru `occurrence.time_source` (`asr`/`muse`). Varian transkrip-di-prompt hanya untuk ablasi. Structured output aktif (skema penuh). SAM: bbox saja, prompt deskripsi Inggris | Syafiq + Gate 0, 28 Okt |
 | D8 | `speech_heard` dari Muse **tidak dipercaya** sebagai sinyal. Di uji v1, klip kontrol yang hanya musik menghasilkan `speech_heard: true` padahal transkripnya "tidak ada ucapan". Metrik halusinasi dihitung dari jumlah istilah `speech`, bukan dari `speech_heard` | Plan (dari `hasil-v1/kontrol-musik-nglorod.json`) |
+| D11 | **UI Mori & Malam.** Token, copy, komponen, dan layout di `desain.md` (sumber `docs/design/`). Bentuk data UI = `docs/design/contoh-data.json`. Hero/mockup hanya aset CC BY di `docs/design/aset/` (+ atribusi). Jangan block H3 pada Claude Design — brief sudah cukup. Kalau H4 pukul 17:00 kamus belum kebaca, jatuh ke Malam-only dan catat | Brief desain, 28 Okt |
 
 ---
 
@@ -77,6 +80,7 @@ Empu/
 ├── .gitignore                   # H0
 ├── CLAUDE.md                    # bagian "Perintah" diisi di H1, status diperbarui tiap fase
 ├── README.md                    # H6
+├── docs/submission/             # H7: script.md, text.md, receipt.png
 ├── packs/batik_tulis.yaml       # H1 (git mv dari docs/packs/)
 ├── spikes/gate0/                # H0, skrip spike
 ├── data/                        # runtime, TIDAK di-commit
@@ -118,8 +122,10 @@ Empu/
 │   ├── eval/results/            # hasil evaluasi (latest.json di-commit)
 │   └── tests/  fixtures/{muse,sam}/  test_*.py
 ├── web/                         # Next.js (H3)
-│   ├── app/  components/  lib/  next.config.ts  vitest.config.ts
+│   ├── app/  components/  lib/  public/design/  next.config.ts  vitest.config.ts
 └── deploy/  docker-compose.yml  Caddyfile  api.Dockerfile  web.Dockerfile  (H6)
+docs/design/                     # brief, contoh-data.json, aset CC BY (bukan kode)
+docs/superpowers/plans/2026-10-28-empu/desain.md
 ```
 
 ---

@@ -1,0 +1,59 @@
+/* Empu design tokens: Mori (public, default) & Malam (studio, [data-theme="malam"]) */
+:root {
+  --bg: #F5F0E6;
+  --surface: #FBF8F2;
+  --fg: #1C1813;
+  --muted: #665D50;
+  --line: #DDD4C4;
+  --accent: #22304F;
+  --accent-fg: #FFFFFF;
+  --wax: #9E7330;            /* non-text only */
+  --wax-tint: #EFE3CC;       /* New term badge fill */
+  --wax-ink: #5C4214;        /* New term badge text */
+  --src-speech: #22304F;
+  --src-onscreen: #8A4B22;
+  --src-visual: #5E5A52;
+  --ok: #3F6B45;
+  --danger: #9B3B2E;
+  --media-frame: #2A2621;    /* neutral frame behind video/frames */
+
+  --font-head: 'Newsreader', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-xs: 12px; --text-sm: 13px; --text-md: 15px; --text-lg: 18px;
+  --head-sm: 22px; --head-md: 30px; --head-lg: 44px; --head-xl: 64px; --head-xxl: 76px;
+
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-14: 56px; --space-18: 72px;
+
+  --radius-sm: 4px;   /* badges, chips, thumbnails */
+  --radius-md: 6px;   /* buttons, cards, media */
+  --radius-lg: 8px;   /* dialogs */
+
+  --shadow-card: 0 12px 32px rgba(28, 24, 19, 0.14);
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --dur: 150ms;
+}
+
+[data-theme="malam"] {
+  --bg: #12110F;
+  --surface: #1B1916;
+  --fg: #ECE8DF;
+  --muted: #A39C8E;
+  --line: #2E2B26;
+  --accent: #C9A15B;
+  --accent-fg: #12110F;
+  --wax: #C9A15B;
+  --wax-tint: #C9A15B;
+  --wax-ink: #12110F;
+  --src-speech: #9DB0E3;
+  --src-onscreen: #DDA272;
+  --src-visual: #B3AC9F;
+  --ok: #7FB384;
+  --danger: #E57373;
+  --media-frame: #000000;
+}
+
+*:focus-visible { outline: 2px solid var(--wax); outline-offset: 2px; }
+.tabular { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
