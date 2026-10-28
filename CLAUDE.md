@@ -53,4 +53,4 @@ uv run uvicorn empu.app:create_app --factory --reload --port 8000   # API
 
 ## Status
 - H0 (Rab 28 Okt): dokumen konteks selesai. Plan di `docs/superpowers/plans/2026-10-28-empu/` (ikhtisar, H0, H1 sebagian). Keputusan: demo pakai video YouTube CC BY dengan atribusi (spec diperbarui). Gate 0 selesai (`docs/reference/hasil-gate0.md`): audio lulus, recall 4/8 dengan waktu (7/8 isi) → **Mode B** (faster-whisper sebagai jangkar waktu), SAM lulus dengan prompt deskriptif Inggris + bbox saja, structured output skema penuh didukung. Berikutnya: hubungi kreator CC BY, lalu H1.
-- H1 (Kam 29 Okt): paket `empu` + `empu analyze` CLI/tes hijau; uji berbayar *Macam Canting* terblokir (Meta API 401 `authentication_error`). Berikutnya: kunci API sah lalu ulang analyze; H2 (Gate 1).
+- H1 (Kam 29 Okt): paket `empu` + `empu analyze` jalan; uji *Macam Canting* 4 segmen (speech 21, on_screen_text 9, visual_only 3, cache bekerja). Berikutnya: H2 (Gate 1).
