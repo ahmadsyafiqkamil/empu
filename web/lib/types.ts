@@ -1,4 +1,5 @@
 export type Source = "speech" | "on_screen_text" | "visual_only";
+export type SourceKind = "own_recording" | "cc_by_video";
 export type EntryStatus = "proposed" | "accepted" | "edited" | "rejected" | "merged";
 export type JobStatus =
   | "queued"
