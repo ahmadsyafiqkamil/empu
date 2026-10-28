@@ -108,6 +108,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
+    { name = "faster-whisper" },
     { name = "httpx" },
     { name = "pillow" },
     { name = "pydantic" },
@@ -122,11 +123,6 @@ dependencies = [
     { name = "uvicorn", extra = ["standard"] },
 ]
 
-[package.optional-dependencies]
-asr = [
-    { name = "faster-whisper" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "jsonschema" },
@@ -138,7 +134,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
-    { name = "faster-whisper", marker = "extra == 'asr'", specifier = ">=1.1" },
+    { name = "faster-whisper", specifier = ">=1.1" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "pillow", specifier = ">=11.0" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -152,7 +148,6 @@ requires-dist = [
     { name = "typer", specifier = ">=0.12" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]
-provides-extras = ["asr"]
 
 [package.metadata.requires-dev]
 dev = [
