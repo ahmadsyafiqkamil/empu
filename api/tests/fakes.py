@@ -6,6 +6,9 @@ import json
 from pathlib import Path
 
 from empu.meta_client import AnalyzeResult, Detection, extract_json, output_text
+from empu.muse_schema import MuseSegmentOutput
+from empu.pipeline.analyze import ChunkAnalysis
+from empu.pipeline.chunk import ChunkSpec
 
 
 def make_raw(payload: dict | str, usage: dict | None = None) -> dict:
@@ -60,3 +63,48 @@ class FakeClient:
     def segment_image(self, image_path: Path, prompts: list[str], *, model: str) -> list[Detection]:
         self.sam_calls.append((Path(image_path), list(prompts)))
         return list(self.detections)
+
+
+def muse_term(**kw) -> dict:
+    base = {
+        "spoken": kw.get("term", "x"),
+        "term": "x",
+        "category": "tool",
+        "source": "speech",
+        "t_start": 1.0,
+        "t_end": 2.0,
+        "stage": None,
+        "evidence_quote": "",
+        "visible": "",
+        "visible_object_en": None,
+        "visual_match": "not_visible",
+        "gloss_id": "",
+        "gloss_en": "",
+        "confidence": "medium",
+    }
+    return base | kw
+
+
+def analysis(
+    idx: int, start_s: float, end_s: float, terms=(), steps=()
+) -> ChunkAnalysis:
+    out = MuseSegmentOutput.model_validate(
+        {"speech_heard": True, "terms": list(terms), "process_steps": list(steps)}
+    )
+    return ChunkAnalysis(
+        ChunkSpec(idx, start_s, end_s),
+        Path(f"{idx}.mp4"),
+        f"sha{idx}",
+        f"key{idx}",
+        "analyze-v3",
+        out,
+        None,
+        None,
+        {},
+        0.0,
+        None,
+        False,
+        1,
+        0,
+        None,
+    )
