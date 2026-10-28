@@ -7,9 +7,7 @@ import { useEffect, useState } from "react";
 import { apiGet, apiSend } from "@/lib/api";
 import { STAGE_LABEL } from "@/lib/copy";
 import { cn } from "@/lib/cn";
-import type { Job, JobStatus } from "@/lib/types";
-
-type StageStatus = "waiting" | "running" | "done" | "failed";
+import type { Job, JobStageStatus, JobStatus } from "@/lib/types";
 
 function shouldPollJob(status: JobStatus): boolean {
   switch (status) {
@@ -31,10 +29,10 @@ function shouldPollJob(status: JobStatus): boolean {
   }
 }
 
-function StageStatusIcon({ status }: { status: string }) {
+function StageStatusIcon({ status }: { status: JobStageStatus }) {
   const iconClass = "size-4 shrink-0";
-  switch (status as StageStatus) {
-    case "waiting":
+  switch (status) {
+    case "pending":
       return <Circle className={cn(iconClass, "text-[var(--muted)]")} aria-hidden />;
     case "running":
       return (
@@ -45,10 +43,12 @@ function StageStatusIcon({ status }: { status: string }) {
       );
     case "done":
       return <Check className={cn(iconClass, "text-[var(--ok)]")} aria-hidden />;
-    case "failed":
+    case "error":
       return <XCircle className={cn(iconClass, "text-[var(--danger)]")} aria-hidden />;
-    default:
-      return <Circle className={cn(iconClass, "text-[var(--muted)]")} aria-hidden />;
+    default: {
+      const _exhaustive: never = status;
+      return _exhaustive;
+    }
   }
 }
 

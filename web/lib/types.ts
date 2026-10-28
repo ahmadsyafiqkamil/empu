@@ -12,6 +12,9 @@ export type JobStatus =
   | "ready"
   | "failed";
 
+/** Per-stage status from `GET /api/jobs` (see api job_out). */
+export type JobStageStatus = "pending" | "running" | "done" | "error";
+
 export type Occurrence = {
   id: number;
   entry_id: number;
@@ -73,7 +76,7 @@ export type Job = {
   mode: "A" | "B";
   stages: {
     name: string;
-    status: string;
+    status: JobStageStatus;
     started_at: string | null;
     finished_at: string | null;
     seconds: number | null;
