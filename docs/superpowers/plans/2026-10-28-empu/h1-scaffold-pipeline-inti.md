@@ -1369,6 +1369,8 @@ def test_output_text_and_extract_json():
     raw = {"output": [{"type": "message", "content": [{"type": "output_text", "text": "```json\n{\"a\": 1}\n```"}]}]}
     assert extract_json(output_text(raw)) == {"a": 1}
     assert extract_json('Here you go: {"terms": []} thanks') == {"terms": []}
+    echoed = '{"type": "object", "properties": {"terms": {"type": "array"}}} {"terms": [], "speech_heard": true}'
+    assert extract_json(echoed) == {"terms": [], "speech_heard": True}
     assert output_text({"output_text": "{}"}) == "{}"
     with pytest.raises(ValueError):
         extract_json("[1, 2]")
@@ -1460,17 +1462,34 @@ def output_text(resp: dict) -> str:
 
 
 def extract_json(text: str) -> dict:
+    """Return the answer object from model text.
+
+    Without structured output, Muse sometimes echoes the JSON schema from the prompt before
+    its answer. Prefer the first object whose "terms" is a list; otherwise the first object.
+    """
     cleaned = _FENCE.sub("", text.strip())
     try:
         obj: Any = json.loads(cleaned)
+        if isinstance(obj, dict):
+            return obj
     except ValueError:
-        start, end = cleaned.find("{"), cleaned.rfind("}")
-        if start == -1 or end <= start:
-            raise ValueError("no JSON object in model output") from None
-        obj = json.loads(cleaned[start : end + 1])
-    if not isinstance(obj, dict):
-        raise ValueError("model output is not a JSON object")
-    return obj
+        pass
+    decoder = json.JSONDecoder()
+    first: dict | None = None
+    for m in re.finditer(r"\{", cleaned):
+        try:
+            obj, _ = decoder.raw_decode(cleaned, m.start())
+        except ValueError:
+            continue
+        if not isinstance(obj, dict):
+            continue
+        if isinstance(obj.get("terms"), list):
+            return obj
+        if first is None:
+            first = obj
+    if first is None:
+        raise ValueError("no JSON object in model output")
+    return first
 
 
 def _retryable(exc: BaseException) -> bool:
@@ -1755,6 +1774,16 @@ def test_invalid_arguments():
 
 def test_duration_property():
     assert ChunkSpec(1, 65, 140).duration_s == 75
+
+
+@requires_ffmpeg
+def test_cut_chunks_real_video(sample_video, tmp_path):
+    specs = plan_chunks(12, window_s=5, overlap_s=1)
+    assert starts(specs) == [0, 4, 8]
+    paths = cut_chunks(sample_video, specs, tmp_path / "chunks")
+    assert [p.stem for p in paths] == ["0", "1", "2"]
+    assert abs(probe_duration(paths[0]) - 5) < 0.3
+    assert abs(probe_duration(paths[2]) - 4) < 0.3
 ```
 
 <!-- H1-7c -->
