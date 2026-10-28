@@ -10,6 +10,7 @@ def client(tmp_path) -> TestClient:
     s = Settings(
         _env_file=None,
         data_dir=tmp_path / "data",
+        db_url=f"sqlite:///{tmp_path / 'empu.db'}",
         studio_key="studio-test",
         meta_model_api_key="k",
     )

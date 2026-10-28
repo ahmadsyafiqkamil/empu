@@ -25,6 +25,7 @@ def settings(tmp_path) -> Settings:
     return Settings(
         _env_file=None,
         data_dir=tmp_path / "data",
+        db_url=f"sqlite:///{tmp_path / 'empu.db'}",
         packs_dir=REPO_ROOT / "packs",
         meta_model_api_key="test-key",
         studio_key="studio-test",
