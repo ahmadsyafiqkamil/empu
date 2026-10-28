@@ -8,15 +8,28 @@ from collections import Counter
 from pathlib import Path
 
 import typer
+from sqlmodel import Session, col, func, select
 
 from empu.cache import ResponseCache
 from empu.config import Settings, get_settings
+from empu.db import init_db, make_engine
+from empu.enums import AccessLevel, ContributorRole, PipelineMode, SourceKind
+from empu.intake import (
+    IntakeError,
+    RecordingMeta,
+    create_recording,
+    enqueue_job,
+    get_or_create_archive,
+    meta_from_license_file,
+)
 from empu.meta_client import MetaClient
-from empu.packs import PackError, load_pack
+from empu.models import Archive, Entry, Job, Occurrence, Recording
+from empu.packs import PackError, list_packs, load_pack
 from empu.pipeline.analyze import AnalyzeOptions, ChunkAnalysis, analyze_chunks, usage_totals
 from empu.pipeline.chunk import cut_chunks, plan_chunks
 from empu.pipeline.normalize import normalize_recording
 from empu.pipeline.prompts import prompt_version_for
+from empu.pipeline.run import process_recording
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 
@@ -28,6 +41,14 @@ def main() -> None:
 
 def make_client(settings: Settings) -> MetaClient:
     return MetaClient.from_settings(settings)
+
+
+def _default_pack_id(settings: Settings) -> str:
+    ids = sorted(p.id for p in list_packs(settings.packs_dir))
+    if not ids:
+        typer.echo("error: no craft packs found", err=True)
+        raise typer.Exit(2)
+    return ids[0]
 
 
 def _chunk_row(r: ChunkAnalysis) -> dict:
@@ -110,3 +131,158 @@ def analyze(
     typer.echo(f"done: {len(results)} chunks, failed={failed}, wall={summary['wall_s']}s -> {out}")
     if failed:
         raise typer.Exit(1)
+
+
+db_app = typer.Typer(no_args_is_help=True)
+app.add_typer(db_app, name="db", help="Database commands.")
+
+
+def _engine(settings: Settings):
+    engine = make_engine(settings.db_url)
+    init_db(engine)
+    return engine
+
+
+@db_app.command("init")
+def db_init(reset: bool = typer.Option(False, "--reset", help="Drop all tables first.")) -> None:
+    settings = get_settings()
+    init_db(make_engine(settings.db_url), reset=reset)
+    typer.echo(f"database ready: {settings.db_url}")
+
+
+def _run_job(settings: Settings, session: Session, job_id: int) -> None:
+    process_recording(session, job_id, client=make_client(settings), settings=settings)
+    job = session.get(Job, job_id)
+    typer.echo(f"job {job.id}: {job.status.value} {job.error or ''}")
+    typer.echo(
+        json.dumps(
+            {
+                "timings": {k: v.get("seconds") for k, v in job.timings_json.items()},
+                "usage": job.usage_json,
+            },
+            ensure_ascii=False,
+        )
+    )
+    if job.status.value != "ready":
+        raise typer.Exit(1)
+
+
+@app.command()
+def ingest(
+    video: Path = typer.Argument(..., exists=True, dir_okay=False),
+    archive: str = typer.Option(..., "--archive", help="Archive slug (created if missing)."),
+    archive_title: str | None = typer.Option(None, "--archive-title"),
+    pack_id: str | None = typer.Option(
+        None, "--pack", help="Craft pack id (default: sole pack on disk)."
+    ),
+    title: str | None = typer.Option(None, "--title"),
+    license_file: Path | None = typer.Option(
+        None,
+        "--license-file",
+        exists=True,
+        help="docs/eval/lisensi/<id>.json for a CC BY video.",
+    ),
+    contributor: str | None = typer.Option(None, "--contributor"),
+    role: ContributorRole = typer.Option(ContributorRole.maestro, "--role"),
+    consent_confirmed: bool = typer.Option(False, "--consent-confirmed"),
+    consent_scope: AccessLevel = typer.Option(AccessLevel.public, "--consent-scope"),
+    consent_note: str = typer.Option("", "--consent-note"),
+    consent_evidence: str = typer.Option("", "--consent-evidence"),
+    source_kind: SourceKind = typer.Option(SourceKind.own_recording, "--source-kind"),
+    mode: PipelineMode | None = typer.Option(None, "--mode"),
+    demo: bool = typer.Option(False, "--demo", help="Mark the archive as the pinned demo archive."),
+    run: bool = typer.Option(False, "--run", help="Process now instead of waiting for the worker."),
+) -> None:
+    """Register a recording with consent metadata and queue (or run) its job."""
+    settings = get_settings()
+    try:
+        if license_file is not None:
+            meta = meta_from_license_file(license_file, contributor_name=contributor)
+            meta.title = title or meta.title
+        else:
+            meta = RecordingMeta(
+                title=title or video.stem,
+                contributor_name=contributor,
+                contributor_role=role,
+                consent_confirmed=consent_confirmed,
+                consent_scope=consent_scope,
+                consent_note=consent_note,
+                consent_evidence=consent_evidence,
+                source_kind=source_kind,
+            )
+        with Session(_engine(settings)) as session:
+            arc = get_or_create_archive(
+                session,
+                archive,
+                title=archive_title or archive,
+                pack_id=pack_id or _default_pack_id(settings),
+                is_demo=demo,
+            )
+            rec, job = create_recording(session, settings, arc, video, meta, mode=mode)
+            typer.echo(
+                f"recording {rec.id} in archive {arc.slug}, job {job.id} queued "
+                f"(mode {job.mode.value})"
+            )
+            if run:
+                _run_job(settings, session, job.id)
+    except IntakeError as e:
+        typer.echo(f"error: {e}", err=True)
+        raise typer.Exit(2) from e
+
+
+@app.command()
+def reprocess(
+    recording_id: int,
+    mode: PipelineMode | None = typer.Option(None, "--mode"),
+    run: bool = typer.Option(False, "--run"),
+) -> None:
+    """Queue a new job for an existing recording (Muse and SAM come from cache when unchanged)."""
+    settings = get_settings()
+    with Session(_engine(settings)) as session:
+        rec = session.get(Recording, recording_id)
+        if rec is None:
+            typer.echo(f"error: recording {recording_id} not found", err=True)
+            raise typer.Exit(2)
+        job = enqueue_job(session, settings, rec, mode=mode)
+        typer.echo(f"job {job.id} queued for recording {rec.id}")
+        if run:
+            _run_job(settings, session, job.id)
+
+
+@app.command("process")
+def process_cmd(job_id: int) -> None:
+    """Run one queued job in this process (debugging)."""
+    settings = get_settings()
+    with Session(_engine(settings)) as session:
+        _run_job(settings, session, job_id)
+
+
+@app.command()
+def status(archive: str | None = typer.Option(None, "--archive")) -> None:
+    """Print recordings, latest job, and entry counts."""
+    settings = get_settings()
+    with Session(_engine(settings)) as session:
+        q = select(Archive)
+        if archive:
+            q = q.where(Archive.slug == archive)
+        for arc in session.exec(q):
+            ents = list(session.exec(select(Entry).where(Entry.archive_id == arc.id)))
+            by_status = Counter(e.status.value for e in ents)
+            by_sam = Counter(e.sam_status.value for e in ents)
+            typer.echo(
+                f"[{arc.slug}] entries={len(ents)} {dict(by_status)} sam={dict(by_sam)} "
+                f"novel={sum(e.is_novel for e in ents)}"
+            )
+            for rec in session.exec(select(Recording).where(Recording.archive_id == arc.id)):
+                job = session.exec(
+                    select(Job).where(Job.recording_id == rec.id).order_by(col(Job.id).desc())
+                ).first()
+                n_occ = session.exec(
+                    select(func.count())
+                    .select_from(Occurrence)
+                    .where(Occurrence.recording_id == rec.id)
+                ).one()
+                job_txt = f"{job.id}:{job.status.value} {job.detail}" if job else "-"
+                typer.echo(
+                    f"  rec {rec.id} '{rec.title}' {rec.status.value} occ={n_occ} job={job_txt}"
+                )
