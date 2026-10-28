@@ -1,0 +1,404 @@
+# Craft pack: Batik Tulis — DRAF v0.1.0
+#
+# Pack adalah satu-satunya tempat pengetahuan khusus keterampilan. Kode pipeline membaca file ini
+# dan tidak boleh berisi istilah batik secara hardcode.
+#
+# Sumber benih: glosarium uji kelayakan 28 Okt 2026, istilah yang ditemukan Muse di uji v1
+# (nyamplung, cucuk, gagang, dingklik, spangkring), dan istilah umum di literatur batik.
+# SEMUA entri berstatus draf (verified: false) sampai dicek maestro atau sumber rujukan.
+# Entri bertanda "# cek" adalah yang paling perlu diverifikasi.
+#
+# Kategori: tool | tool_part | material | dye | stage | technique | motif | other
+# visual: true  -> layak dipotong dengan SAM 3.1 (pakai sam_prompt, bahasa Inggris, pendek)
+# Aturan validasi: id unik; varian tidak boleh dipakai dua kali, baik antar-istilah maupun
+# antara istilah dan tahap; stage pada istilah harus merujuk id tahap yang ada.
+# Saat H1, file ini dipindah ke packs/batik_tulis.yaml dan divalidasi dengan Pydantic.
+
+id: batik_tulis
+version: 0.1.0
+name:
+  id: Batik Tulis
+  en: Hand-drawn batik (batik tulis)
+languages: [id, jv]
+prompt_context: >
+  Batik tulis adalah kain (biasanya mori) yang digambari pola, lalu malam (lilin batik) panas
+  ditorehkan dengan canting sebagai perintang warna. Kain kemudian diwarnai (celup atau colet),
+  warnanya dikunci (fiksasi), lalu malamnya diluruhkan dengan air mendidih (nglorod).
+  Urutan bisa berulang untuk beberapa warna. Narasumber biasanya berbicara bahasa Indonesia
+  bercampur bahasa Jawa, dan istilah bisa berbeda antardaerah (Solo, Yogyakarta, Pekalongan,
+  Cirebon, Madura, dan lain-lain).
+
+stages:
+  - id: persiapan_kain
+    label: {id: Persiapan kain, en: Cloth preparation}
+    variants: [mencuci mori, merebus mori, ngemplong, kemplong, ngetel]   # cek: ngemplong, ngetel
+  - id: memola
+    label: {id: Membuat pola, en: Drawing the pattern}
+    variants: [memola, molani, nyorek, ngeblat, sketsa, menggambar pola, pola]   # cek: ngeblat
+  - id: nglowong
+    label: {id: Mencanting garis utama, en: Outlining with wax}
+    variants: [nglowong, ngelowong, klowong, klowongan, ngengreng, ngrengreng, rengrengan]
+  - id: nerusi
+    label: {id: Mencanting sisi balik, en: Tracing the reverse side}
+    variants: [nerusi, terusan, nerus]
+  - id: ngiseni
+    label: {id: Mengisi isen-isen, en: Filling details}
+    variants: [ngiseni, isen-isen, isen]
+  - id: nembok
+    label: {id: Menutup bidang dengan malam, en: Blocking areas with wax}
+    variants: [nembok, nemboki, tembok, tembokan, nutup, menutup]
+  - id: pewarnaan
+    label: {id: Pewarnaan, en: Dyeing}
+    variants: [pewarnaan, mewarna, mewarnai, celup, mencelup, pencelupan, medel]   # cek: medel
+  - id: ngerok
+    label: {id: Mengerok malam, en: Scraping off wax}
+    variants: [ngerok, kerok, ngerik, nggirah]   # cek: nggirah
+  - id: mbironi
+    label: {id: Menutup bagian sebelum warna kedua, en: Re-waxing before second dye}
+    variants: [mbironi, bironi, biron]   # cek
+  - id: nyoga
+    label: {id: Pencelupan soga, en: Soga (brown) dyeing}
+    variants: [nyoga]
+  - id: fiksasi
+    label: {id: Penguncian warna, en: Colour fixing}
+    variants: [fiksasi, mengunci warna, penguncian, fixer]
+  - id: nglorod
+    label: {id: Meluruhkan malam, en: Wax removal by boiling}
+    variants: [nglorod, ngelorod, ngelorot, lorod, lorot, pelorodan, melorod, dilorod, dilorot, ngebyok]
+  - id: finishing
+    label: {id: Mencuci dan menjemur, en: Rinsing and drying}
+    variants: [membilas, mencuci, menjemur, dijemur, diangin-anginkan, jemur]
+
+terms:
+  # --- Alat ---
+  - id: canting
+    label: canting
+    category: tool
+    variants: [canting, tjanting, nyanting, mencanting, dicanting]
+    stage: nglowong
+    gloss_id: alat pena kecil dari tembaga bergagang bambu untuk menorehkan malam cair
+    gloss_en: small copper pen with a bamboo handle used to draw with hot wax
+    visual: true
+    sam_prompt: canting, small copper wax pen
+    verified: false
+  - id: canting_klowongan
+    label: canting klowongan
+    category: tool
+    variants: [canting klowongan, canting klowong]
+    stage: nglowong
+    gloss_id: canting untuk membuat garis utama motif
+    gloss_en: canting for outlining the main pattern
+    visual: true
+    sam_prompt: canting, small copper wax pen
+    verified: false   # cek
+  - id: canting_cecekan
+    label: canting cecekan
+    category: tool
+    variants: [canting cecekan, canting isen, canting cecek]
+    stage: ngiseni
+    gloss_id: canting bercucuk kecil untuk titik-titik isen-isen
+    gloss_en: fine-spout canting for dotted fillings
+    visual: true
+    sam_prompt: canting, small copper wax pen
+    verified: false   # cek
+  - id: canting_tembokan
+    label: canting tembokan
+    category: tool
+    variants: [canting tembokan, canting tembok]
+    stage: nembok
+    gloss_id: canting bercucuk besar untuk menutup bidang luas
+    gloss_en: wide-spout canting for blocking large areas
+    visual: true
+    sam_prompt: canting, small copper wax pen
+    verified: false   # cek
+  - id: wajan
+    label: wajan
+    category: tool
+    variants: [wajan, wajan kecil]
+    gloss_id: wajan kecil untuk mencairkan malam
+    gloss_en: small pan for melting the wax
+    visual: true
+    sam_prompt: small black wok with melted wax
+    verified: false
+  - id: kompor
+    label: kompor
+    category: tool
+    variants: [kompor, kompor batik, kompor minyak, anglo]
+    gloss_id: pemanas untuk menjaga malam tetap cair (anglo = tungku arang)
+    gloss_en: small stove that keeps the wax liquid (anglo = charcoal brazier)
+    visual: true
+    sam_prompt: small stove
+    verified: false
+  - id: gawangan
+    label: gawangan
+    category: tool
+    variants: [gawangan, gawang]
+    gloss_id: rak kayu atau bambu untuk membentangkan kain saat dicanting
+    gloss_en: wooden or bamboo rack that holds the cloth while drawing
+    visual: true
+    sam_prompt: wooden rack holding cloth
+    verified: false
+  - id: spangkring
+    label: spangkring
+    category: tool
+    variants: [spangkring, spang kring, sangkring]   # cek: sangkring
+    gloss_id: bingkai atau ram untuk merentangkan kain
+    gloss_en: frame or hoop that stretches the cloth
+    visual: true
+    sam_prompt: wooden hoop frame holding cloth
+    verified: false
+  - id: dingklik
+    label: dingklik
+    category: tool
+    variants: [dingklik]
+    gloss_id: bangku kayu pendek untuk duduk saat membatik
+    gloss_en: low wooden stool for sitting while drawing
+    visual: true
+    sam_prompt: low wooden stool
+    verified: false
+  - id: taplak
+    label: taplak
+    category: tool
+    variants: [taplak, kain alas]
+    gloss_id: kain alas di pangkuan agar tidak terkena tetesan malam
+    gloss_en: lap cloth that protects from dripping wax
+    visual: true
+    sam_prompt: cloth on lap
+    verified: false   # cek
+  - id: kenceng
+    label: kenceng
+    category: tool
+    variants: [kenceng, kenceng lorod]
+    stage: nglorod
+    gloss_id: panci atau wajan besar untuk merebus kain saat nglorod
+    gloss_en: large pot for boiling the cloth during wax removal
+    visual: true
+    sam_prompt: large metal pot
+    verified: false   # cek
+  - id: bandul
+    label: bandul
+    category: tool
+    variants: [bandul]
+    gloss_id: pemberat agar kain di gawangan tidak tertiup angin
+    gloss_en: weight that keeps the cloth on the rack in place
+    visual: true
+    sam_prompt: small weight
+    verified: false   # cek
+  - id: kuas
+    label: kuas
+    category: tool
+    variants: [kuas]
+    gloss_id: kuas untuk mencolet warna atau menutup bidang dengan malam
+    gloss_en: brush for painting dye or blocking with wax
+    visual: true
+    sam_prompt: paint brush
+    verified: false
+  - id: bak_celup
+    label: bak celup
+    category: tool
+    variants: [bak celup, bak, ember, baskom]
+    stage: pewarnaan
+    gloss_id: wadah larutan pewarna atau air bilasan
+    gloss_en: dye bath or rinsing tub
+    visual: true
+    sam_prompt: plastic tub with liquid
+    verified: false
+
+  # --- Bagian canting ---
+  - id: nyamplung
+    label: nyamplung
+    category: tool_part
+    variants: [nyamplung]
+    gloss_id: wadah malam cair pada canting
+    gloss_en: wax reservoir of the canting
+    visual: true
+    sam_prompt: small copper cup of a wax pen
+    verified: false
+  - id: cucuk
+    label: cucuk
+    category: tool_part
+    variants: [cucuk, carat]   # cek: carat
+    gloss_id: ujung pipa kecil tempat malam keluar
+    gloss_en: spout where the wax flows out
+    visual: true
+    sam_prompt: tip of a copper wax pen
+    verified: false
+  - id: gagang
+    label: gagang
+    category: tool_part
+    variants: [gagang, tangkai]
+    gloss_id: pegangan canting, biasanya bambu
+    gloss_en: canting handle, usually bamboo
+    visual: true
+    sam_prompt: bamboo handle
+    verified: false
+
+  # --- Bahan ---
+  - id: mori
+    label: mori
+    category: material
+    variants: [mori, kain mori, primissima, prima, kain putih]
+    gloss_id: kain katun putih bahan batik
+    gloss_en: white cotton cloth used for batik
+    visual: true
+    sam_prompt: white cloth
+    verified: false
+  - id: malam
+    label: malam
+    category: material
+    variants: [malam, lilin, lilin batik, lilin malam, malam klowong, malam tembok]
+    gloss_id: lilin batik yang dipakai sebagai perintang warna
+    gloss_en: batik wax used to resist the dye
+    visual: true
+    sam_prompt: melted brown wax
+    verified: false
+  - id: gondorukem
+    label: gondorukem
+    category: material
+    variants: [gondorukem, gondo rukem]
+    gloss_id: getah pinus, salah satu campuran malam
+    gloss_en: pine resin, one of the wax ingredients
+    visual: false
+    verified: false
+  - id: parafin
+    label: parafin
+    category: material
+    variants: [parafin, paraffin]
+    gloss_id: lilin parafin, campuran malam
+    gloss_en: paraffin, a wax ingredient
+    visual: false
+    verified: false
+  - id: soda_abu
+    label: soda abu
+    category: material
+    variants: [soda abu, soda ash]
+    stage: nglorod
+    gloss_id: dicampur ke air mendidih untuk membantu meluruhkan malam
+    gloss_en: soda ash added to boiling water to help remove wax
+    visual: false
+    verified: false
+  - id: waterglass
+    label: waterglass
+    category: material
+    variants: [waterglass, water glass, natrium silikat]
+    stage: fiksasi
+    gloss_id: larutan pengunci warna untuk pewarna remasol
+    gloss_en: sodium silicate solution that fixes reactive dyes
+    visual: false
+    verified: false
+  - id: hcl
+    label: HCl
+    category: material
+    variants: [hcl, asam klorida]
+    stage: fiksasi
+    gloss_id: larutan asam untuk membangkitkan warna (mis. indigosol)
+    gloss_en: acid used to develop some dyes (e.g. indigosol)
+    visual: false
+    verified: false
+  - id: fiksator_alam
+    label: tawas, kapur, tunjung
+    category: material
+    variants: [tawas, kapur, tunjung]
+    stage: fiksasi
+    gloss_id: pengunci warna untuk pewarna alam
+    gloss_en: fixers for natural dyes
+    visual: false
+    verified: false
+
+  # --- Pewarna ---
+  - id: naptol
+    label: naptol
+    category: dye
+    variants: [naptol, napthol, naphtol]
+    gloss_id: pewarna sintetis, biasanya untuk celup
+    gloss_en: naphthol synthetic dye, usually for immersion dyeing
+    visual: false
+    verified: false
+  - id: indigosol
+    label: indigosol
+    category: dye
+    variants: [indigosol]
+    gloss_id: pewarna sintetis yang warnanya dibangkitkan dengan asam dan sinar matahari
+    gloss_en: synthetic dye developed with acid and sunlight
+    visual: false
+    verified: false
+  - id: remasol
+    label: remasol
+    category: dye
+    variants: [remasol, remazol]
+    gloss_id: pewarna reaktif, bisa dicelup atau dicolet
+    gloss_en: reactive dye, for dipping or painting
+    visual: false
+    verified: false
+  - id: pewarna_alam
+    label: pewarna alam
+    category: dye
+    variants: [pewarna alam, indigo, tom, tingi, jambal, tegeran, mahoni]
+    gloss_id: pewarna dari tumbuhan
+    gloss_en: plant-based dyes
+    visual: false
+    verified: false
+  - id: soga
+    label: soga
+    category: dye
+    variants: [soga, sogan]
+    stage: nyoga
+    gloss_id: warna coklat khas batik klasik
+    gloss_en: the classic brown of traditional batik
+    visual: false
+    verified: false
+
+  # --- Teknik ---
+  - id: batik_tulis
+    label: batik tulis
+    category: technique
+    variants: [batik tulis]
+    gloss_id: batik yang dibuat dengan canting secara manual
+    gloss_en: batik drawn by hand with a canting
+    visual: false
+    verified: false
+  - id: batik_cap
+    label: batik cap
+    category: technique
+    variants: [batik cap, ngecap, cap]
+    gloss_id: batik yang dibuat dengan stempel tembaga
+    gloss_en: batik made with a copper stamp
+    visual: true
+    sam_prompt: copper stamp
+    verified: false
+  - id: colet
+    label: colet
+    category: technique
+    variants: [colet, nyolet, coletan, dicolet]
+    stage: pewarnaan
+    gloss_id: mewarnai bagian tertentu dengan kuas
+    gloss_en: painting dye onto specific areas with a brush
+    visual: false
+    verified: false
+  - id: cecek
+    label: cecek
+    category: technique
+    variants: [cecek, nyecek, cecek pitu]
+    stage: ngiseni
+    gloss_id: isen-isen berupa titik
+    gloss_en: dotted filling
+    visual: false
+    verified: false
+  - id: sawut
+    label: sawut
+    category: technique
+    variants: [sawut]
+    stage: ngiseni
+    gloss_id: isen-isen berupa garis-garis halus
+    gloss_en: fine-line filling
+    visual: false
+    verified: false
+
+  # --- Motif (contoh; daftar lengkap tidak perlu untuk hackathon) ---
+  - {id: parang, label: parang, category: motif, variants: [parang, lereng], gloss_id: motif garis miring berulang, gloss_en: repeating diagonal motif, visual: false, verified: false}
+  - {id: kawung, label: kawung, category: motif, variants: [kawung], gloss_id: motif bulatan empat menyerupai buah kolang-kaling, gloss_en: four-oval motif, visual: false, verified: false}
+  - {id: truntum, label: truntum, category: motif, variants: [truntum], gloss_id: motif bunga kecil bertabur, gloss_en: scattered small-flower motif, visual: false, verified: false}
+  - {id: megamendung, label: megamendung, category: motif, variants: [megamendung, mega mendung], gloss_id: motif awan khas Cirebon, gloss_en: Cirebon cloud motif, visual: false, verified: false}
+  - {id: sekar_jagad, label: sekar jagad, category: motif, variants: [sekar jagad], gloss_id: motif gabungan banyak pola, gloss_en: patchwork-of-patterns motif, visual: false, verified: false}
+  - {id: sidomukti, label: sidomukti, category: motif, variants: [sidomukti, sido mukti], gloss_id: motif klasik untuk upacara, gloss_en: classic ceremonial motif, visual: false, verified: false}
+  - {id: ceplok, label: ceplok, category: motif, variants: [ceplok, ceplokan], gloss_id: motif geometris berulang, gloss_en: repeating geometric motif, visual: false, verified: false}

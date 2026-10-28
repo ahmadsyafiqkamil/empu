@@ -1,0 +1,4 @@
+clip_id,t_start,t_end,spoken,term,category,source,stage,visible_object,note,annotator
+ngertibatik-proses,85,88,pola,pola,stage,speech,memola,pensil di atas kain,"memilih pola yang ingin dibatik",contoh
+ngertibatik-proses,122,124,spangkring,spangkring,tool,speech,nglowong,bingkai kayu,"subtitle YouTube: spang King",contoh
+ngertibatik-proses,66,68,nyamplung,nyamplung,tool_part,on_screen_text,,diagram canting,"label di diagram, tidak diucapkan",contoh

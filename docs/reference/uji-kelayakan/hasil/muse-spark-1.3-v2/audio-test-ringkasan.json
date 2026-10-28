@@ -1,0 +1,14 @@
+{
+ "with_audio": {
+  "speech_heard": true,
+  "transcript_first_20s": "Halo teman-teman semua, kenalin nama aku Zukhrufatussyifa Yuliana Elsa Rahman dari Universitas Negeri Surabaya, pada kesempatan kali ini aku akan melakukan praktikum mencanting di kain batik yang aku udah pindahin sketsa kemarin",
+  "n_terms_total": 22,
+  "n_terms_source_ucapan": 13
+ },
+ "no_audio": {
+  "speech_heard": true,
+  "transcript_first_20s": "Halo teman-teman semua kenalin nama aku Zukhr... dari Universitas Negeri Surabaya pada kesempatan kali ini aku akan melakukan praktikum mencanting di kain batik yang aku udah pindahin sketsa kemarin",
+  "n_terms_total": 13,
+  "n_terms_source_ucapan": 4
+ }
+}

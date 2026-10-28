@@ -1,0 +1,195 @@
+{
+ "speech_heard": true,
+ "transcript_first_20s": "Tahukah anda dibalik megahnya batik Trusmi hari ini ada sosok yang mengabdikan hidupnya menjaga tradisi sejak puluhan tahun lalu",
+ "terms": [
+  {
+   "spoken": "batik",
+   "term": "batik",
+   "source": "ucapan",
+   "t_start": 2.8,
+   "t_end": 3.8,
+   "stage": "umum",
+   "visible": "gapura bata KAWASAN BATIK TRUSMI, jalan ramai",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "kain berhias teknik malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "Batik Trusmi",
+   "term": "Batik Trusmi",
+   "source": "ucapan",
+   "t_start": 4.2,
+   "t_end": 5.5,
+   "stage": "umum",
+   "visible": "gapura bata dan jalan kawasan",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "batik khas Desa Trusmi Cirebon",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "canting",
+   "term": "canting",
+   "source": "ucapan",
+   "t_start": 11.5,
+   "t_end": 12.8,
+   "stage": "mencanting",
+   "visible": "perempuan membatik dengan canting di atas kain",
+   "visual_match": "ya",
+   "gloss_id": "alat berujung cucuk untuk menorehkan malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "batik tulis",
+   "term": "batik tulis",
+   "source": "ucapan",
+   "t_start": 42.0,
+   "t_end": 43.5,
+   "stage": "teknik",
+   "visible": "perempuan menorehkan malam di kain",
+   "visual_match": "ya",
+   "gloss_id": "batik dibuat manual dengan canting",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "KAWASAN BATIK TRUSMI",
+   "term": "Kawasan Batik Trusmi",
+   "source": "teks_layar",
+   "t_start": 0.5,
+   "t_end": 1.8,
+   "stage": "umum",
+   "visible": "tulisan di gapura bata merah",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "kawasan wisata belanja batik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "BT Batik Trusmi",
+   "term": "Batik Trusmi",
+   "source": "teks_layar",
+   "t_start": 2.0,
+   "t_end": 3.2,
+   "stage": "umum",
+   "visible": "gedung ornamen batik dan billboard BT",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "toko batik Trusmi",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "SANGGAR BATIK KATURA",
+   "term": "sanggar batik",
+   "source": "teks_layar",
+   "t_start": 24.0,
+   "t_end": 26.0,
+   "stage": "umum",
+   "visible": "papan vertikal hitam kuning di jalan",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "tempat belajar dan produksi batik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "WISATA BERTAN",
+   "term": "wisata",
+   "source": "teks_layar",
+   "t_start": 26.5,
+   "t_end": 28.0,
+   "stage": "umum",
+   "visible": "papan nama di atas bangunan",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "kunjungan budaya",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "Bapak Katura A.R",
+   "term": "Katura A.R.",
+   "source": "teks_layar",
+   "t_start": 43.0,
+   "t_end": 47.0,
+   "stage": "umum",
+   "visible": "teks overlay saat perempuan membatik",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "nama maestro batik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "MAESTRO BATIK TULIS LEGENDARIS ASAL TRUSMI",
+   "term": "batik tulis",
+   "source": "teks_layar",
+   "t_start": 148.0,
+   "t_end": 156.0,
+   "stage": "teknik",
+   "visible": "teks kuning overlay di bawah bapak berbaju batik merah",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "batik dibuat manual dengan canting",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "canting",
+   "term": "canting",
+   "source": "visual",
+   "t_start": 50.0,
+   "t_end": 57.5,
+   "stage": "mencanting",
+   "visible": "tangan mencelupkan canting tembaga ke wajan berisi cairan hitam lalu menorehkan garis coklat di kain putih bermotif flora",
+   "visual_match": "ya",
+   "gloss_id": "alat berujung cucuk untuk menorehkan malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "malam",
+   "term": "malam",
+   "source": "visual",
+   "t_start": 49.5,
+   "t_end": 53.0,
+   "stage": "mencanting",
+   "visible": "cairan lilin hitam kental di dalam wajan kecil",
+   "visual_match": "ya",
+   "gloss_id": "lilin batik perintang warna",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "kain",
+   "term": "kain",
+   "source": "visual",
+   "t_start": 34.0,
+   "t_end": 36.5,
+   "stage": "mencanting",
+   "visible": "kain merah dan putih dibentangkan di atas gawangan, dikerjakan dua perempuan",
+   "visual_match": "ya",
+   "gloss_id": "bahan dasar kain untuk dibatik",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "motif",
+   "term": "motif",
+   "source": "visual",
+   "t_start": 53.5,
+   "t_end": 57.5,
+   "stage": "pola",
+   "visible": "pola lengkung flora coklat di kain putih hasil torehan canting",
+   "visual_match": "ya",
+   "gloss_id": "ragam hias batik",
+   "confidence": "sedang"
+  }
+ ],
+ "process_steps": [
+  {
+   "step": "mencanting",
+   "t_start": 49.5,
+   "t_end": 57.5,
+   "tools": [
+    "canting",
+    "wajan malam",
+    "kain"
+   ]
+  },
+  {
+   "step": "pameran dan dokumentasi",
+   "t_start": 69.0,
+   "t_end": 105.0,
+   "tools": [
+    "kain batik",
+    "gawangan"
+   ]
+  }
+ ]
+}

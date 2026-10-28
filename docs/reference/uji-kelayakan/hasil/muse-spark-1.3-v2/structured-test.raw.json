@@ -1,0 +1,146 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "text": {
+  "format": {
+   "type": "json_schema",
+   "name": "empu_gate0_terms",
+   "schema": {
+    "properties": {
+     "process_steps": {
+      "items": {
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "speech_heard": {
+      "type": "boolean"
+     },
+     "terms": {
+      "items": {
+       "properties": {
+        "confidence": {
+         "enum": [
+          "rendah",
+          "sedang",
+          "tinggi"
+         ],
+         "type": "string"
+        },
+        "gloss_id": {
+         "type": "string"
+        },
+        "source": {
+         "enum": [
+          "ucapan",
+          "teks_layar",
+          "visual"
+         ],
+         "type": "string"
+        },
+        "spoken": {
+         "type": "string"
+        },
+        "stage": {
+         "type": "string"
+        },
+        "t_end": {
+         "type": "number"
+        },
+        "t_start": {
+         "type": "number"
+        },
+        "term": {
+         "type": "string"
+        },
+        "visible": {
+         "type": "string"
+        },
+        "visual_match": {
+         "enum": [
+          "ya",
+          "tidak",
+          "tidak_terlihat"
+         ],
+         "type": "string"
+        }
+       },
+       "required": [
+        "spoken",
+        "term",
+        "source",
+        "t_start",
+        "t_end"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "transcript_first_20s": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "speech_heard",
+     "terms"
+    ],
+    "type": "object"
+   },
+   "strict": false
+  }
+ },
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1920e5a81168b6c864e89",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793167886.0,
+ "completed_at": 1793167886.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1920e5a81168b6c864e89:rs_f0f83a95-2aab-492a-9d23-44df2d14d8f7",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_d1b53c09-93ab-4253-86fc-36114057dbb2",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"terms\": [{\"confidence\": \"tinggi\", \"gloss_id\": \"teknik melukis dengan canting berisi malam\", \"source\": \"ucapan\", \"spoken\": \"mencanting\", \"stage\": \"pembuka praktikum\", \"t_end\": 13.5, \"t_start\": 11.5, \"term\": \"mencanting\", \"visible\": \"pembicara tersenyum di depan latar kain biru bermotif, belum ada alat\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"media kain untuk batik\", \"source\": \"ucapan\", \"spoken\": \"kain batik\", \"stage\": \"pembuka praktikum\", \"t_end\": 16.0, \"t_start\": 14.0, \"term\": \"kain batik\", \"visible\": \"pembicara berbicara, kain belum diperlihatkan dekat\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"gambar pola awal motif\", \"source\": \"ucapan\", \"spoken\": \"sketsa\", \"stage\": \"persiapan pola\", \"t_end\": 18.8, \"t_start\": 17.0, \"term\": \"sketsa\", \"visible\": \"pembicara berbicara, pola belum terlihat\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"tahapan awal batik tulis menggaris pola dengan malam\", \"source\": \"teks_layar\", \"spoken\": \"Proses Ngelowong ke Media Kain\", \"stage\": \"judul tahapan\", \"t_end\": 25.0, \"t_start\": 22.5, \"term\": \"ngelowong\", \"visible\": \"teks judul putih di atas latar buram kain dan canting\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"daftar peralatan dan material\", \"source\": \"teks_layar\", \"spoken\": \"Alat dan Bahan\", \"stage\": \"persiapan\", \"t_end\": 25.0, \"t_start\": 23.0, \"term\": \"alat dan bahan\", \"visible\": \"teks judul di atas latar buram\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"alat pemanas untuk mencairkan malam\", \"source\": \"ucapan\", \"spoken\": \"kompor\", \"stage\": \"persiapan alat\", \"t_end\": 36.0, \"t_start\": 34.5, \"term\": \"kompor\", \"visible\": \"kompor minyak tanah hijau tosca dengan wajan di atasnya, api menyala\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"bahan malam atau wax batik\", \"source\": \"ucapan\", \"spoken\": \"lilin\", \"stage\": \"persiapan bahan\", \"t_end\": 37.0, \"t_start\": 35.8, \"term\": \"lilin\", \"visible\": \"cairan hitam di wajan dan balok padat hitam di atas meja biru\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"alat pena malam dari bambu dan tembaga\", \"source\": \"ucapan\", \"spoken\": \"canting\", \"stage\": \"persiapan alat\", \"t_end\": 38.5, \"t_start\": 37.0, \"term\": \"canting\", \"visible\": \"deretan canting kayu berujung tembaga di samping kain putih bersketsa\", \"visual_match\": \"ya\"}, {\"confidence\": \"sedang\", \"gloss_id\": \"malam cair yang dipanaskan\", \"source\": \"ucapan\", \"spoken\": \"malam panas\", \"stage\": \"pengisian canting\", \"t_end\": 42.0, \"t_start\": 39.5, \"term\": \"malam panas\", \"visible\": \"tangan mencelupkan canting ke wajan berisi cairan hitam panas\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"proses membuat batik tulis\", \"source\": \"ucapan\", \"spoken\": \"membatik\", \"stage\": \"pelaksanaan dengan K3\", \"t_end\": 48.0, \"t_start\": 46.5, \"term\": \"membatik\", \"visible\": \"tangan memegang canting dan membersihkan ujung dengan tisu\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"tahap outline pertama dengan malam\", \"source\": \"ucapan\", \"spoken\": \"ngelowong\", \"stage\": \"ngelowong ke media kain\", \"t_end\": 62.0, \"t_start\": 60.0, \"term\": \"ngelowong\", \"visible\": \"tangan menggoreskan malam dari canting mengikuti pola sketsa di kain putih\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"alat kuas untuk garis\", \"source\": \"ucapan\", \"spoken\": \"kuas\", \"stage\": \"ngelowong garis lurus\", \"t_end\": 75.5, \"t_start\": 73.5, \"term\": \"kuas\", \"visible\": \"tangan memegang kuas kecil melukis garis batas motif dengan malam coklat\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"garis batas lurus pada kain\", \"source\": \"ucapan\", \"spoken\": \"garis lurus\", \"stage\": \"ngelowong garis lurus\", \"t_end\": 76.5, \"t_start\": 74.5, \"term\": \"garis lurus\", \"visible\": \"garis coklat lurus dibuat dengan kuas di atas dan bawah papan ornamen mega mendung\", \"visual_match\": \"ya\"}, {\"confidence\": \"tinggi\", \"gloss_id\": \"pola hias batik\", \"source\": \"ucapan\", \"spoken\": \"motif\", \"stage\": \"hasil\", \"t_end\": 114.0, \"t_start\": 112.0, \"term\": \"motif\", \"visible\": \"kain putih penuh ornamen malam coklat: tugu, mega mendung, bunga dan isen titik\", \"visual_match\": \"ya\"}, {\"confidence\": \"sedang\", \"gloss_id\": \"tahapan kerja\", \"source\": \"teks_layar\", \"spoken\": \"Langkah-Langkah\", \"stage\": \"judul tahapan\", \"t_end\": 34.0, \"t_start\": 32.5, \"term\": \"langkah-langkah\", \"visible\": \"teks judul putih di atas latar buram kegiatan\", \"visual_match\": \"tidak_terlihat\"}, {\"confidence\": \"sedang\", \"gloss_id\": \"malam padat berbentuk balok\", \"source\": \"teks_layar\", \"spoken\": \"Lilin Balok\", \"stage\": \"persiapan bahan\", \"t_end\": 30.5, \"t_start\": 29.0, \"term\": \"lilin balok\", \"visible\": \"balok padat hitam di atas alas biru dekat canting\", \"visual_match\": \"ya\"}, {\"confidence\": \"sedang\", \"gloss_id\": \"wadah logam untuk mencairkan malam\", \"source\": \"visual\", \"spoken\": \"wajan\", \"stage\": \"memanaskan malam\", \"t_end\": 27.0, \"t_start\": 25.0, \"term\": \"wajan\", \"visible\": \"wajan logam di atas kompor berisi cairan hitam\", \"visual_match\": \"ya\"}], \"transcript_first_20s\": \"Halo teman-teman semua kenalin nama aku Zukhrufatussyifa Yuliana Elsa Rahman dari Universitas Negeri Surabaya pada kesempatan kali ini aku akan melakukan praktikum mencanting di kain batik yang aku udah pindahin sketsa kemarin\", \"process_steps Patrimonio\": null, \"process_steps_\": null}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 36373,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 5673,
+  "output_tokens_details": {
+   "reasoning_tokens": 3910
+  },
+  "total_tokens": 42046
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae179e143bb5233d8264ad2",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793161697.0,
+ "completed_at": 1793161697.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae179e143bb5233d8264ad2:rs_6feb3b3b-94d7-443a-b754-9a68acf8089b",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_fa63ff44-9225-4935-8fbe-ed27f483ae72",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"transcript_first_20s\": \"Halo teman-teman semua kenalin nama aku Zukhrufatussyifa Yuliana Elsa Rahman dari universitas negeri Surabaya pada kesempatan kali ini aku akan melakukan praktikum mencanting\", \"terms\": [{\"spoken\": \"mencanting\", \"term\": \"mencanting\", \"t_start\": 12.0, \"t_end\": 13.5, \"stage\": \"pelaksanaan / ngelowong\", \"visible\": \"presenter perempuan berhijab berbicara di depan latar kain biru bermotif, belum ada alat terlihat\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"teknik menorehkan lilin panas dengan canting\", \"confidence\": \"tinggi\"}, {\"spoken\": \"kain batik\", \"term\": \"kain batik\", \"t_start\": 14.5, \"t_end\": 16.0, \"stage\": \"persiapan media\", \"visible\": \"presenter berbicara, kain belum diperlihatkan di frame ini\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"kain putih sebagai media batik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"sketsa\", \"term\": \"sketsa\", \"t_start\": 17.2, \"t_end\": 18.8, \"stage\": \"pemolaan\", \"visible\": \"presenter berbicara, pola belum terlihat\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"gambar pola awal motif sebelum dicanting\", \"confidence\": \"tinggi\"}, {\"spoken\": \"kompor\", \"term\": \"kompor\", \"t_start\": 25.5, \"t_end\": 26.5, \"stage\": \"persiapan alat\", \"visible\": \"kompor minyak hijau dengan wajan berisi cairan gelap menyala di atas kardus\", \"visual_match\": \"ya\", \"gloss_id\": \"alat pemanas untuk mencairkan lilin\", \"confidence\": \"sedang\"}, {\"spoken\": \"lilin panas\", \"term\": \"lilin panas\", \"t_start\": 26.0, \"t_end\": 27.2, \"stage\": \"persiapan bahan\", \"visible\": \"cairan lilin hitam kecoklatan di wajan atas kompor menyala\", \"visual_match\": \"ya\", \"gloss_id\": \"lilin malam yang dicairkan untuk perintang warna\", \"confidence\": \"sedang\"}, {\"spoken\": \"kain batik\", \"term\": \"kain batik\", \"t_start\": 28.0, \"t_end\": 29.0, \"stage\": \"persiapan bahan\", \"visible\": \"kain putih dengan gambar sketsa pensil motif tugu, bunga, mega mendung di atas alas\", \"visual_match\": \"ya\", \"gloss_id\": \"kain putih sebagai media batik\", \"confidence\": \"sedang\"}, {\"spoken\": \"lilin\", \"term\": \"lilin\", \"t_start\": 29.2, \"t_end\": 30.0, \"stage\": \"persiapan bahan\", \"visible\": \"balok lilin gelap di atas alas biru di samping kain\", \"visual_match\": \"ya\", \"gloss_id\": \"lilin malam bahan perintang\", \"confidence\": \"sedang\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"t_start\": 30.2, \"t_end\": 31.2, \"stage\": \"persiapan alat\", \"visible\": \"deretan canting kayu dengan ujung nyamplung tembaga di atas alas\", \"visual_match\": \"ya\", \"gloss_id\": \"alat berujung pipa kecil untuk menorehkan lilin\", \"confidence\": \"sedang\"}, {\"spoken\": \"ngelowong\", \"term\": \"ngelowong\", \"t_start\": 33.0, \"t_end\": 34.0, \"stage\": \"ngelowong\", \"visible\": \"titel Langkah-Langkah Proses Ngelowong ke Media Kain dengan latar blur aktivitas\", \"visual_match\": \"ya\", \"gloss_id\": \"tahap menorehkan lilin mengikuti garis pola utama\", \"confidence\": \"sedang\"}, {\"spoken\": \"kuas\", \"term\": \"kuas\", \"t_start\": 73.0, \"t_end\": 74.5, \"stage\": \"ngelowong / isen garis\", \"visible\": \"tangan memegang kuas kecil membuat garis lurus coklat di tepi motif mega mendung\", \"visual_match\": \"ya\", \"gloss_id\": \"alat kuas untuk membuat garis lurus dengan lilin\", \"confidence\": \"rendah\"}, {\"spoken\": \"motif\", \"term\": \"motif\", \"t_start\": 110.0, \"t_end\": 111.5, \"stage\": \"hasil\", \"visible\": \"kain putih hasil cantingan motif tugu, bunga, isen titik diperlihatkan penuh\", \"visual_match\": \"ya\", \"gloss_id\": \"ragam hias gambar pada batik\", \"confidence\": \"sedang\"}, {\"spoken\": \"membatikku\", \"term\": \"membatik\", \"t_start\": 128.5, \"t_end\": 129.5, \"stage\": \"penutup\", \"visible\": \"presenter kembali berbicara di depan latar biru\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"proses membuat batik secara keseluruhan\", \"confidence\": \"tinggi\"}], \"process_steps\": [{\"step\": \"persiapan alat dan bahan\", \"t_start\": 22.0, \"t_end\": 34.0, \"tools\": [\"kompor\", \"lilin panas\", \"kain batik\", \"lilin\", \"canting\"]}, {\"step\": \"ngelowong ke media kain dengan canting\", \"t_start\": 34.0, \"t_end\": 70.0, \"tools\": [\"canting\", \"lilin panas\", \"kompor\", \"kain batik\"]}, {\"step\": \"membuat garis lurus dengan kuas\", \"t_start\": 70.0, \"t_end\": 108.0, \"tools\": [\"kuas\", \"lilin panas\", \"kain batik\"]}, {\"step\": \"pamer hasil motif yang sudah dicanting\", \"t_start\": 109.0, \"t_end\": 121.0, \"tools\": [\"kain batik\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 36271,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 4218,
+  "output_tokens_details": {
+   "reasoning_tokens": 2823
+  },
+  "total_tokens": 40489
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

@@ -1,0 +1,40 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Test/source video (copyrighted, internal eval only — never commit)
+arsip-hidup-batik/
+data/
+data-uji/
+data-uji
+docs/reference/uji-kelayakan/klip/
+
+# Media and generated pipeline output
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.m4a
+*.vtt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node / web
+node_modules/
+.next/
+dist/
+build/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

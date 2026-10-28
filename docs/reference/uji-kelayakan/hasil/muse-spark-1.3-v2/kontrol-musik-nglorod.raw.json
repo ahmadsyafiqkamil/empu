@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1932784f0f87a4cb34433",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793168167.0,
+ "completed_at": 1793168167.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1932784f0f87a4cb34433:rs_6b243e51-6afc-4e38-a0e5-ea4dd7cc7ba0",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_780c8e39-4b67-4c88-b44f-47af955b567f",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"transcript_first_20s\": \"[0-20 dtk musik gamelan/campursari instrumental dilanjut vokal Jawa, lirik tidak jelas, tidak terdengar istilah batik]\", \"terms\": [{\"spoken\": \"Pelorodan Batik\", \"term\": \"pelorodan\", \"source\": \"teks_layar\", \"t_start\": 1.5, \"t_end\": 6.0, \"stage\": \"tahap pelorodan\", \"visible\": \"panci besar berisi air mendidih beruap di atas api tanah\", \"visual_match\": \"ya\", \"gloss_id\": \"proses menghilangkan lilin malam dari kain batik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Bertujuan untuk menghilangkan lilin malam pada kain yang dibatik\", \"term\": \"lilin malam\", \"source\": \"teks_layar\", \"t_start\": 7.0, \"t_end\": 11.0, \"stage\": \"tujuan pelorodan\", \"visible\": \"air mendidih beruap di panci, kaki bersandal di samping\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"lilin perintang warna pada batik tulis\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Soda abu ditambahkan pada air panas untuk memudahkan lepasnya lilin malam dari kain\", \"term\": \"soda abu\", \"source\": \"teks_layar\", \"t_start\": 12.0, \"t_end\": 17.5, \"stage\": \"persiapan larutan pelorod\", \"visible\": \"tuangan cairan putih ke panci mendidih, uap tebal\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"natrium karbonat untuk membantu lepas lilin\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Ada cara yang lebih praktis untuk nglorod kain batik\", \"term\": \"nglorod\", \"source\": \"teks_layar\", \"t_start\": 43.5, \"t_end\": 49.0, \"stage\": \"tahap pelorodan metode praktis\", \"visible\": \"layar hijau teks putih, lalu kain kuning bermotif\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"istilah Jawa untuk pelorodan\", \"confidence\": \"tinggi\"}, {\"spoken\": \"panaskan satu ceret air\", \"term\": \"ceret\", \"source\": \"teks_layar\", \"t_start\": 51.5, \"t_end\": 55.0, \"stage\": \"persiapan air panas\", \"visible\": \"ceret logam di atas tungku, lalu di lantai paving\", \"visual_match\": \"ya\", \"gloss_id\": \"teko logam untuk merebus air\", \"confidence\": \"tinggi\"}, {\"spoken\": \"tambahkan 3 sendok makan soda abu\", \"term\": \"soda abu\", \"source\": \"teks_layar\", \"t_start\": 55.5, \"t_end\": 60.0, \"stage\": \"pembuatan larutan\", \"visible\": \"tangan menuang bubuk putih dari gelas ke ember plastik tosca\", \"visual_match\": \"ya\", \"gloss_id\": \"natrium karbonat bubuk putih\", \"confidence\": \"tinggi\"}, {\"spoken\": \"masukkan air panas pada ember\", \"term\": \"ember\", \"source\": \"teks_layar\", \"t_start\": 62.5, \"t_end\": 67.0, \"stage\": \"pembuatan larutan\", \"visible\": \"ceret dituang ke ember tosca kecil\", \"visual_match\": \"ya\", \"gloss_id\": \"wadah plastik untuk merendam\", \"confidence\": \"tinggi\"}, {\"spoken\": \"aduk agar tercampur rata\", \"term\": \"aduk\", \"source\": \"teks_layar\", \"t_start\": 70.5, \"t_end\": 77.0, \"stage\": \"pengadukan larutan\", \"visible\": \"kayu panjang mengaduk air di ember tosca, ember hitam besar berisi air di samping\", \"visual_match\": \"ya\", \"gloss_id\": \"mengaduk larutan soda abu\", \"confidence\": \"tinggi\"}, {\"spoken\": \"masukkan kain kedalamnya\", \"term\": \"kain\", \"source\": \"teks_layar\", \"t_start\": 82.5, \"t_end\": 89.0, \"stage\": \"perendaman kain batik\", \"visible\": \"kain batik oranye-kuning dimasukkan ke ember tosca dan ditekan kayu\", \"visual_match\": \"ya\", \"gloss_id\": \"kain batik yang akan dilorod\", \"confidence\": \"tinggi\"}, {\"spoken\": \"bolak - balik kain hingga lilin terlihat meleleh dan lepas dari kainnya\", \"term\": \"bolak-balik\", \"source\": \"teks_layar\", \"t_start\": 93.0, \"t_end\": 100.0, \"stage\": \"teknik membolak-balik\", \"visible\": \"kayu membolak-balik kain dalam air keruh kecoklatan di ember\", \"visual_match\": \"ya\", \"gloss_id\": \"membalik kain agar lilin meleleh merata\", \"confidence\": \"tinggi\"}, {\"spoken\": \"angkat kain dan bilas dengan air bersih pada ember lainnya\", \"term\": \"bilas\", \"source\": \"teks_layar\", \"t_start\": 104.0, \"t_end\": 111.0, \"stage\": \"pembilasan\", \"visible\": \"kain diangkat dengan kayu, dipindah ke ember bak hitam besar berisi air bersih\", \"visual_match\": \"ya\", \"gloss_id\": \"membilas sisa lilin dan soda abu\", \"confidence\": \"tinggi\"}, {\"spoken\": \"kucek kain dan pastikan lilin malam telah terlepas dari kain\", \"term\": \"kucek\", \"source\": \"teks_layar\", \"t_start\": 139.0, \"t_end\": 145.5, \"stage\": \"pengucekan akhir\", \"visible\": \"tangan mengucek dan meremas kain oranye dalam bak hitam\", \"visual_match\": \"ya\", \"gloss_id\": \"mengucek dengan tangan untuk membersihkan lilin\", \"confidence\": \"tinggi\"}, {\"spoken\": \"panci besar di atas api\", \"term\": \"panci\", \"source\": \"visual\", \"t_start\": 0.5, \"t_end\": 30.0, \"stage\": \"alat pelorodan tradisional\", \"visible\": \"panci logam berkaki dua hitam di atas api kayu tanah\", \"visual_match\": \"ya\", \"gloss_id\": \"wadah logam besar untuk merebus\", \"confidence\": \"sedang\"}, {\"spoken\": \"kayu pengaduk\", \"term\": \"kayu pengaduk\", \"source\": \"visual\", \"t_start\": 70.0, \"t_end\": 120.0, \"stage\": \"alat bantu\", \"visible\": \"tongkat kayu panjang untuk mengaduk dan mengangkat kain\", \"visual_match\": \"ya\", \"gloss_id\": \"tongkat kayu untuk mengaduk\", \"confidence\": \"sedang\"}, {\"spoken\": \"motif bunga daun\", \"term\": \"motif\", \"source\": \"visual\", \"t_start\": 154.0, \"t_end\": 159.0, \"stage\": \"hasil jadi\", \"visible\": \"kain kuning dengan bunga merah dan daun hijau, lalu jadi baju di manekin\", \"visual_match\": \"ya\", \"gloss_id\": \"ragam hias flora pada kain\", \"confidence\": \"sedang\"}], \"process_steps\": [{\"step\": \"pelorodan tradisional dengan panci\", \"t_start\": 0.5, \"t_end\": 40.0, \"tools\": [\"panci besar\", \"api kayu\", \"air panas\", \"soda abu\"]}, {\"step\": \"metode praktis: panaskan air ceret\", \"t_start\": 50.0, \"t_end\": 55.0, \"tools\": [\"ceret\", \"tungku\"]}, {\"step\": \"buat larutan soda abu di ember\", \"t_start\": 55.5, \"t_end\": 77.0, \"tools\": [\"ember plastik\", \"sendok\", \"soda abu\", \"air panas\", \"kayu pengaduk\"]}, {\"step\": \"rendam dan bolak-balik kain hingga lilin meleleh\", \"t_start\": 82.0, \"t_end\": 103.0, \"tools\": [\"ember\", \"kayu pengaduk\", \"kain batik\"]}, {\"step\": \"angkat bilas dan kucek di ember lain\", \"t_start\": 104.0, \"t_end\": 147.0, \"tools\": [\"ember bak hitam\", \"air bersih\", \"tangan\"]}, {\"step\": \"jemur dan tampilkan hasil jadi\", \"t_start\": 148.0, \"t_end\": 198.0, \"tools\": [\"jemuran bambu\", \"manekin\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 62260,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 4613,
+  "output_tokens_details": {
+   "reasoning_tokens": 2637
+  },
+  "total_tokens": 66873
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

@@ -1,0 +1,398 @@
+{
+ "speech_heard": true,
+ "transcript_first_20s": "[0-20 detik musik instrumental gamelan, belum ada narasi jelas]",
+ "terms": [
+  {
+   "spoken": "batik tulis",
+   "term": "batik tulis",
+   "source": "ucapan",
+   "t_start": 30.5,
+   "t_end": 33.0,
+   "stage": "pengenalan jenis teknik",
+   "visible": "tangan memegang canting menggoreskan malam di atas kain bermotif bunga oranye-coklat",
+   "visual_match": "ya",
+   "gloss_id": "batik dibuat manual dengan canting",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "batik cap",
+   "term": "batik cap",
+   "source": "ucapan",
+   "t_start": 41.5,
+   "t_end": 44.0,
+   "stage": "pengenalan jenis teknik",
+   "visible": "tangan menekan cap tembaga bermotif geometris ke kain putih lebar di meja",
+   "visual_match": "ya",
+   "gloss_id": "batik dibuat dengan stempel cap tembaga",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "malam",
+   "term": "malam",
+   "source": "ucapan",
+   "t_start": 56.5,
+   "t_end": 59.0,
+   "stage": "alat dan bahan",
+   "visible": "close-up bongkahan malam padat berwarna coklat tua",
+   "visual_match": "ya",
+   "gloss_id": "lilin untuk perintang warna batik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "lilin",
+   "term": "lilin batik",
+   "source": "ucapan",
+   "t_start": 59.5,
+   "t_end": 61.5,
+   "stage": "alat dan bahan",
+   "visible": "malam padat lalu wajan berisi cairan hitam dipanaskan",
+   "visual_match": "ya",
+   "gloss_id": "sinonim malam, bahan perintang",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "kompor",
+   "term": "kompor",
+   "source": "ucapan",
+   "t_start": 60.0,
+   "t_end": 62.5,
+   "stage": "alat dan bahan",
+   "visible": "tungku kecil dengan wajan hitam berisi malam cair",
+   "visual_match": "ya",
+   "gloss_id": "pemanas untuk mencairkan malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "wajan",
+   "term": "wajan",
+   "source": "ucapan",
+   "t_start": 60.0,
+   "t_end": 62.5,
+   "stage": "alat dan bahan",
+   "visible": "wajan cekung hitam berisi cairan malam panas",
+   "visual_match": "ya",
+   "gloss_id": "wadah untuk mencairkan malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "canting",
+   "term": "canting",
+   "source": "ucapan",
+   "t_start": 64.0,
+   "t_end": 67.0,
+   "stage": "alat dan bahan",
+   "visible": "foto diagram canting bambu dengan penanda bagian; kemudian tangan memegang canting asli",
+   "visual_match": "ya",
+   "gloss_id": "alat pen untuk menggambar malam",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "Nyamplung",
+   "term": "nyamplung",
+   "source": "teks_layar",
+   "t_start": 64.0,
+   "t_end": 68.0,
+   "stage": "alat dan bahan",
+   "visible": "label diagram menunjuk wadah tembaga canting",
+   "visual_match": "ya",
+   "gloss_id": "wadah penampung malam pada canting",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "Cucuk",
+   "term": "cucuk",
+   "source": "teks_layar",
+   "t_start": 64.0,
+   "t_end": 68.0,
+   "stage": "alat dan bahan",
+   "visible": "label diagram menunjuk ujung pipa kecil canting",
+   "visual_match": "ya",
+   "gloss_id": "ujung keluarnya malam",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "Gagang",
+   "term": "gagang",
+   "source": "teks_layar",
+   "t_start": 64.0,
+   "t_end": 68.0,
+   "stage": "alat dan bahan",
+   "visible": "label diagram menunjuk pegangan bambu canting",
+   "visual_match": "ya",
+   "gloss_id": "pegangan canting",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "kain",
+   "term": "kain",
+   "source": "ucapan",
+   "t_start": 69.0,
+   "t_end": 72.0,
+   "stage": "alat dan bahan",
+   "visible": "tumpukan kain mori putih polos dilipat",
+   "visual_match": "ya",
+   "gloss_id": "media dasar mori untuk dibatik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "dingklik",
+   "term": "dingklik",
+   "source": "ucapan",
+   "t_start": 73.0,
+   "t_end": 76.0,
+   "stage": "alat dan bahan",
+   "visible": "bangku kayu kecil pendek berkaki empat",
+   "visual_match": "ya",
+   "gloss_id": "bangku jongkok untuk pembatik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "spangkring",
+   "term": "spangkring",
+   "source": "ucapan",
+   "t_start": 77.0,
+   "t_end": 80.5,
+   "stage": "alat dan bahan",
+   "visible": "tiga lingkaran pembidang kayu kuning dengan sekrup di lantai",
+   "visual_match": "ya",
+   "gloss_id": "bingkai lingkaran penegang kain",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "pola",
+   "term": "pola",
+   "source": "ucapan",
+   "t_start": 85.0,
+   "t_end": 89.0,
+   "stage": "persiapan / membuat pola",
+   "visible": "tangan menjiplak dan menggambar sketsa dengan pensil di kain putih",
+   "visual_match": "ya",
+   "gloss_id": "desain motif awal",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "menggambar pola",
+   "term": "membuat pola",
+   "source": "ucapan",
+   "t_start": 89.0,
+   "t_end": 101.0,
+   "stage": "persiapan / membuat pola",
+   "visible": "close-up pensil menebalkan motif sayap dan bunga mawar di kain",
+   "visual_match": "ya",
+   "gloss_id": "tahap sketsa motif di kain",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "mencairkan",
+   "term": "mencairkan malam",
+   "source": "ucapan",
+   "t_start": 111.0,
+   "t_end": 115.5,
+   "stage": "mencairkan malam",
+   "visible": "wajan hitam beruap berisi malam cair dikelilingi pembatik duduk",
+   "visual_match": "ya",
+   "gloss_id": "memanaskan malam hingga cair",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "membatik",
+   "term": "membatik / mbathik",
+   "source": "ucapan",
+   "t_start": 123.0,
+   "t_end": 127.0,
+   "stage": "pembatikan / perintangan",
+   "visible": "tangan mencanting mengikuti garis pensil motif bunga pada kain di spangkring",
+   "visual_match": "ya",
+   "gloss_id": "menggoreskan malam dengan canting",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "MBATHIK",
+   "term": "mbathik",
+   "source": "teks_layar",
+   "t_start": 8.0,
+   "t_end": 9.5,
+   "stage": "pembatikan",
+   "visible": "papan kayu penunjuk arah bertuliskan MBATHIK di pintu masuk",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "tahap menggambar dengan malam (Jawa)",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "mewarnai",
+   "term": "pewarnaan / pencelupan",
+   "source": "ucapan",
+   "t_start": 148.0,
+   "t_end": 153.0,
+   "stage": "pewarnaan",
+   "visible": "tangan bersarung mencelup kain ke bak cairan ungu/merah tua lalu mengangkat",
+   "visual_match": "ya",
+   "gloss_id": "tahap memberi warna dengan celup",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "MBABAR",
+   "term": "mbabar",
+   "source": "teks_layar",
+   "t_start": 8.0,
+   "t_end": 9.5,
+   "stage": "pewarnaan / pembabaran",
+   "visible": "papan kayu penunjuk arah kedua bertuliskan MBABAR",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "tahap pewarnaan / membuka? istilah lokal workshop",
+   "confidence": "rendah"
+  },
+  {
+   "spoken": "NGELAP",
+   "term": "ngelap / ngelorot",
+   "source": "teks_layar",
+   "t_start": 8.5,
+   "t_end": 9.5,
+   "stage": "pelorotan",
+   "visible": "papan kayu ketiga di bawahnya, kurang fokus",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "tahap menghilangkan malam / melorot",
+   "confidence": "rendah"
+  },
+  {
+   "spoken": "melorot",
+   "term": "melorot / nglorot",
+   "source": "ucapan",
+   "t_start": 172.0,
+   "t_end": 178.0,
+   "stage": "pelorotan",
+   "visible": "kain direbus / diaduk dengan tongkat di air biru-coklat mendidih untuk luruhkan malam",
+   "visual_match": "ya",
+   "gloss_id": "merebus untuk hilangkan malam",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "mencuci",
+   "term": "mencuci / membilas",
+   "source": "ucapan",
+   "t_start": 181.0,
+   "t_end": 184.5,
+   "stage": "pembilasan",
+   "visible": "kain merah muda dicuci dikucek di bak beton berisi air bersih",
+   "visual_match": "ya",
+   "gloss_id": "membilas sisa malam dan warna",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "menjemur",
+   "term": "menjemur / mengeringkan",
+   "source": "ucapan",
+   "t_start": 168.0,
+   "t_end": 171.0,
+   "stage": "pengeringan",
+   "visible": "kain basah biru dan merah digantung pada bambu",
+   "visual_match": "ya",
+   "gloss_id": "menjemur hasil setelah cuci",
+   "confidence": "sedang"
+  },
+  {
+   "spoken": "telaten dan sabar",
+   "term": "telaten",
+   "source": "ucapan",
+   "t_start": 206.0,
+   "t_end": 210.0,
+   "stage": "tips",
+   "visible": "ibu berkacamata berbicara sambil memegang spangkring",
+   "visual_match": "tidak_terlihat",
+   "gloss_id": "tekun dan sabar saat membatik",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "tiup ujung canting",
+   "term": "meniup canting",
+   "source": "ucapan",
+   "t_start": 202.5,
+   "t_end": 205.5,
+   "stage": "tips",
+   "visible": "perempuan berkerudung pink mendemonstrasikan meniup ujung canting",
+   "visual_match": "ya",
+   "gloss_id": "tiup cucuk agar malam lancar keluar",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "memiringkan kain",
+   "term": "memiringkan kain",
+   "source": "ucapan",
+   "t_start": 210.5,
+   "t_end": 215.5,
+   "stage": "tips",
+   "visible": "tangan memiringkan spangkring sambil mencanting",
+   "visual_match": "ya",
+   "gloss_id": "miringkan bidang agar mudah digores",
+   "confidence": "tinggi"
+  },
+  {
+   "spoken": "canting tidak boleh terlalu miring",
+   "term": "posisi canting",
+   "source": "ucapan",
+   "t_start": 223.5,
+   "t_end": 229.0,
+   "stage": "tips",
+   "visible": "peserta pria berkacamata memegang canting tegak di atas kain",
+   "visual_match": "ya",
+   "gloss_id": "jaga kemiringan canting agar tidak tumpah/mampet",
+   "confidence": "tinggi"
+  }
+ ],
+ "process_steps": [
+  {
+   "step": "persiapan kain dan pembuatan pola",
+   "t_start": 82.0,
+   "t_end": 111.0,
+   "tools": [
+    "kain",
+    "pensil",
+    "pola"
+   ]
+  },
+  {
+   "step": "mencairkan malam",
+   "t_start": 111.0,
+   "t_end": 123.0,
+   "tools": [
+    "malam",
+    "wajan",
+    "kompor"
+   ]
+  },
+  {
+   "step": "membatik / mencanting",
+   "t_start": 123.0,
+   "t_end": 147.0,
+   "tools": [
+    "canting",
+    "spangkring",
+    "dingklik"
+   ]
+  },
+  {
+   "step": "pewarnaan / pencelupan",
+   "t_start": 147.0,
+   "t_end": 168.0,
+   "tools": [
+    "bak pewarna",
+    "sarung tangan"
+   ]
+  },
+  {
+   "step": "pelorotan / melorot dan pencucian",
+   "t_start": 168.0,
+   "t_end": 185.0,
+   "tools": [
+    "air panas",
+    "bak bilas"
+   ]
+  },
+  {
+   "step": "pengeringan dan hasil",
+   "t_start": 185.0,
+   "t_end": 197.0,
+   "tools": []
+  }
+ ]
+}

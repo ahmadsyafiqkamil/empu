@@ -1,0 +1,183 @@
+[
+ {
+  "gold_terms_from_subtitle": [
+   "malam",
+   "nglorod"
+  ],
+  "muse_terms_in_glossary": [
+   "batik cap",
+   "batik tulis",
+   "canting",
+   "jemur",
+   "kompor",
+   "malam",
+   "pencelupan",
+   "pola",
+   "wajan"
+  ],
+  "muse_novel_terms": [
+   "kain",
+   "dingklik",
+   "spangkring",
+   "membatik / mbathik",
+   "melorot / nglorot",
+   "mencuci / membilas",
+   "telaten",
+   "memiringkan kain"
+  ],
+  "recall": 0.5,
+  "precision_vs_subtitle": 0.11,
+  "median_time_error_s": 1.0,
+  "visual_match_counts": {
+   "ya": 24,
+   "tidak_terlihat": 4
+  },
+  "n_terms_muse": 28,
+  "source_counts": {
+   "ucapan": 22,
+   "teks_layar": 6,
+   "visual": 0
+  },
+  "label": "proses-lengkap-ngertibatik",
+  "seconds": 44.7,
+  "speech_heard": true,
+  "transcript_first_20s": "[0-20 detik musik instrumental gamelan, belum ada narasi jelas]",
+  "usage": {
+   "input_tokens": 66075,
+   "input_tokens_details": {
+    "cached_tokens": 0
+   },
+   "output_tokens": 4923,
+   "output_tokens_details": {
+    "reasoning_tokens": 1857
+   },
+   "total_tokens": 70998
+  }
+ },
+ {
+  "gold_terms_from_subtitle": [
+   "canting",
+   "malam",
+   "nglowong"
+  ],
+  "muse_terms_in_glossary": [
+   "canting",
+   "kompor",
+   "malam",
+   "pola"
+  ],
+  "muse_novel_terms": [
+   "kain batik",
+   "sketsa",
+   "kain batik",
+   "membatik"
+  ],
+  "recall": 0.67,
+  "precision_vs_subtitle": 0.5,
+  "median_time_error_s": 4.1,
+  "visual_match_counts": {
+   "tidak_terlihat": 5,
+   "ya": 10
+  },
+  "n_terms_muse": 15,
+  "source_counts": {
+   "ucapan": 8,
+   "teks_layar": 4,
+   "visual": 3
+  },
+  "label": "nglowong",
+  "seconds": 43.7,
+  "speech_heard": true,
+  "transcript_first_20s": "Halo teman-teman semua kenalin nama aku zukhrufatussyifa yuliana elsa rahman dari universitas negeri surabaya pada kesempatan kali ini aku akan melakukan praktikum mencanting",
+  "usage": {
+   "input_tokens": 36373,
+   "input_tokens_details": {
+    "cached_tokens": 36323
+   },
+   "output_tokens": 5918,
+   "output_tokens_details": {
+    "reasoning_tokens": 4070
+   },
+   "total_tokens": 42291
+  }
+ },
+ {
+  "gold_terms_from_subtitle": [],
+  "muse_terms_in_glossary": [],
+  "muse_novel_terms": [],
+  "recall": null,
+  "precision_vs_subtitle": null,
+  "median_time_error_s": null,
+  "visual_match_counts": {
+   "ya": 12,
+   "tidak_terlihat": 3
+  },
+  "n_terms_muse": 15,
+  "source_counts": {
+   "ucapan": 0,
+   "teks_layar": 12,
+   "visual": 3
+  },
+  "label": "kontrol-musik-nglorod",
+  "seconds": 48.8,
+  "speech_heard": true,
+  "transcript_first_20s": "[0-20 dtk musik gamelan/campursari instrumental dilanjut vokal Jawa, lirik tidak jelas, tidak terdengar istilah batik]",
+  "usage": {
+   "input_tokens": 62260,
+   "input_tokens_details": {
+    "cached_tokens": 0
+   },
+   "output_tokens": 4613,
+   "output_tokens_details": {
+    "reasoning_tokens": 2637
+   },
+   "total_tokens": 66873
+  }
+ },
+ {
+  "gold_terms_from_subtitle": [
+   "isen-isen",
+   "jemur",
+   "mori",
+   "motif",
+   "nembok",
+   "pencelupan"
+  ],
+  "muse_terms_in_glossary": [
+   "batik tulis",
+   "canting"
+  ],
+  "muse_novel_terms": [
+   "batik",
+   "Batik Trusmi"
+  ],
+  "recall": 0.0,
+  "precision_vs_subtitle": 0.0,
+  "median_time_error_s": null,
+  "visual_match_counts": {
+   "tidak_terlihat": 8,
+   "ya": 6
+  },
+  "n_terms_muse": 14,
+  "source_counts": {
+   "ucapan": 4,
+   "teks_layar": 6,
+   "visual": 4
+  },
+  "label": "maestro-trusmi-menit15-20",
+  "seconds": 34.1,
+  "speech_heard": true,
+  "transcript_first_20s": "Tahukah anda dibalik megahnya batik Trusmi hari ini ada sosok yang mengabdikan hidupnya menjaga tradisi sejak puluhan tahun lalu",
+  "usage": {
+   "input_tokens": 82153,
+   "input_tokens_details": {
+    "cached_tokens": 0
+   },
+   "output_tokens": 3177,
+   "output_tokens_details": {
+    "reasoning_tokens": 1653
+   },
+   "total_tokens": 85330
+  }
+ }
+]

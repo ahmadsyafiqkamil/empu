@@ -1,0 +1,119 @@
+# Set uji Empu
+#
+# PENTING: video YouTube di bawah milik kreatornya. Hanya untuk evaluasi INTERNAL.
+# Jangan commit videonya, jangan dipakai di demo atau video submission,
+# dan jangan dirilis sebagai dataset. Repo hanya menyimpan ID dan potongan waktu.
+#
+# Lokasi video: env EMPU_TESTDATA_DIR (default ./data-uji, sudah di-.gitignore).
+# Saat ini videonya ada di folder unduhan "arsip-hidup-batik/" (subfolder 1-…, 2-…, 3-…, 4-…).
+# Cari file dengan pola "*[<youtube_id>]*.mp4". Subtitle otomatis: "*[<id>]*.id-orig.vtt" atau ".id.vtt".
+
+version: 1
+
+clips:
+  - id: ngertibatik-proses
+    youtube_id: 7-WQ3DKKn0w
+    start_s: 0
+    duration_s: 241
+    purpose: >
+      Proses lengkap. Narasi mulai sekitar detik 82. Ada diagram bertulisan di layar
+      (detik 57–80) untuk menguji label sumber speech vs on_screen_text.
+      Delapan istilah yang diucapkan tercantum di docs/reference/hasil-uji-kelayakan.md.
+    gold: docs/eval/kunci-jawaban/ngertibatik-proses.csv   # belum dibuat
+
+  - id: nglowong
+    youtube_id: rKVEysItoKY
+    start_s: 0
+    duration_s: 132
+    purpose: Satu tahap, close-up, presenter berbicara. Dipakai juga untuk uji dengan/tanpa audio (Gate 0).
+    gold: docs/eval/kunci-jawaban/nglowong.csv   # belum dibuat
+
+  - id: kontrol-musik-nglorod
+    youtube_id: J_XcGhkCRAQ
+    start_s: 0
+    duration_s: 227
+    purpose: KONTROL NEGATIF. Hanya musik, tanpa ucapan. Harus menghasilkan 0 istilah speech.
+    gold: null
+
+  - id: trusmi-maestro-15-20
+    youtube_id: 8sMSLQPYNc4
+    start_s: 900
+    duration_s: 300
+    purpose: >
+      Wawancara maestro Batik Trusmi Cirebon, ucapan spontan. Menit 15–20 adalah bagian paling
+      teknis menurut kepadatan istilah di subtitle.
+    gold: docs/eval/kunci-jawaban/trusmi-maestro-15-20.csv   # belum dibuat
+
+# Cadangan kalau perlu set yang lebih besar (sudah terunduh)
+candidates:
+  - {youtube_id: Fn0JbZPCfM4, duration_s: 298, note: cara mencanting untuk pemula}
+  - {youtube_id: -X2y0nXfARE, duration_s: 270, note: teknik mencanting beserta tahapannya}
+  - {youtube_id: 7YwsfU-Fq0g, duration_s: 207, note: nemboki dengan canting}
+  - {youtube_id: d-tX1ycqRPw, duration_s: 908, note: pewarnaan celup dan colet}
+  - {youtube_id: tknGmrzZ2xQ, duration_s: 513, note: proses dengan pewarna remasol}
+  - {youtube_id: cQ23gLNBVRs, duration_s: 414, note: tahapan batik tulis}
+  - {youtube_id: aVXzCxZiDas, duration_s: 931, note: proses tahap demi tahap}
+# Tidak tersedia lagi di YouTube: mlz636cOWRw
+
+# Tambahan 28 Okt, lisensi STANDAR: hanya evaluasi internal (source_kind = internal_eval).
+# Tidak boleh tampil di demo, kamus publik, atau ekspor, walaupun nanti dihapus.
+# Lokasi: arsip-hidup-batik/5-tambahan-internal/ (720p + subtitle id kalau ada).
+# terms = jumlah istilah pack berbeda di subtitle otomatis (indikasi kasar; ASR sering salah tulis).
+internal_extra:
+  - {youtube_id: 71EDWiILmv0, duration_s: 576, channel: Tholo Thili, terms: 12, note: "Penjelasan canting paling lengkap: klowongan, cecekan, tembokan, nerusi. Kandidat kunci jawaban"}
+  - {youtube_id: X1shlzzAaK8, duration_s: 634, channel: Tholo Thili, terms: 8, note: "Alat pendukung: kompor, wajan, gawangan, dingklik. Bagus untuk SAM"}
+  - {youtube_id: NHafrpF9PmI, duration_s: 723, channel: Direktorat SMK Kemdikdasmen, terms: 8, note: "Nglorod dengan narasi: kenceng, soda abu, waterglass"}
+  - {youtube_id: _gB39fcaONU, duration_s: 163, channel: Ketua Asbun, terms: 5, note: "Beda canting tembok, klowong, cecek"}
+  - {youtube_id: zYLpFRVfgEY, duration_s: 104, channel: Oemah Batik Lasem, terms: 4, note: "Macam canting, perajin Lasem"}
+  - {youtube_id: caCJ-eW8Q-g, duration_s: 864, channel: Batik Udaya Institute, terms: 4, note: "Pewarnaan Lasem metode lorot, remasol, waterglass"}
+  - {youtube_id: -prUw9SiKiQ, duration_s: 402, channel: Sembung Batik, terms: 3, note: "Fungsi soda ash dan waterglass (fiksasi)"}
+  - {youtube_id: bm7XXcdq0as, duration_s: 309, channel: PEKALONGAN BERITA, terms: 3, note: "Liputan pembuat canting nyamplung yang hampir punah (cerita, bukan demonstrasi)"}
+  - {youtube_id: Aw-hjWi-CO0, duration_s: 295, channel: Sembung Batik, terms: 1, note: "Warna sogan Jawa"}
+  - {youtube_id: UUt2ahy_eYo, duration_s: 571, channel: Official Rumah Batik Komar, terms: 1, note: "Cara melorod; subtitle lemah, perlu dicek"}
+  - {youtube_id: dNpJMNOhMkQ, duration_s: 101, channel: Edi Rusmantoro, terms: 1, note: "Mbaleni/nerusi (istilah lokal); narasi pendek"}
+  - {youtube_id: Jiq5MZUR_qQ, duration_s: 97, channel: Veri Yanti, terms: null, note: "Nembok/mopok (istilah lokal). Tanpa subtitle, belum dicek ada narasi"}
+  - {youtube_id: ixTygkNj658, duration_s: 128, channel: Museum Batik Pekalongan, terms: null, note: "Nglorod. Tanpa subtitle, belum dicek"}
+  - {youtube_id: WlTJrz-TBww, duration_s: 724, channel: Dunia Malam 26A, terms: null, note: "Ragam isen-isen. Tanpa subtitle, belum dicek"}
+  - {youtube_id: _H3uXCspjBU, duration_s: 282, channel: Yanti Lasem, terms: 0, note: "Subtitle hampir semua [Musik]. Kandidat KONTROL NEGATIF kedua"}
+
+# Video CC BY: bahan DEMO dan set uji utama (keputusan 28 Okt).
+# Lisensi diverifikasi 28 Okt 2026 via metadata YouTube (yt-dlp: "Creative Commons Attribution license
+# (reuse allowed)"). Boleh tampil publik DENGAN atribusi: kreator, URL, "CC BY", dan "dipotong".
+# Video tetap TIDAK di-commit. Unduh ke data-uji/cc-by/ dengan:
+#   yt-dlp -f "bv*[height<=1080]+ba/b" --merge-output-format mp4 \
+#     --write-subs --write-auto-subs --sub-langs "id,id-orig" \
+#     -o "data-uji/cc-by/%(title)s [%(id)s].%(ext)s" <url>
+# Prioritas: 1 = demo utama + kunci jawaban, 2 = pelengkap arsip, 3 = cadangan.
+demo_cc_by:
+  - {id: ccby-macam-canting, youtube_id: FodqwNTWOrQ, creator: Batik Education, duration_s: 246, priority: 1,
+     purpose: "Jenis canting. Subtitle otomatis menulis canting -> cantik/cacing, klowong -> cowok (bahan baseline ASR)"}
+  - {id: ccby-nyanting, youtube_id: zyscgcTHtq8, creator: TEBAK teras batik kaindra, duration_s: 508, priority: 1,
+     purpose: "Proses nyanting di sanggar Batik Pajampangan (Sukabumi). Kreator dihubungi untuk validasi"}
+  - {id: ccby-isen, youtube_id: FRIKA7rTFGw, creator: Batik Education, duration_s: 389, priority: 1,
+     purpose: "Isen-isen Jogja-Solo. Subtitle menulis batik -> baris/batu"}
+  - {id: ccby-keselamatan-mencanting, youtube_id: nNECew1VoMc, creator: Artful Moniz, duration_s: 437, priority: 2,
+     purpose: "Cara memegang canting, wajan, close-up alat (bagus untuk SAM)"}
+  - {id: ccby-celup-naphtol, youtube_id: JmsliC9SPFg, creator: Artful Moniz, duration_s: 474, priority: 2,
+     purpose: "Tahap pewarnaan naphtol"}
+  - {id: ccby-membatik-dasar, youtube_id: UfE1z4aJo7o, creator: TEBAK teras batik kaindra, duration_s: 306, priority: 2,
+     purpose: "Dasar membatik, sanggar yang sama dengan ccby-nyanting"}
+  - {id: ccby-mengenal-canting, youtube_id: aCNWgBxWxJI, creator: TEBAK teras batik kaindra, duration_s: 115, priority: 2,
+     purpose: "Pengenalan canting. Belum dicek apakah ada narasi (tanpa subtitle)"}
+  - {id: ccby-melorot, youtube_id: TunxVJaMYhA, creator: TEBAK teras batik kaindra, duration_s: 191, priority: 2,
+     purpose: "Tahap nglorod. Belum dicek apakah ada narasi"}
+  - {id: ccby-menjemur, youtube_id: YGcEH3lvFec, creator: TEBAK teras batik kaindra, duration_s: 139, priority: 3,
+     purpose: "Tahap akhir. Belum dicek apakah ada narasi"}
+  - {id: ccby-tutorial-lengkap, youtube_id: XgQsrmdqrRo, creator: YasminHyo, duration_s: 846, priority: 3,
+     purpose: "Proses lengkap, istilah padat (waterglass, remasol, nglorod). Presenter pemula, bukan ahli"}
+  - {id: ccby-oey-soe-tjoen, youtube_id: FKEYLmgyDJE, creator: BUMNINC, duration_s: 1180, priority: 3,
+     purpose: "Generasi ke-3 Batik Peranakan Oey Soe Tjoen. Cerita maestro; lebih banyak wawancara"}
+# Dibuang: reupload acara TV (EC Publishing/Trans7, channel "Creative Commons Media"), video tanpa
+# label lisensi (sCSBoYaaGHc), dan GXKPzm49b2o (subtitle hanya musik/obrolan).
+
+# Rekaman sendiri (opsional sejak 28 Okt). Diisi kalau ada sesi sanggar.
+own_recordings: []
+#  - id: sanggar-<nama>-<tahap>
+#    path: data-uji/sanggar/<file>.mp4
+#    maestro: <nama>
+#    consent_scope: public
+#    gold: docs/eval/kunci-jawaban/<id>.csv

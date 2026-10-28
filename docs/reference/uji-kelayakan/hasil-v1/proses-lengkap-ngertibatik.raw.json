@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae179ba0e6569d23e8f4e48",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793161658.0,
+ "completed_at": 1793161658.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae179ba0e6569d23e8f4e48:rs_aba69826-0092-45c7-80a8-d94fb88da438",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_a77fc784-ea88-4a01-bf82-addc3f813342",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"transcript_first_20s\": \"[musik gamelan pembuka, belum ada narasi, hanya teks NGERTI BATIK dan lorong Batik Putra Laweyan Solo]\", \"terms\": [{\"spoken\": \"batik tulis\", \"term\": \"batik tulis\", \"t_start\": 31.0, \"t_end\": 33.5, \"stage\": \"pengenalan jenis\", \"visible\": \"close-up tangan memegang canting menorehkan malam di atas kain motif bunga oranye coklat\", \"visual_match\": \"ya\", \"gloss_id\": \"batik dibuat manual dengan canting\", \"confidence\": \"tinggi\"}, {\"spoken\": \"batik cap\", \"term\": \"batik cap\", \"t_start\": 42.0, \"t_end\": 44.5, \"stage\": \"pengenalan jenis\", \"visible\": \"tangan menekan cap bermalam ke kain putih lebar, motif kawung coklat\", \"visual_match\": \"ya\", \"gloss_id\": \"batik dibuat dengan stempel cap\", \"confidence\": \"tinggi\"}, {\"spoken\": \"malam\", \"term\": \"malam\", \"t_start\": 57.0, \"t_end\": 59.0, \"stage\": \"alat dan bahan\", \"visible\": \"close-up bongkahan lilin malam coklat gelap\", \"visual_match\": \"ya\", \"gloss_id\": \"lilin perintang warna batik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"kompor\", \"term\": \"kompor\", \"t_start\": 60.0, \"t_end\": 62.0, \"stage\": \"alat dan bahan\", \"visible\": \"wajan hitam berisi malam cair di atas tungku/anglo\", \"visual_match\": \"ya\", \"gloss_id\": \"pemanas untuk mencairkan malam\", \"confidence\": \"tinggi\"}, {\"spoken\": \"wajan\", \"term\": \"wajan\", \"t_start\": 60.0, \"t_end\": 62.0, \"stage\": \"alat dan bahan\", \"visible\": \"wajan hitam berisi malam cair di atas tungku\", \"visual_match\": \"ya\", \"gloss_id\": \"wadah untuk melelehkan malam\", \"confidence\": \"tinggi\"}, {\"spoken\": \"canting\", \"term\": \"canting\", \"t_start\": 64.0, \"t_end\": 66.0, \"stage\": \"alat dan bahan\", \"visible\": \"diagram canting bambu dengan label nyamplung cucuk gagang\", \"visual_match\": \"ya\", \"gloss_id\": \"alat pen untuk menorehkan malam\", \"confidence\": \"tinggi\"}, {\"spoken\": \"nyamplung\", \"term\": \"nyamplung\", \"t_start\": 65.0, \"t_end\": 67.0, \"stage\": \"alat dan bahan\", \"visible\": \"bagian wadah malam pada diagram canting\", \"visual_match\": \"ya\", \"gloss_id\": \"wadah malam pada canting\", \"confidence\": \"sedang\"}, {\"spoken\": \"cucuk\", \"term\": \"cucuk\", \"t_start\": 66.0, \"t_end\": 68.0, \"stage\": \"alat dan bahan\", \"visible\": \"ujung pipa kecil pada diagram canting\", \"visual_match\": \"ya\", \"gloss_id\": \"ujung keluarnya malam\", \"confidence\": \"sedang\"}, {\"spoken\": \"gagang\", \"term\": \"gagang\", \"t_start\": 66.5, \"t_end\": 68.5, \"stage\": \"alat dan bahan\", \"visible\": \"pegangan bambu pada diagram canting\", \"visual_match\": \"ya\", \"gloss_id\": \"pegangan canting\", \"confidence\": \"sedang\"}, {\"spoken\": \"kain\", \"term\": \"kain\", \"t_start\": 69.5, \"t_end\": 71.5, \"stage\": \"alat dan bahan\", \"visible\": \"lipatan kain putih mori\", \"visual_match\": \"ya\", \"gloss_id\": \"kain dasar untuk dibatik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"dingklik\", \"term\": \"dingklik\", \"t_start\": 73.5, \"t_end\": 76.0, \"stage\": \"alat dan bahan\", \"visible\": \"bangku kayu pendek berkaki empat untuk duduk\", \"visual_match\": \"ya\", \"gloss_id\": \"bangku kecil untuk membatik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"spangkring\", \"term\": \"spangkring\", \"t_start\": 77.5, \"t_end\": 80.0, \"stage\": \"alat dan bahan\", \"visible\": \"tiga lingkaran kayu hoop untuk merentangkan kain\", \"visual_match\": \"ya\", \"gloss_id\": \"bingkai perentang kain\", \"confidence\": \"sedang\"}, {\"spoken\": \"pola\", \"term\": \"pola\", \"t_start\": 89.0, \"t_end\": 92.0, \"stage\": \"membuat pola\", \"visible\": \"tangan menggambar pola logo sayap dan bunga mawar dengan pensil di kain putih\", \"visual_match\": \"ya\", \"gloss_id\": \"gambar rancangan motif\", \"confidence\": \"sedang\"}, {\"spoken\": \"membatik\", \"term\": \"membatik\", \"t_start\": 124.0, \"t_end\": 128.0, \"stage\": \"mencanting\", \"visible\": \"tangan menorehkan malam cair dengan canting mengikuti garis pensil pada kain dalam hoop\", \"visual_match\": \"ya\", \"gloss_id\": \"menerakan malam dengan canting\", \"confidence\": \"tinggi\"}, {\"spoken\": \"pewarnaan\", \"term\": \"pewarnaan\", \"t_start\": 148.0, \"t_end\": 152.0, \"stage\": \"pewarnaan\", \"visible\": \"tangan bersarung mencelup dan mengaduk kain di bak cairan warna ungu merah dan biru\", \"visual_match\": \"ya\", \"gloss_id\": \"pencelupan kain ke zat warna\", \"confidence\": \"sedang\"}, {\"spoken\": \"dilorot\", \"term\": \"pelorodan\", \"t_start\": 173.0, \"t_end\": 177.0, \"stage\": \"pelorodan\", \"visible\": \"kain diaduk di air panas berwarna coklat biru untuk meluruhkan malam lalu dibilas\", \"visual_match\": \"ya\", \"gloss_id\": \"merebus untuk menghilangkan malam\", \"confidence\": \"sedang\"}], \"process_steps\": [{\"step\": \"persiapan alat dan bahan\", \"t_start\": 55.0, \"t_end\": 81.0, \"tools\": [\"malam\", \"kompor\", \"wajan\", \"canting\", \"kain\", \"dingklik\", \"spangkring\"]}, {\"step\": \"membuat pola\", \"t_start\": 82.0, \"t_end\": 111.0, \"tools\": [\"kain\", \"pensil\"]}, {\"step\": \"mencanting dengan malam panas\", \"t_start\": 111.0, \"t_end\": 147.0, \"tools\": [\"kompor\", \"wajan\", \"canting\", \"spangkring\"]}, {\"step\": \"pewarnaan pencelupan\", \"t_start\": 147.0, \"t_end\": 170.0, \"tools\": [\"bak warna\", \"sarung tangan\"]}, {\"step\": \"pelorodan pembilasan dan penjemuran\", \"t_start\": 170.0, \"t_end\": 185.0, \"tools\": [\"bak air panas\", \"bak bilas\"]}, {\"step\": \"hasil\", \"t_start\": 185.0, \"t_end\": 197.0, \"tools\": []}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 65973,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 4773,
+  "output_tokens_details": {
+   "reasoning_tokens": 3050
+  },
+  "total_tokens": 70746
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

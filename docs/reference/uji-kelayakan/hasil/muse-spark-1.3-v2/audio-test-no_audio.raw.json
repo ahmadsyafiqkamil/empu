@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae1926e9e08f53bee5b4548",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793167982.0,
+ "completed_at": 1793167982.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae1926e9e08f53bee5b4548:rs_065fffc8-5e4f-48c0-b806-3bf4045c731d",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_1add42a1-21b6-45ef-b8fa-e852a477f781",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"transcript_first_20s\": \"Halo teman-teman semua kenalin nama aku Zukhr... dari Universitas Negeri Surabaya pada kesempatan kali ini aku akan melakukan praktikum mencanting di kain batik yang aku udah pindahin sketsa kemarin\", \"terms\": [{\"spoken\": \"praktikum mencanting\", \"term\": \"mencanting\", \"source\": \"ucapan\", \"t_start\": 11.0, \"t_end\": 13.8, \"stage\": \"ngelowong\", \"visible\": \"perempuan berhijab bicara di depan latar kain biru bermotif, belum ada alat terlihat\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"menerakan malam panas dengan canting mengikuti pola\", \"confidence\": \"tinggi\"}, {\"spoken\": \"kain batik\", \"term\": \"kain batik\", \"source\": \"ucapan\", \"t_start\": 14.5, \"t_end\": 16.5, \"stage\": \"persiapan media\", \"visible\": \"perempuan bicara close-up, kain batik belum ditunjukkan\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"kain mori sebagai media batik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"sketsa\", \"term\": \"sketsa\", \"source\": \"ucapan\", \"t_start\": 17.0, \"t_end\": 19.0, \"stage\": \"pemolaan\", \"visible\": \"perempuan bicara, pola belum terlihat saat itu\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"gambar pola awal di atas kain\", \"confidence\": \"tinggi\"}, {\"spoken\": \"membatikku\", \"term\": \"membatik\", \"source\": \"ucapan\", \"t_start\": 128.0, \"t_end\": 130.0, \"stage\": \"penutup\", \"visible\": \"perempuan bicara penutup di depan latar biru\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"proses membuat batik secara keseluruhan\", \"confidence\": \"sedang\"}, {\"spoken\": \"Alat dan Bahan\", \"term\": \"alat dan bahan\", \"source\": \"teks_layar\", \"t_start\": 23.0, \"t_end\": 25.0, \"stage\": \"persiapan\", \"visible\": \"tulisan judul di atas latar buram kain dan canting\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"perlengkapan untuk membatik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Proses Ngelowong ke Media Kain\", \"term\": \"ngelowong\", \"source\": \"teks_layar\", \"t_start\": 23.5, \"t_end\": 25.0, \"stage\": \"ngelowong\", \"visible\": \"subjudul di bawah Alat dan Bahan, latar buram\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"tahap menorehkan malam pertama mengikuti garis pola\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Lilin Panas\", \"term\": \"lilin panas\", \"source\": \"teks_layar\", \"t_start\": 25.5, \"t_end\": 27.5, \"stage\": \"persiapan malam\", \"visible\": \"wajan logam berisi cairan gelap di atas kompor minyak menyala\", \"visual_match\": \"ya\", \"gloss_id\": \"malam batik yang dicairkan\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Kompor\", \"term\": \"kompor\", \"source\": \"teks_layar\", \"t_start\": 25.5, \"t_end\": 27.5, \"stage\": \"persiapan malam\", \"visible\": \"kompor minyak biru menyala di bawah wajan\", \"visual_match\": \"ya\", \"gloss_id\": \"alat pemanas untuk mencairkan malam\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Kain Batik\", \"term\": \"kain batik\", \"source\": \"teks_layar\", \"t_start\": 28.0, \"t_end\": 29.0, \"stage\": \"persiapan media\", \"visible\": \"kain putih dengan gambar pensil motif flora dan tugu di atas meja biru\", \"visual_match\": \"ya\", \"gloss_id\": \"kain mori sebagai media batik\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Lilin Balok\", \"term\": \"lilin balok\", \"source\": \"teks_layar\", \"t_start\": 29.2, \"t_end\": 30.2, \"stage\": \"persiapan bahan\", \"visible\": \"balok malam gelap di atas meja biru dekat canting\", \"visual_match\": \"ya\", \"gloss_id\": \"malam batik padat sebelum dicairkan\", \"confidence\": \"sedang\"}, {\"spoken\": \"Canting\", \"term\": \"canting\", \"source\": \"teks_layar\", \"t_start\": 30.5, \"t_end\": 31.5, \"stage\": \"ngelowong\", \"visible\": \"empat canting kayu dengan cucuk kuningan berjejer\", \"visual_match\": \"ya\", \"gloss_id\": \"alat penoreh malam dengan gagang dan cucuk\", \"confidence\": \"tinggi\"}, {\"spoken\": \"Langkah-Langkah\", \"term\": \"langkah-langkah\", \"source\": \"teks_layar\", \"t_start\": 32.5, \"t_end\": 34.0, \"stage\": \"ngelowong\", \"visible\": \"tulisan judul di atas latar buram kegiatan mencanting\", \"visual_match\": \"tidak_terlihat\", \"gloss_id\": \"tahapan kerja\", \"confidence\": \"tinggi\"}, {\"spoken\": \"wajan\", \"term\": \"wajan\", \"source\": \"visual\", \"t_start\": 25.5, \"t_end\": 27.5, \"stage\": \"persiapan malam\", \"visible\": \"wajan logam dua kuping berisi cairan hitam di atas kompor\", \"visual_match\": \"ya\", \"gloss_id\": \"wadah untuk memanaskan malam\", \"confidence\": \"sedang\"}], \"process_steps\": [{\"step\": \"pembuka dan pengenalan\", \"t_start\": 0.0, \"t_end\": 21.0, \"tools\": []}, {\"step\": \"persiapan alat dan bahan\", \"t_start\": 22.0, \"t_end\": 31.5, \"tools\": [\"Kompor\", \"Lilin Panas\", \"Lilin Balok\", \"Kain Batik\", \"Canting\"]}, {\"step\": \"pemanasan malam dan pengisian canting\", \"t_start\": 34.0, \"t_end\": 39.0, \"tools\": [\"Kompor\", \"wajan\", \"Canting\"]}, {\"step\": \"ngelowong ke media kain\", \"t_start\": 39.0, \"t_end\": 108.5, \"tools\": [\"Canting\", \"Kain Batik\", \"Lilin Panas\"]}, {\"step\": \"pamer hasil dan penutup\", \"t_start\": 109.0, \"t_end\": 131.5, \"tools\": [\"Kain Batik\"]}]}",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 34720,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 4255,
+  "output_tokens_details": {
+   "reasoning_tokens": 2661
+  },
+  "total_tokens": 38975
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

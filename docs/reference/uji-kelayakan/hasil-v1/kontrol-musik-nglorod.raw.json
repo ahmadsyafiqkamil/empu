@@ -1,0 +1,58 @@
+{
+ "top_logprobs": 0,
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "service_tier": "auto",
+ "model": "muse-spark-1.3",
+ "reasoning": {
+  "effort": "high"
+ },
+ "background": false,
+ "tools": [],
+ "tool_choice": "auto",
+ "truncation": "disabled",
+ "id": "resp_6ae17a13a70e8e8260d44714",
+ "object": "response",
+ "status": "completed",
+ "created_at": 1793161746.0,
+ "completed_at": 1793161747.0,
+ "error": null,
+ "incomplete_details": null,
+ "output": [
+  {
+   "type": "reasoning",
+   "id": "rs_6ae17a13a70e8e8260d44714:rs_f7fd52dc-43cc-48bf-ba36-6d34b00a03df",
+   "summary": [],
+   "status": "completed"
+  },
+  {
+   "type": "message",
+   "id": "msg_ea9ca75c-a469-45a2-b301-3838ed5547b2",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "{\"speech_heard\": true, \"transcript_first_20s\": \"[00:00-00:20] musik instrumental gamelan, tidak ada ucapan / lirik yang terdengar\", \"terms\": [], \"process_steps\": [{\"step\": \"pelorodan tradisional - perebusan air dalam panci besar di atas tungku api\", \"t_start\": 0, \"t_end\": 40, \"tools\": [\"panci besar\", \"tungku api kayu\"]}, {\"step\": \"penambahan soda abu ke air panas dan pencelupan kain batik untuk melepaskan lilin malam\", \"t_start\": 7, \"t_end\": 29, \"tools\": [\"panci besar\", \"air panas\", \"soda abu\"]}, {\"step\": \"metode praktis - memanaskan satu ceret air\", \"t_start\": 50, \"t_end\": 55, \"tools\": [\"ceret\", \"kompor\"]}, {\"step\": \"menambahkan 3 sendok makan soda abu ke ember\", \"t_start\": 55, \"t_end\": 61, \"tools\": [\"ember plastik hijau\", \"gelas kecil\", \"soda abu\"]}, {\"step\": \"menuang air panas dari ceret ke ember\", \"t_start\": 62, \"t_end\": 67, \"tools\": [\"ceret\", \"ember plastik hijau\"]}, {\"step\": \"mengaduk agar tercampur rata\", \"t_start\": 70, \"t_end\": 80, \"tools\": [\"kayu pengaduk\", \"ember plastik hijau\"]}, {\"step\": \"memasukkan kain batik dan membolak-balik hingga lilin terlihat meleleh dan lepas\", \"t_start\": 81, \"t_end\": 103, \"tools\": [\"kain batik\", \"kayu pengaduk\", \"ember plastik hijau\"]}, {\"step\": \"mengangkat kain dan membilas dengan air bersih pada ember / bak lain\", \"t_start\": 104, \"t_end\": 138, \"tools\": [\"bak hitam besar\", \"air bersih\"]}, {\"step\": \"mengucek kain dan memastikan lilin malam telah terlepas\", \"t_start\": 139, \"t_end\": 147, \"tools\": [\"bak hitam besar\"]}, {\"step\": \"menjemur / menggantung kain hasil pelorodan\", \"t_start\": 149, \"t_end\": 154, \"tools\": [\"jemuran bambu\"]}, {\"step\": \"penampilan hasil kain batik jadi pada manekin\", \"t_start\": 154, \"t_end\": 198, \"tools\": [\"manekin\"]}]}\n",
+     "annotations": [],
+     "logprobs": []
+    }
+   ],
+   "status": "completed"
+  }
+ ],
+ "instructions": null,
+ "usage": {
+  "input_tokens": 62158,
+  "input_tokens_details": {
+   "cached_tokens": 0
+  },
+  "output_tokens": 2546,
+  "output_tokens_details": {
+   "reasoning_tokens": 1977
+  },
+  "total_tokens": 64704
+ },
+ "parallel_tool_calls": true,
+ "store": true,
+ "max_output_tokens": 16000
+}

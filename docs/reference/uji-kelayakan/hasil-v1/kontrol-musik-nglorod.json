@@ -1,0 +1,106 @@
+{
+ "speech_heard": true,
+ "transcript_first_20s": "[00:00-00:20] musik instrumental gamelan, tidak ada ucapan / lirik yang terdengar",
+ "terms": [],
+ "process_steps": [
+  {
+   "step": "pelorodan tradisional - perebusan air dalam panci besar di atas tungku api",
+   "t_start": 0,
+   "t_end": 40,
+   "tools": [
+    "panci besar",
+    "tungku api kayu"
+   ]
+  },
+  {
+   "step": "penambahan soda abu ke air panas dan pencelupan kain batik untuk melepaskan lilin malam",
+   "t_start": 7,
+   "t_end": 29,
+   "tools": [
+    "panci besar",
+    "air panas",
+    "soda abu"
+   ]
+  },
+  {
+   "step": "metode praktis - memanaskan satu ceret air",
+   "t_start": 50,
+   "t_end": 55,
+   "tools": [
+    "ceret",
+    "kompor"
+   ]
+  },
+  {
+   "step": "menambahkan 3 sendok makan soda abu ke ember",
+   "t_start": 55,
+   "t_end": 61,
+   "tools": [
+    "ember plastik hijau",
+    "gelas kecil",
+    "soda abu"
+   ]
+  },
+  {
+   "step": "menuang air panas dari ceret ke ember",
+   "t_start": 62,
+   "t_end": 67,
+   "tools": [
+    "ceret",
+    "ember plastik hijau"
+   ]
+  },
+  {
+   "step": "mengaduk agar tercampur rata",
+   "t_start": 70,
+   "t_end": 80,
+   "tools": [
+    "kayu pengaduk",
+    "ember plastik hijau"
+   ]
+  },
+  {
+   "step": "memasukkan kain batik dan membolak-balik hingga lilin terlihat meleleh dan lepas",
+   "t_start": 81,
+   "t_end": 103,
+   "tools": [
+    "kain batik",
+    "kayu pengaduk",
+    "ember plastik hijau"
+   ]
+  },
+  {
+   "step": "mengangkat kain dan membilas dengan air bersih pada ember / bak lain",
+   "t_start": 104,
+   "t_end": 138,
+   "tools": [
+    "bak hitam besar",
+    "air bersih"
+   ]
+  },
+  {
+   "step": "mengucek kain dan memastikan lilin malam telah terlepas",
+   "t_start": 139,
+   "t_end": 147,
+   "tools": [
+    "bak hitam besar"
+   ]
+  },
+  {
+   "step": "menjemur / menggantung kain hasil pelorodan",
+   "t_start": 149,
+   "t_end": 154,
+   "tools": [
+    "jemuran bambu"
+   ]
+  },
+  {
+   "step": "penampilan hasil kain batik jadi pada manekin",
+   "t_start": 154,
+   "t_end": 198,
+   "tools": [
+    "manekin"
+   ]
+  }
+ ]
+}
