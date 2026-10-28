@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "empu/muse-output/v3",
+  "title": "Empu: Muse analysis output per segment",
+  "description": "Output Muse untuk SATU segmen video. Semua waktu dalam detik dari awal segmen. Enum memakai bahasa Inggris (uji v1/v2 memakai enum Indonesia, lihat pemetaan di hasil-uji-kelayakan.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["speech_heard", "language_notes", "transcript_excerpt", "terms", "process_steps"],
+  "properties": {
+    "speech_heard": {
+      "type": "boolean",
+      "description": "true jika ada ucapan manusia yang terdengar di audio segmen ini"
+    },
+    "language_notes": {
+      "type": "string",
+      "description": "Bahasa yang terdengar, mis. 'Indonesia bercampur istilah Jawa'"
+    },
+    "transcript_excerpt": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "Transkrip kasar 20 detik pertama, atau keterangan seperti '[musik, tanpa ucapan]'"
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "spoken", "term", "category", "source", "t_start", "t_end", "stage",
+          "evidence_quote", "visible", "visible_object_en", "visual_match",
+          "gloss_id", "gloss_en", "confidence"
+        ],
+        "properties": {
+          "spoken": {
+            "type": "string",
+            "description": "Bentuk persis yang diucapkan atau tertulis (mis. 'dilorot', 'ngelowong')"
+          },
+          "term": {
+            "type": "string",
+            "description": "Bentuk baku/kanonis menurut Muse (mis. 'nglorod', 'nglowong')"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["tool", "tool_part", "material", "dye", "stage", "technique", "motif", "other"]
+          },
+          "source": {
+            "type": "string",
+            "enum": ["speech", "on_screen_text", "visual_only"],
+            "description": "speech = terdengar di audio; on_screen_text = hanya terbaca di layar; visual_only = bendanya terlihat tapi tidak diucapkan dan tidak tertulis"
+          },
+          "t_start": { "type": "number", "minimum": 0 },
+          "t_end": { "type": "number", "minimum": 0 },
+          "stage": {
+            "type": ["string", "null"],
+            "description": "Tahap proses saat istilah muncul, idealnya id tahap dari craft pack"
+          },
+          "evidence_quote": {
+            "type": "string",
+            "maxLength": 160,
+            "description": "Kalimat yang diucapkan di sekitar istilah (kosong jika source bukan speech)"
+          },
+          "visible": {
+            "type": "string",
+            "description": "Apa yang terlihat di layar saat itu (alat, bahan, gerakan)"
+          },
+          "visible_object_en": {
+            "type": ["string", "null"],
+            "description": "Frasa benda pendek dalam bahasa Inggris untuk prompt SAM, mis. 'copper wax pen'. null jika tidak ada benda yang relevan"
+          },
+          "visual_match": {
+            "type": "string",
+            "enum": ["yes", "no", "not_visible"]
+          },
+          "gloss_id": { "type": "string", "description": "Arti singkat dalam bahasa Indonesia" },
+          "gloss_en": { "type": "string", "description": "Short meaning in English" },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "process_steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step", "t_start", "t_end", "tools"],
+        "properties": {
+          "step": { "type": "string" },
+          "t_start": { "type": "number", "minimum": 0 },
+          "t_end": { "type": "number", "minimum": 0 },
+          "tools": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}
