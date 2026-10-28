@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+from functools import lru_cache
 from pathlib import Path
 
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
-from sqlmodel import SQLModel, create_engine
+from sqlmodel import Session, SQLModel, create_engine
 
 from empu import models  # noqa: F401  (registers the tables on SQLModel.metadata)
+from empu.config import Settings, get_settings
 
 
 def make_engine(db_url: str) -> Engine:
@@ -33,3 +36,20 @@ def init_db(engine: Engine, *, reset: bool = False) -> None:
     if reset:
         SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
+
+
+@lru_cache
+def get_engine_cached(db_url: str) -> Engine:
+    return make_engine(db_url)
+
+
+def get_engine(settings: Settings | None = None) -> Engine:
+    s = settings or get_settings()
+    eng = get_engine_cached(s.db_url)
+    init_db(eng)
+    return eng
+
+
+def get_session() -> Iterator[Session]:
+    with Session(get_engine()) as session:
+        yield session
