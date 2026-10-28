@@ -97,4 +97,8 @@ Respons: `status: completed`, `usage.images_processed: 1`, token 0. Teks keluara
 Sekitar 7 panggilan Muse yang berbayar (4 recall, 2 audio, 1 structured; 2 percobaan transkripsi ditolak tanpa biaya) dan 13 panggilan SAM (0 token). Latensi Muse per segmen 75 s sekitar 25–45 s. Total di bawah USD 0,20.
 
 ## Catatan H1
-(diisi saat H1-10)
+- CLI `empu analyze` dan tes H1 hijau (75 passed, `ruff check .` bersih). Uji berbayar *Macam Canting* **tidak menghasilkan angka Muse yang sah**.
+- Run 28 Okt 2026: 4/4 segmen gagal `MetaAPIError` **401** (`invalid_api_key` / `authentication_error`); terms speech/on_screen_text/visual_only = 0/0/0; token 0; wall 31,4 s (ffmpeg + 401, bukan latensi Muse). Cache tidak menulis kegagalan, jadi ulang nanti tidak memakai hasil rusak.
+- *canting* sebagai `speech`: tidak terukur (tidak ada keluaran Muse). Subtitle otomatis orig: "cantik" @30,3 s, "cacing" @33,7 s (juga @37,1 s, @122,96 s); `.id.vtt` yang dibersihkan menulis "canting" @19,8 s, @28,6 s, @32,5 s.
+- Istilah `speech` yang jelas salah: tidak terukur.
+- Masalah: kunci API di `.env` ditolak Meta. Perbaikan: ganti `META_MODEL_API_KEY` yang sah, lalu jalankan ulang `empu analyze` pada video yang sama (`data/runs/macam-canting`); run kedua harus 100% cache.

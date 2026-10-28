@@ -3,6 +3,7 @@
 import re
 
 from conftest import REPO_ROOT
+
 from empu.text import normalize
 
 ALLOW = {"finishing", "other"}

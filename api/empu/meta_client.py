@@ -99,7 +99,9 @@ def extract_json(text: str) -> dict:
 
 
 def _retryable(exc: BaseException) -> bool:
-    return isinstance(exc, httpx.TransportError) or (isinstance(exc, MetaAPIError) and exc.retryable)
+    return isinstance(exc, httpx.TransportError) or (
+        isinstance(exc, MetaAPIError) and exc.retryable
+    )
 
 
 class MetaClient:
@@ -123,7 +125,9 @@ class MetaClient:
         self._http.close()
 
     def _retry(self, fn: Callable[[], T]) -> T:
-        wait = wait_exponential(multiplier=self._backoff_s, max=60) if self._backoff_s else wait_none()
+        wait = (
+            wait_exponential(multiplier=self._backoff_s, max=60) if self._backoff_s else wait_none()
+        )
         retrying = Retrying(stop=stop_after_attempt(self._max_retries + 1), wait=wait,
                             retry=retry_if_exception(_retryable), reraise=True)
         return retrying(fn)
@@ -140,8 +144,13 @@ class MetaClient:
 
         def send() -> dict:
             with path.open("rb") as f:
-                return self._send("POST", "/files", timeout=600,
-                                  files={"file": (path.name, f, mime)}, data={"purpose": "user_data"})
+                return self._send(
+                    "POST",
+                    "/files",
+                    timeout=600,
+                    files={"file": (path.name, f, mime)},
+                    data={"purpose": "user_data"},
+                )
 
         return self._retry(send)["id"]
 

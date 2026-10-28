@@ -15,7 +15,11 @@ def make_raw(payload: dict | str, usage: dict | None = None) -> dict:
         "status": "completed",
         "output": [
             {"type": "reasoning", "summary": []},
-            {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": text}]},
+            {
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": text}],
+            },
         ],
         "usage": usage or {"input_tokens": 100, "output_tokens": 20,
                            "output_tokens_details": {"reasoning_tokens": 5}},

@@ -2,9 +2,9 @@
 import json
 
 import pytest
+from conftest import REPO_ROOT, load_fixture
 from pydantic import ValidationError
 
-from conftest import REPO_ROOT, load_fixture
 from empu.enums import Confidence, Source, VisualMatch
 from empu.legacy import upgrade_v1
 from empu.muse_schema import MuseSegmentOutput, MuseTerm, load_json_schema
@@ -36,7 +36,9 @@ def test_valid_term_parses():
 
 
 def test_legacy_enums_coerced():
-    t = MuseTerm.model_validate(term(source="teks_layar", visual_match="tidak_terlihat", confidence="sedang"))
+    t = MuseTerm.model_validate(
+        term(source="teks_layar", visual_match="tidak_terlihat", confidence="sedang")
+    )
     assert t.source is Source.on_screen_text
     assert t.visual_match is VisualMatch.not_visible
     assert t.confidence is Confidence.medium
@@ -82,5 +84,7 @@ def test_upgrade_v1_nglowong():
 
 
 def test_upgrade_v1_control_has_no_terms():
-    out = MuseSegmentOutput.model_validate(upgrade_v1(load_fixture("muse/v1/kontrol-musik-nglorod.json")))
+    out = MuseSegmentOutput.model_validate(
+        upgrade_v1(load_fixture("muse/v1/kontrol-musik-nglorod.json"))
+    )
     assert out.terms == [] and len(out.process_steps) > 0

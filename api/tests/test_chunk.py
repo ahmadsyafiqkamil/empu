@@ -1,6 +1,6 @@
 import pytest
-
 from conftest import requires_ffmpeg
+
 from empu.pipeline.chunk import ChunkSpec, cut_chunks, plan_chunks
 from empu.pipeline.ffmpeg import probe_duration
 

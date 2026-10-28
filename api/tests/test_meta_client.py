@@ -4,8 +4,8 @@ import json
 import httpx
 import pytest
 import respx
-
 from conftest import FIXTURES, load_fixture
+
 from empu.meta_client import MetaAPIError, MetaClient, extract_json, output_text
 from empu.muse_schema import MuseSegmentOutput
 
@@ -25,7 +25,9 @@ def client() -> MetaClient:
 
 @respx.mock
 def test_upload_sends_auth_and_purpose(video):
-    route = respx.post(f"{BASE}/files").mock(return_value=httpx.Response(200, json={"id": "file_1"}))
+    route = respx.post(f"{BASE}/files").mock(
+        return_value=httpx.Response(200, json={"id": "file_1"})
+    )
     assert client().upload_file(video) == "file_1"
     req = route.calls.last.request
     assert req.headers["Authorization"] == "Bearer secret-key"
@@ -86,7 +88,12 @@ def test_analyze_video_with_schema_sets_text_format():
     route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
     client().analyze_video("f", "P", model="m", schema={"type": "object"})
     fmt = json.loads(route.calls.last.request.content)["text"]["format"]
-    assert fmt == {"type": "json_schema", "name": "empu_terms", "schema": {"type": "object"}, "strict": True}
+    assert fmt == {
+        "type": "json_schema",
+        "name": "empu_terms",
+        "schema": {"type": "object"},
+        "strict": True,
+    }
 
 
 @respx.mock
@@ -112,10 +119,20 @@ def test_repr_hides_key():
 
 
 def test_output_text_and_extract_json():
-    raw = {"output": [{"type": "message", "content": [{"type": "output_text", "text": "```json\n{\"a\": 1}\n```"}]}]}
+    raw = {
+        "output": [
+            {
+                "type": "message",
+                "content": [{"type": "output_text", "text": "```json\n{\"a\": 1}\n```"}],
+            }
+        ]
+    }
     assert extract_json(output_text(raw)) == {"a": 1}
     assert extract_json('Here you go: {"terms": []} thanks') == {"terms": []}
-    echoed = '{"type": "object", "properties": {"terms": {"type": "array"}}} {"terms": [], "speech_heard": true}'
+    echoed = (
+        '{"type": "object", "properties": {"terms": {"type": "array"}}} '
+        '{"terms": [], "speech_heard": true}'
+    )
     assert extract_json(echoed) == {"terms": [], "speech_heard": True}
     assert output_text({"output_text": "{}"}) == "{}"
     with pytest.raises(ValueError):
@@ -124,7 +141,10 @@ def test_output_text_and_extract_json():
         extract_json("nothing")
 
 
-@pytest.mark.skipif(not (FIXTURES / "muse/gate0/recall-seg0.raw.json").exists(), reason="gate0 fixture missing")
+@pytest.mark.skipif(
+    not (FIXTURES / "muse/gate0/recall-seg0.raw.json").exists(),
+    reason="gate0 fixture missing",
+)
 def test_gate0_v3_output_validates_without_upgrade():
     raw = load_fixture("muse/gate0/recall-seg0.raw.json")
     MuseSegmentOutput.model_validate(extract_json(output_text(raw)))

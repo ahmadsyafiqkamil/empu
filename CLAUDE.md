@@ -34,7 +34,16 @@ Plan implementasi disimpan di `docs/superpowers/plans/`.
 - Satu paket Python `empu` berisi pustaka pipeline, API, worker (`python -m empu.worker`), dan CLI (`empu analyze`, `empu eval`).
 
 ## Perintah
-Diisi saat scaffolding (H1): instalasi, menjalankan api, worker, dan web, tes, lint, dan CLI.
+```bash
+# Python
+cd api && uv sync                         # instal
+uv run pytest -q                          # tes
+uv run ruff check . && uv run ruff format --check .
+uv run empu analyze <video> --pack batik_tulis --out ../data/runs/<nama>
+uv run empu db init
+uv run python -m empu.worker              # worker
+uv run uvicorn empu.app:create_app --factory --reload --port 8000   # API
+```
 
 ## Konvensi
 - Kode, identifier, nama tabel, enum, dan pesan commit dalam bahasa Inggris.
@@ -44,3 +53,4 @@ Diisi saat scaffolding (H1): instalasi, menjalankan api, worker, dan web, tes, l
 
 ## Status
 - H0 (Rab 28 Okt): dokumen konteks selesai. Plan di `docs/superpowers/plans/2026-10-28-empu/` (ikhtisar, H0, H1 sebagian). Keputusan: demo pakai video YouTube CC BY dengan atribusi (spec diperbarui). Gate 0 selesai (`docs/reference/hasil-gate0.md`): audio lulus, recall 4/8 dengan waktu (7/8 isi) → **Mode B** (faster-whisper sebagai jangkar waktu), SAM lulus dengan prompt deskriptif Inggris + bbox saja, structured output skema penuh didukung. Berikutnya: hubungi kreator CC BY, lalu H1.
+- H1 (Kam 29 Okt): paket `empu` + `empu analyze` CLI/tes hijau; uji berbayar *Macam Canting* terblokir (Meta API 401 `authentication_error`). Berikutnya: kunci API sah lalu ulang analyze; H2 (Gate 1).

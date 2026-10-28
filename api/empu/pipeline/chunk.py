@@ -20,7 +20,9 @@ class ChunkSpec:
         return self.end_s - self.start_s
 
 
-def plan_chunks(duration_s: float, window_s: float = 75.0, overlap_s: float = 10.0) -> list[ChunkSpec]:
+def plan_chunks(
+    duration_s: float, window_s: float = 75.0, overlap_s: float = 10.0
+) -> list[ChunkSpec]:
     if duration_s <= 0:
         raise ValueError("duration must be positive")
     if not 0 <= overlap_s < window_s:

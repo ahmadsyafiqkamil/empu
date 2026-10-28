@@ -33,5 +33,8 @@ def normalize_recording(src: Path, out_dir: Path, *, strip_audio: bool = False) 
         audio = ANALYSIS_AUDIO if audio_in and not strip_audio else ["-an"]
         ffmpeg_to(analysis, ["-i", str(src), *ANALYSIS_VIDEO, *audio])
     if not display.exists():
-        ffmpeg_to(display, ["-i", str(src), *DISPLAY_VIDEO, *(DISPLAY_AUDIO if audio_in else ["-an"])])
+        ffmpeg_to(
+            display,
+            ["-i", str(src), *DISPLAY_VIDEO, *(DISPLAY_AUDIO if audio_in else ["-an"])],
+        )
     return NormalizedMedia(analysis, display, probe_duration(display))

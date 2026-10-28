@@ -1,6 +1,6 @@
 import pytest
-
 from conftest import requires_ffmpeg
+
 from empu.pipeline.ffmpeg import FFmpegError, has_audio, probe_height, run_ffmpeg
 from empu.pipeline.normalize import normalize_recording
 

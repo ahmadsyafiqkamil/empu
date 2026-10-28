@@ -14,10 +14,15 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=REPO_ROOT / ".env", env_file_encoding="utf-8", extra="ignore", populate_by_name=True
+        env_file=REPO_ROOT / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        populate_by_name=True,
     )
 
-    meta_model_api_key: SecretStr | None = Field(default=None, validation_alias="META_MODEL_API_KEY")
+    meta_model_api_key: SecretStr | None = Field(
+        default=None, validation_alias="META_MODEL_API_KEY"
+    )
     studio_key: SecretStr | None = Field(default=None, validation_alias="STUDIO_KEY")
     meta_base_url: str = Field(default="https://api.meta.ai/v1", validation_alias="META_BASE_URL")
     muse_model: str = Field(default="muse-spark-1.3", validation_alias="MUSE_MODEL")
@@ -44,7 +49,9 @@ class Settings(BaseSettings):
 
     max_upload_mb: int = Field(default=500, validation_alias="EMPU_MAX_UPLOAD_MB")
     max_duration_s: float = Field(default=1200.0, validation_alias="EMPU_MAX_DURATION_S")
-    sandbox_max_duration_s: float = Field(default=180.0, validation_alias="EMPU_SANDBOX_MAX_DURATION_S")
+    sandbox_max_duration_s: float = Field(
+        default=180.0, validation_alias="EMPU_SANDBOX_MAX_DURATION_S"
+    )
     sandbox_daily_quota: int = Field(default=30, validation_alias="EMPU_SANDBOX_DAILY_QUOTA")
 
     @model_validator(mode="after")
