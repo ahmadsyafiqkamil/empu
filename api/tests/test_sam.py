@@ -2,8 +2,8 @@ import json
 
 import httpx
 import respx
-
 from conftest import load_fixture
+
 from empu.meta_client import MetaClient, output_text, parse_sam_boxes
 
 BASE = "https://api.test/v1"
@@ -15,7 +15,8 @@ def test_parse_row_fixture_four_boxes():
     assert len(dets) == 4
     assert dets[0].label == "wooden stick with copper tip" and dets[0].score == 1.0
     x1, y1, x2, y2 = dets[3].bbox_xyxy
-    assert (round(x1 * 854), round(y1 * 480), round(x2 * 854), round(y2 * 480)) == (553, 265, 736, 425)
+    scaled = (round(x1 * 854), round(y1 * 480), round(x2 * 854), round(y2 * 480))
+    assert scaled == (553, 265, 736, 425)
 
 
 def test_parse_ignores_degenerate_and_garbage():

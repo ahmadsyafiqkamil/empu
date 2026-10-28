@@ -30,7 +30,13 @@ PAYLOAD = {
             gloss_id="alat menorehkan lilin",
             gloss_en="wax pen",
         ),
-        muse_term(term="canting", spoken="tjanting", source="on_screen_text", t_start=8.0, t_end=9.0),
+        muse_term(
+            term="canting",
+            spoken="tjanting",
+            source="on_screen_text",
+            t_start=8.0,
+            t_end=9.0,
+        ),
         muse_term(
             term="bethik",
             spoken="bethik",
@@ -56,7 +62,12 @@ def job_for(session, settings, sample_video):
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(sample_video, dst)
         r.original_path = rel_to_data(settings.data_dir, dst)
-        job = Job(recording_id=r.id, mode=mode, model=settings.muse_model, prompt_version="analyze-v3")
+        job = Job(
+            recording_id=r.id,
+            mode=mode,
+            model=settings.muse_model,
+            prompt_version="analyze-v3",
+        )
         session.add_all([r, job])
         session.commit()
         return job
@@ -71,7 +82,8 @@ def entries(session):
 @requires_ffmpeg
 def test_end_to_end_mode_a(session, settings, job_for):
     job = job_for()
-    process_recording(session, job.id, client=FakeClient([make_raw(PAYLOAD)], sam=SAM), settings=settings)
+    client = FakeClient([make_raw(PAYLOAD)], sam=SAM)
+    process_recording(session, job.id, client=client, settings=settings)
     session.refresh(job)
     assert job.status is JobStatus.ready, job.error
     assert job.progress == 1.0 and set(job.timings_json) >= {s.value for s in JOB_STAGES}
@@ -81,7 +93,8 @@ def test_end_to_end_mode_a(session, settings, job_for):
     es = entries(session)
     assert set(es) == {"term:canting", "novel:bethik"}
     canting = es["term:canting"]
-    assert canting.sam_status is SamStatus.ok and abs_from_rel(settings.data_dir, canting.crop_path).exists()
+    crop = abs_from_rel(settings.data_dir, canting.crop_path)
+    assert canting.sam_status is SamStatus.ok and crop.exists()
     assert canting.sam_prompt == "wooden stick with copper tip"
     assert es["novel:bethik"].sam_status is SamStatus.empty and es["novel:bethik"].is_novel
     occs = session.exec(select(Occurrence)).all()
@@ -96,7 +109,8 @@ def test_end_to_end_mode_a(session, settings, job_for):
 @requires_ffmpeg
 def test_reprocess_uses_cache_and_does_not_duplicate(session, settings, job_for):
     job = job_for()
-    process_recording(session, job.id, client=FakeClient([make_raw(PAYLOAD)], sam=SAM), settings=settings)
+    client = FakeClient([make_raw(PAYLOAD)], sam=SAM)
+    process_recording(session, job.id, client=client, settings=settings)
     again = Job(recording_id=job.recording_id, mode=PipelineMode.A, model=settings.muse_model)
     session.add(again)
     session.commit()
@@ -134,7 +148,8 @@ def test_mode_b_realigns_speech(session, settings, job_for):
 @requires_ffmpeg
 def test_invalid_muse_output_fails_job_cleanly(session, settings, job_for):
     job = job_for()
-    process_recording(session, job.id, client=FakeClient([make_raw("x"), make_raw("y")]), settings=settings)
+    bad = FakeClient([make_raw("x"), make_raw("y")])
+    process_recording(session, job.id, client=bad, settings=settings)
     session.refresh(job)
     assert job.status is JobStatus.failed and job.error.startswith("analyzing")
     assert session.get(Recording, job.recording_id).status is JobStatus.failed
@@ -146,4 +161,5 @@ def test_sam_disabled_skips(session, settings, job_for):
     settings.sam_enabled = False
     client = FakeClient([make_raw(PAYLOAD)], sam=SAM)
     process_recording(session, job.id, client=client, settings=settings)
-    assert client.sam_calls == [] and entries(session)["term:canting"].sam_status is SamStatus.skipped
+    canting = entries(session)["term:canting"]
+    assert client.sam_calls == [] and canting.sam_status is SamStatus.skipped

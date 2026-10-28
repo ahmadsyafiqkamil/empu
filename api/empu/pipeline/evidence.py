@@ -36,21 +36,37 @@ class EvidencePaths:
 def extract_keyframe(display: Path, t: float, dst: Path) -> Path:
     if Path(dst).exists():
         return Path(dst)
-    return ffmpeg_to(Path(dst), ["-ss", f"{max(0.0, t):.3f}", "-i", str(display),
-                                 "-frames:v", "1", "-q:v", "2"])
+    return ffmpeg_to(
+        Path(dst), ["-ss", f"{max(0.0, t):.3f}", "-i", str(display), "-frames:v", "1", "-q:v", "2"]
+    )
 
 
-def make_evidence(display: Path, t_start: float, t_end: float, duration_s: float,
-                  out_dir: Path) -> EvidencePaths:
+def make_evidence(
+    display: Path, t_start: float, t_end: float, duration_s: float, out_dir: Path
+) -> EvidencePaths:
     out_dir = Path(out_dir)
     a, b = clip_window(t_start, t_end, duration_s)
     seek = ["-ss", f"{a:.3f}", "-i", str(display), "-t", f"{b - a:.3f}"]
     clip, audio, keyframe = out_dir / "clip.mp4", out_dir / "audio.m4a", out_dir / "keyframe.jpg"
     with_audio = has_audio(display)
     if not clip.exists():
-        ffmpeg_to(clip, [*seek, "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
-                         *(["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"]),
-                         "-movflags", "+faststart"])
+        ffmpeg_to(
+            clip,
+            [
+                *seek,
+                "-c:v",
+                "libx264",
+                "-preset",
+                "veryfast",
+                "-crf",
+                "23",
+                "-pix_fmt",
+                "yuv420p",
+                *(["-c:a", "aac", "-b:a", "128k"] if with_audio else ["-an"]),
+                "-movflags",
+                "+faststart",
+            ],
+        )
     if with_audio and not audio.exists():
         ffmpeg_to(audio, [*seek, "-vn", "-c:a", "aac", "-b:a", "96k"])
     extract_keyframe(display, (t_start + t_end) / 2, keyframe)

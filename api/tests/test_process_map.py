@@ -1,7 +1,7 @@
 import pytest
+from fakes import analysis
 
 from empu.pipeline.process_map import StageMatcher, build_process_map, stage_at
-from fakes import analysis
 
 
 @pytest.fixture(scope="module")

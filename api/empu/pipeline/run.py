@@ -1,4 +1,4 @@
-"""Pipeline orchestrator: one job through all stages, progress written to the job row (spec 8, D7)."""
+"""Pipeline orchestrator: one job through all stages; progress on job row (spec 8, D7)."""
 
 from __future__ import annotations
 
@@ -36,8 +36,14 @@ from empu.pipeline.transcribe import (
     whisper_transcriber,
 )
 
-JOB_STAGES = (JobStatus.normalizing, JobStatus.chunking, JobStatus.analyzing, JobStatus.merging,
-              JobStatus.grounding, JobStatus.cutting)
+JOB_STAGES = (
+    JobStatus.normalizing,
+    JobStatus.chunking,
+    JobStatus.analyzing,
+    JobStatus.merging,
+    JobStatus.grounding,
+    JobStatus.cutting,
+)
 DEFAULT_ASR_MODEL = "small"
 
 
@@ -66,13 +72,20 @@ class StageTracker:
     def stage(self, status: JobStatus) -> Iterator[None]:
         self.current, self._t0 = status, time.monotonic()
         self.job.status = status
-        self.job.timings_json = {**self.job.timings_json,
-                                 status.value: {"started_at": utcnow().isoformat(), "finished_at": None}}
+        self.job.timings_json = {
+            **self.job.timings_json,
+            status.value: {"started_at": utcnow().isoformat(), "finished_at": None},
+        }
         self.update(0.0, "")
         yield
-        self.job.timings_json = {**self.job.timings_json, status.value: {
-            **self.job.timings_json[status.value], "finished_at": utcnow().isoformat(),
-            "seconds": round(time.monotonic() - self._t0, 1)}}
+        self.job.timings_json = {
+            **self.job.timings_json,
+            status.value: {
+                **self.job.timings_json[status.value],
+                "finished_at": utcnow().isoformat(),
+                "seconds": round(time.monotonic() - self._t0, 1),
+            },
+        }
         self.update(1.0)
 
 
@@ -83,12 +96,15 @@ def _pack_for(session: Session, rec: Recording, settings: Settings) -> CraftPack
     return load_pack(archive.craft_pack_id, settings.packs_dir)
 
 
-def _upsert_chunks(session: Session, rec: Recording, specs: list[ChunkSpec], paths: list[Path],
-                   data_dir: Path) -> dict[int, Chunk]:
+def _upsert_chunks(
+    session: Session, rec: Recording, specs: list[ChunkSpec], paths: list[Path], data_dir: Path
+) -> dict[int, Chunk]:
     existing = {c.idx: c for c in session.exec(select(Chunk).where(Chunk.recording_id == rec.id))}
     rows: dict[int, Chunk] = {}
     for spec, path in zip(specs, paths, strict=True):
-        row = existing.pop(spec.idx, None) or Chunk(recording_id=rec.id, idx=spec.idx, start_s=0, end_s=0, path="")
+        row = existing.pop(spec.idx, None) or Chunk(
+            recording_id=rec.id, idx=spec.idx, start_s=0, end_s=0, path=""
+        )
         row.start_s, row.end_s, row.path = spec.start_s, spec.end_s, rel_to_data(data_dir, path)
         row.status, row.error = ChunkStatus.pending, None
         session.add(row)
@@ -99,8 +115,9 @@ def _upsert_chunks(session: Session, rec: Recording, specs: list[ChunkSpec], pat
     return rows
 
 
-def _store_chunk_results(session: Session, rows: dict[int, Chunk], results: list[ChunkAnalysis],
-                         data_dir: Path) -> None:
+def _store_chunk_results(
+    session: Session, rows: dict[int, Chunk], results: list[ChunkAnalysis], data_dir: Path
+) -> None:
     for r in results:
         row = rows[r.spec.idx]
         row.sha256, row.file_id, row.cached = r.sha256, r.file_id, r.cached
@@ -112,25 +129,46 @@ def _store_chunk_results(session: Session, rows: dict[int, Chunk], results: list
     session.commit()
 
 
-def _ground(session: Session, rec: Recording, entries: list[Entry], display: Path, *, client: Any,
-            settings: Settings, pack: CraftPack, tracker: StageTracker) -> Counter:
+def _ground(
+    session: Session,
+    rec: Recording,
+    entries: list[Entry],
+    display: Path,
+    *,
+    client: Any,
+    settings: Settings,
+    pack: CraftPack,
+    tracker: StageTracker,
+) -> Counter:
     sam_cache = ResponseCache(settings.data_dir / "cache" / "sam")
     counts: Counter = Counter()
     for i, entry in enumerate(entries, start=1):
-        best = session.get(Occurrence, entry.best_occurrence_id) if entry.best_occurrence_id else None
+        best = (
+            session.get(Occurrence, entry.best_occurrence_id) if entry.best_occurrence_id else None
+        )
         if best is None or best.recording_id != rec.id:
             continue
         odir = occurrence_dir(settings.data_dir, rec.archive_id, rec.id, best.id)
         keyframe = extract_keyframe(display, (best.t_start + best.t_end) / 2, odir / "keyframe.jpg")
         best.keyframe_path = rel_to_data(settings.data_dir, keyframe)
-        prompts = sam_prompts_for(pack, pack_term_id=entry.pack_term_id, is_novel=entry.is_novel,
-                                  visible_object_en=best.visible_object_en)
+        prompts = sam_prompts_for(
+            pack,
+            pack_term_id=entry.pack_term_id,
+            is_novel=entry.is_novel,
+            visible_object_en=best.visible_object_en,
+        )
         if settings.sam_enabled and prompts:
-            res = ground_keyframe(client, sam_cache, keyframe, prompts,
-                                  entry_dir(settings.data_dir, rec.archive_id, entry.id), model=settings.sam_model)
+            edir = entry_dir(settings.data_dir, rec.archive_id, entry.id)
+            res = ground_keyframe(
+                client, sam_cache, keyframe, prompts, edir, model=settings.sam_model
+            )
             entry.sam_status, entry.sam_prompt = res.status, res.prompt_used or prompts[0]
-            entry.crop_path = rel_to_data(settings.data_dir, res.crop_path) if res.crop_path else None
-            entry.overlay_path = rel_to_data(settings.data_dir, res.overlay_path) if res.overlay_path else None
+            entry.crop_path = (
+                rel_to_data(settings.data_dir, res.crop_path) if res.crop_path else None
+            )
+            entry.overlay_path = (
+                rel_to_data(settings.data_dir, res.overlay_path) if res.overlay_path else None
+            )
         else:
             entry.sam_status, entry.crop_path, entry.overlay_path = SamStatus.skipped, None, None
         counts[entry.sam_status.value] += 1
@@ -140,12 +178,22 @@ def _ground(session: Session, rec: Recording, entries: list[Entry], display: Pat
     return counts
 
 
-def _cut(session: Session, rec: Recording, display: Path, settings: Settings, tracker: StageTracker) -> int:
-    occs = list(session.exec(select(Occurrence).where(Occurrence.recording_id == rec.id)
-                             .order_by(Occurrence.t_start)))
+def _cut(
+    session: Session, rec: Recording, display: Path, settings: Settings, tracker: StageTracker
+) -> int:
+    occs = list(
+        session.exec(
+            select(Occurrence).where(Occurrence.recording_id == rec.id).order_by(Occurrence.t_start)
+        )
+    )
     for i, o in enumerate(occs, start=1):
-        ev = make_evidence(display, o.t_start, o.t_end, rec.duration_s or o.t_end,
-                           occurrence_dir(settings.data_dir, rec.archive_id, rec.id, o.id))
+        ev = make_evidence(
+            display,
+            o.t_start,
+            o.t_end,
+            rec.duration_s or o.t_end,
+            occurrence_dir(settings.data_dir, rec.archive_id, rec.id, o.id),
+        )
         o.clip_path = rel_to_data(settings.data_dir, ev.clip)
         o.audio_path = rel_to_data(settings.data_dir, ev.audio) if ev.audio else None
         o.keyframe_path = rel_to_data(settings.data_dir, ev.keyframe)
@@ -156,8 +204,14 @@ def _cut(session: Session, rec: Recording, display: Path, settings: Settings, tr
     return len(occs)
 
 
-def process_recording(session: Session, job_id: int, *, client: Any, settings: Settings,
-                      transcriber: Transcriber | None = None) -> None:
+def process_recording(
+    session: Session,
+    job_id: int,
+    *,
+    client: Any,
+    settings: Settings,
+    transcriber: Transcriber | None = None,
+) -> None:
     job = session.get(Job, job_id)
     if job is None:
         raise PipelineError(f"job {job_id} not found")
@@ -190,9 +244,13 @@ def process_recording(session: Session, job_id: int, *, client: Any, settings: S
             if job.mode is PipelineMode.B and has_audio(media.display_path):
                 model_name = settings.transcribe_model or DEFAULT_ASR_MODEL
                 language = (rec.language_hint or "id").split(",")[0].strip() or "id"
-                words_future = pool.submit(transcribe_cached, media.display_path,
-                                           transcriber or whisper_transcriber(model_name, language),
-                                           cache_root=data_dir / "cache" / "asr", model_name=model_name)
+                words_future = pool.submit(
+                    transcribe_cached,
+                    media.display_path,
+                    transcriber or whisper_transcriber(model_name, language),
+                    cache_root=data_dir / "cache" / "asr",
+                    model_name=model_name,
+                )
             done = 0
 
             def on_done(_: ChunkAnalysis) -> None:
@@ -200,18 +258,30 @@ def process_recording(session: Session, job_id: int, *, client: Any, settings: S
                 done += 1
                 tracker.update(done / len(specs), f"segment {done}/{len(specs)}")
 
-            opts = AnalyzeOptions(model=settings.muse_model, structured=settings.structured_output,
-                                  schema_variant=settings.structured_schema_variant)
-            results = analyze_chunks(client, ResponseCache(data_dir / "cache" / "muse"), pack,
-                                     list(zip(specs, paths, strict=True)), opts, out_dir=rec_dir / "muse",
-                                     concurrency=settings.analyze_concurrency, on_done=on_done)
+            opts = AnalyzeOptions(
+                model=settings.muse_model,
+                structured=settings.structured_output,
+                schema_variant=settings.structured_schema_variant,
+            )
+            results = analyze_chunks(
+                client,
+                ResponseCache(data_dir / "cache" / "muse"),
+                pack,
+                list(zip(specs, paths, strict=True)),
+                opts,
+                out_dir=rec_dir / "muse",
+                concurrency=settings.analyze_concurrency,
+                on_done=on_done,
+            )
             _store_chunk_results(session, rows, results, data_dir)
             usage["muse"] = usage_totals([r.usage for r in results if not r.cached])
             usage["cached_chunks"] = sum(r.cached for r in results)
             failed = [r for r in results if r.error]
             if failed:
-                raise PipelineError(f"{len(failed)}/{len(results)} segments failed: "
-                                    + "; ".join(f"#{r.spec.idx}: {r.error[:200]}" for r in failed))
+                raise PipelineError(
+                    f"{len(failed)}/{len(results)} segments failed: "
+                    + "; ".join(f"#{r.spec.idx}: {r.error[:200]}" for r in failed)
+                )
             words: list[Word] = []
             if words_future is not None:
                 try:
@@ -224,20 +294,40 @@ def process_recording(session: Session, job_id: int, *, client: Any, settings: S
             steps = build_process_map(results, pack)
             retime = (lambda occs: realign(occs, words)) if words else None
             drafts = merge_analyses(results, pack, steps=steps, retime=retime)
-            touched = persist_results(session, rec, drafts, steps, {i: r.id for i, r in rows.items()})
+            touched = persist_results(
+                session, rec, drafts, steps, {i: r.id for i, r in rows.items()}
+            )
             all_occs = [o for d in drafts for o in d.occurrences]
-            usage |= {"entries": len(drafts), "novel": sum(d.canon.is_novel for d in drafts),
-                      "occurrences": len(all_occs),
-                      "asr_retimed": sum(o.time_source is TimeSource.asr for o in all_occs)}
+            usage |= {
+                "entries": len(drafts),
+                "novel": sum(d.canon.is_novel for d in drafts),
+                "occurrences": len(all_occs),
+                "asr_retimed": sum(o.time_source is TimeSource.asr for o in all_occs),
+            }
 
         with tracker.stage(JobStatus.grounding):
-            usage["sam"] = dict(_ground(session, rec, touched, media.display_path, client=client,
-                                        settings=settings, pack=pack, tracker=tracker))
+            usage["sam"] = dict(
+                _ground(
+                    session,
+                    rec,
+                    touched,
+                    media.display_path,
+                    client=client,
+                    settings=settings,
+                    pack=pack,
+                    tracker=tracker,
+                )
+            )
 
         with tracker.stage(JobStatus.cutting):
             _cut(session, rec, media.display_path, settings, tracker)
 
-        job.status, job.progress, job.detail, job.finished_at = JobStatus.ready, 1.0, "ready", utcnow()
+        job.status, job.progress, job.detail, job.finished_at = (
+            JobStatus.ready,
+            1.0,
+            "ready",
+            utcnow(),
+        )
         job.usage_json = usage
         rec.status = JobStatus.ready
         session.add_all([job, rec])
