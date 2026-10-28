@@ -18,6 +18,7 @@ dependencies = [
   "pillow>=11.0",
   "typer>=0.12",
   "faster-whisper>=1.1",
+  "av>=11,<19",  # faster-whisper 1.2.1 passes metadata_errors; PyAV 19 removed it
 ]
 
 [project.scripts]
