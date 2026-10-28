@@ -5,6 +5,7 @@ Never log request headers or the API key. Callers own caching (empu.cache).
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import time
@@ -98,6 +99,22 @@ def extract_json(text: str) -> dict:
     return first
 
 
+_SAM_BOX = re.compile(
+    r"<\|box;x1=([\d.]+);y1=([\d.]+);x2=([\d.]+);y2=([\d.]+);w=(\d+);h=(\d+)\|>")
+_IMAGE_MIME = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png"}
+
+
+def parse_sam_boxes(text: str, label: str = "") -> list[Detection]:
+    """SAM 3.1 returns one <|box;...|><|mask;...|> pair per instance, in pixels of w x h."""
+    dets: list[Detection] = []
+    for m in _SAM_BOX.finditer(text):
+        x1, y1, x2, y2, w, h = map(float, m.groups())
+        if w <= 0 or h <= 0 or x2 <= x1 or y2 <= y1:
+            continue
+        dets.append(Detection(label, 1.0, (x1 / w, y1 / h, x2 / w, y2 / h)))
+    return dets
+
+
 def _retryable(exc: BaseException) -> bool:
     return isinstance(exc, httpx.TransportError) or (
         isinstance(exc, MetaAPIError) and exc.retryable
@@ -184,3 +201,20 @@ class MetaClient:
             parsed, err = None, str(e)
         return AnalyzeResult(raw=raw, text=text, parsed=parsed, parse_error=err,
                              usage=raw.get("usage") or {}, latency_s=latency)
+
+    def segment_image_raw(self, image_path: Path, prompt: str, *, model: str) -> dict:
+        path = Path(image_path)
+        mime = _IMAGE_MIME.get(path.suffix.lower(), "image/jpeg")
+        data_url = f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
+        body = {"model": model, "stream": False, "input": [{"role": "user", "content": [
+            {"type": "input_text", "text": prompt},
+            {"type": "input_image", "image_url": data_url},
+        ]}]}
+        return self.create_response(body, timeout=120)
+
+    def segment_image(self, image_path: Path, prompts: list[str], *, model: str) -> list[Detection]:
+        dets: list[Detection] = []
+        for prompt in prompts:
+            raw = self.segment_image_raw(image_path, prompt, model=model)
+            dets += parse_sam_boxes(output_text(raw), prompt)
+        return dets

@@ -11,6 +11,14 @@ from empu.pipeline.analyze import ChunkAnalysis
 from empu.pipeline.chunk import ChunkSpec
 
 
+def make_sam_raw(boxes, w: int = 854, h: int = 480) -> dict:
+    text = "<0f>0" + "".join(
+        f"<|box;x1={x1};y1={y1};x2={x2};y2={y2};w={w};h={h}|><|mask;x=0;y=0;data=x|>"
+        for x1, y1, x2, y2 in boxes
+    )
+    return make_raw(text, usage={"input_tokens": 0, "output_tokens": 0, "images_processed": 1})
+
+
 def make_raw(payload: dict | str, usage: dict | None = None) -> dict:
     text = payload if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False)
     return {
@@ -33,9 +41,11 @@ class FakeClient:
     """Mimics MetaClient. `responses` are raw Responses-API dicts, consumed in order."""
 
     def __init__(self, responses: list[dict] | None = None,
-                 detections: list[Detection] | None = None) -> None:
+                 detections: list[Detection] | None = None,
+                 sam: dict[str, dict] | None = None) -> None:
         self.responses = list(responses or [])
         self.detections = detections or []
+        self.sam = sam or {}
         self.uploads: list[Path] = []
         self.prompts: list[str] = []
         self.schemas: list[dict | None] = []
@@ -59,6 +69,10 @@ class FakeClient:
             parsed, err = None, str(e)
         return AnalyzeResult(raw=raw, text=text, parsed=parsed, parse_error=err,
                              usage=raw.get("usage", {}), latency_s=0.5)
+
+    def segment_image_raw(self, image_path: Path, prompt: str, *, model: str) -> dict:
+        self.sam_calls.append((Path(image_path), [prompt]))
+        return self.sam.get(prompt, make_sam_raw([]))
 
     def segment_image(self, image_path: Path, prompts: list[str], *, model: str) -> list[Detection]:
         self.sam_calls.append((Path(image_path), list(prompts)))
