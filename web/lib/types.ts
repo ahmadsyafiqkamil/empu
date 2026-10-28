@@ -38,6 +38,25 @@ export type Occurrence = {
   keyframe_url: string | null;
 };
 
+
+export type EntryListItem = {
+  id: number;
+  term: string;
+  category: string;
+  stage_id: string | null;
+  gloss_id: string;
+  gloss_en: string;
+  is_novel: boolean;
+  status: EntryStatus;
+  access_level: string;
+  source: Source | null;
+  confidence: string | null;
+  n_occurrences: number;
+  crop_url: string | null;
+  keyframe_url: string | null;
+  clip_url: string | null;
+};
+
 export type Entry = {
   id: number;
   term: string;

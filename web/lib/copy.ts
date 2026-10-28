@@ -137,6 +137,24 @@ export function tryQuota(n: number): string {
   return `Up to 3 minutes. ${n} uploads left today.`;
 }
 
+export function studioReviewProgress(reviewed: number, total: number): string {
+  return `${reviewed} of ${total} reviewed`;
+}
+
+export function studioStatusCounts(counts: {
+  proposed: number;
+  accepted: number;
+  edited: number;
+  rejected: number;
+}): string {
+  return `Proposed ${counts.proposed} · Accepted ${counts.accepted} · Edited ${counts.edited} · Rejected ${counts.rejected}`;
+}
+
+export function mergePreview(from: string, into: string): string {
+  return `Merge ${from} into ${into}?`;
+}
+
+
 export function attributionLine(parts: {
   title: string;
   creator: string;
