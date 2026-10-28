@@ -15,7 +15,7 @@
 # Divalidasi oleh api/empu/packs.py (tes: api/tests/test_packs.py).
 
 id: batik_tulis
-version: 0.1.0
+version: 0.1.1
 name:
   id: Batik Tulis
   en: Hand-drawn batik (batik tulis)
@@ -116,7 +116,7 @@ terms:
     gloss_id: canting bercucuk besar untuk menutup bidang luas
     gloss_en: wide-spout canting for blocking large areas
     visual: true
-    sam_prompt: wooden stick with copper tip, pen with wooden handle
+    sam_prompt: wide spout wax pen held in hand, thick copper nib on bamboo stick
     verified: false   # cek
   - id: wajan
     label: wajan
@@ -228,7 +228,7 @@ terms:
     gloss_id: ujung pipa kecil tempat malam keluar
     gloss_en: spout where the wax flows out
     visual: true
-    sam_prompt: tip of a copper wax pen
+    sam_prompt: narrow metal spout on wax pen, thin copper tube at pen tip
     verified: false
   - id: gagang
     label: gagang
@@ -248,7 +248,7 @@ terms:
     gloss_id: kain katun putih bahan batik
     gloss_en: white cotton cloth used for batik
     visual: true
-    sam_prompt: white cloth
+    sam_prompt: plain white cotton fabric sheet, undyed cloth on frame
     verified: false
   - id: malam
     label: malam
@@ -257,7 +257,7 @@ terms:
     gloss_id: lilin batik yang dipakai sebagai perintang warna
     gloss_en: batik wax used to resist the dye
     visual: true
-    sam_prompt: melted brown wax
+    sam_prompt: liquid wax in small pan, dark molten wax pool
     verified: false
   - id: gondorukem
     label: gondorukem
