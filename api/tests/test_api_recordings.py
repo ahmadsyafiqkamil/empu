@@ -60,10 +60,37 @@ def test_cc_by_requires_attribution(api, tmp_path, session):
     video.write_bytes(b"x")
     r = api.post(
         f"/api/archives/{a.id}/recordings",
-        data={"title": "CC", "consent_confirmed": "true", "source_kind": "cc_by_video"},
+        data={
+            "title": "CC",
+            "consent_confirmed": "true",
+            "contributor_name": "Bu Ahli",
+            "source_kind": "cc_by_video",
+        },
         files={"file": ("a.mp4", video.read_bytes(), "video/mp4")},
     )
     assert r.status_code == 400
+    detail = r.json()["detail"].lower()
+    assert "cc_by_video requires" in detail
+    for field in ("source_url", "source_creator", "license", "attribution"):
+        assert field in detail
+
+
+def test_upload_rejects_file_over_size_cap(api, tmp_path, session, settings):
+    settings.max_upload_mb = 0
+    a = make_archive(session)
+    video = tmp_path / "a.mp4"
+    video.write_bytes(b"x" * 100)
+    r = api.post(
+        f"/api/archives/{a.id}/recordings",
+        data={
+            "title": "Big",
+            "consent_confirmed": "true",
+            "contributor_name": "Bu Ahli",
+        },
+        files={"file": ("a.mp4", video.read_bytes(), "video/mp4")},
+    )
+    assert r.status_code == 413
+    assert "exceeds 0 mb" in r.json()["detail"].lower()
 
 
 def test_job_shape(api, session):
