@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F5F0E6;
+  --surface: #FBF8F2;
+  --fg: #1C1813;
+  --muted: #665D50;
+  --line: #DDD4C4;
+  --accent: #22304F;
+  --wax: #9E7330;
+  --src-speech: #22304F;
+  --src-onscreen: #8A4B22;
+  --src-visual: #5E5A52;
+  --ok: #3F6B45;
+  --danger: #9B3B2E;
+  --font-display: "Fraunces", serif;
+  --font-ui: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius: 2px;
+}
+[data-theme="malam"] {
+  --bg: #12110F;
+  --surface: #1B1916;
+  --fg: #ECE8DF;
+  --muted: #A39C8E;
+  --line: #2E2B26;
+  --accent: #C9A15B;
+  --wax: #C9A15B;
+  --src-speech: #9DB0E3;
+  --src-onscreen: #DDA272;
+  --src-visual: #B3AC9F;
+  --ok: #7FB384;
+  --danger: #E57373;
+}
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+}
+.font-display {
+  font-family: var(--font-display);
+}
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
