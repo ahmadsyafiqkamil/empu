@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
 from empu.app import create_app
-from empu.config import Settings
-from empu.db import init_db, make_engine
+from empu.config import Settings, get_settings
+from empu.db import get_session, init_db, make_engine
 
 
 def client(tmp_path) -> TestClient:
@@ -12,12 +13,17 @@ def client(tmp_path) -> TestClient:
         studio_key="studio-test",
         meta_model_api_key="k",
     )
-    init_db(make_engine(s.db_url))
+    engine = make_engine(s.db_url)
+    init_db(engine)
     app = create_app()
     app.dependency_overrides = {}
-    from empu.config import get_settings
+
+    def _session():
+        with Session(engine) as session:
+            yield session
 
     app.dependency_overrides[get_settings] = lambda: s
+    app.dependency_overrides[get_session] = _session
     return TestClient(app)
 
 

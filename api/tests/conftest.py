@@ -4,10 +4,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlmodel import Session
 
-from empu.config import Settings
-from empu.db import init_db, make_engine
+from empu.app import create_app
+from empu.config import Settings, get_settings
+from empu.db import get_session, init_db, make_engine
 from empu.packs import CraftPack, load_pack
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -43,6 +45,20 @@ def engine(settings):
 def session(engine):
     with Session(engine) as s:
         yield s
+
+
+@pytest.fixture
+def api(session, settings):
+    app = create_app()
+
+    def _session():
+        yield session
+
+    app.dependency_overrides[get_settings] = lambda: settings
+    app.dependency_overrides[get_session] = _session
+    with TestClient(app) as c:
+        c.headers["X-Studio-Key"] = settings.studio_key.get_secret_value()
+        yield c
 
 
 @pytest.fixture(scope="session")
