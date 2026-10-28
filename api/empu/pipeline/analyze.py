@@ -163,7 +163,11 @@ def analyze_chunk(
     try:
         file_id = client.upload_file(path)
         for attempt in (1, 2):
-            text = prompt if attempt == 1 else prompt + RETRY_SUFFIX.format(error=err)
+            text = (
+                prompt
+                if attempt == 1
+                else prompt + RETRY_SUFFIX.replace("{error}", err or "")
+            )
             res = client.analyze_video(
                 file_id,
                 text,

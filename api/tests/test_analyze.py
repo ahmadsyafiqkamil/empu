@@ -69,6 +69,16 @@ def test_invalid_then_valid_retries_once_same_upload(tmp_path, pack, cache):
     assert res.usage["input_tokens"] == 200
 
 
+def test_brace_in_validation_error_retries_once(tmp_path, pack, cache):
+    # Pydantic v2 includes `{...}` when input_value is a dict; str.format would raise.
+    bad = {"terms": [], "speech_heard": {"nested": True}}
+    client = FakeClient([make_raw(bad), make_raw(GOOD)])
+    res = run(client, cache, pack, tmp_path)
+    assert res.error is None and res.attempts == 2
+    assert "tidak valid" in client.prompts[1]
+    assert "{'nested': True}" in client.prompts[1]
+
+
 def test_invalid_twice_is_error_and_not_cached(tmp_path, pack, cache):
     client = FakeClient([make_raw("nope"), make_raw({"no_terms": 1})])
     res = run(client, cache, pack, tmp_path)
