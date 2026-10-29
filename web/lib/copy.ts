@@ -123,6 +123,17 @@ export const COPY = {
 /** Human-readable pipeline stage labels (desain.md). Do not paraphrase. */
 export const STAGE_LABEL = COPY.stages;
 
+export const CATEGORY_LABEL: Record<string, string> = {
+  tool: "Tools",
+  tool_part: "Tool parts",
+  material: "Materials",
+  dye: "Dyes",
+  stage: "Stages",
+  technique: "Techniques",
+  motif: "Motifs",
+  other: "Other",
+};
+
 export function expertValidationLabel(name: string): string {
   return `Validated by the expert · ${name}`;
 }

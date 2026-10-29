@@ -49,6 +49,7 @@ def public_archive_entries(
     q: str | None = None,
     category: str | None = None,
     stage: str | None = None,
+    is_novel: bool | None = None,
     session: Session = Depends(get_session),
 ) -> list[EntryListItem]:
     a = _archive_by_slug(session, slug)
@@ -57,6 +58,8 @@ def public_archive_entries(
         if category and e.category.value != category:
             continue
         if stage and e.stage_id != stage:
+            continue
+        if is_novel is not None and bool(e.is_novel) is not is_novel:
             continue
         if q:
             blob = f"{e.term} {e.gloss_id} {e.gloss_en}".casefold()
