@@ -1,0 +1,12 @@
+.venv
+.env
+.git
+.gitignore
+.superpowers
+data
+data-uji
+arsip-hidup-batik
+web/node_modules
+web/.next
+__pycache__
+*.pyc

@@ -1,0 +1,35 @@
+services:
+  api:
+    build: { context: .., dockerfile: deploy/api.Dockerfile }
+    env_file: ../.env
+    environment:
+      EMPU_DATA_DIR: /data
+      EMPU_PACKS_DIR: /packs
+    volumes: ["../data:/data"]
+    restart: unless-stopped
+  worker:
+    build: { context: .., dockerfile: deploy/api.Dockerfile }
+    command: uv run python -m empu.worker
+    env_file: ../.env
+    environment:
+      EMPU_DATA_DIR: /data
+      EMPU_PACKS_DIR: /packs
+    volumes: ["../data:/data"]
+    restart: unless-stopped
+  web:
+    build: { context: .., dockerfile: deploy/web.Dockerfile }
+    environment:
+      EMPU_API_ORIGIN: http://api:8000
+    restart: unless-stopped
+  caddy:
+    image: caddy:2
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ../data:/srv/media
+      - caddy_data:/data
+    environment:
+      EMPU_DOMAIN: ${EMPU_DOMAIN}
+    depends_on: [api, web]
+volumes:
+  caddy_data:
