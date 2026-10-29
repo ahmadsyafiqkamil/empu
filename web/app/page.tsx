@@ -18,6 +18,8 @@ export default async function Home() {
   const archives: Archive[] = await fetch(`${API}/api/public/archives`, { cache: "no-store" })
     .then((r) => r.json())
     .catch(() => []);
+  const demoSrc = archives.find((a) => a.is_demo) ?? archives[0];
+  const demoSlug = demoSrc?.slug ?? "batik-tulis";
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
@@ -29,7 +31,7 @@ export default async function Home() {
         <h1 className="mt-4 max-w-xl font-display text-4xl leading-tight">{COPY.tagline}</h1>
         <p className="mt-5 max-w-xl text-[var(--muted)]">{COPY.home.paragraph}</p>
         <div className="mt-7 flex flex-wrap gap-3">
-          <Link href="/d/hidup-batik" className="bg-[var(--accent)] px-4 py-2 text-white">
+          <Link href={`/d/${demoSlug}`} className="bg-[var(--accent)] px-4 py-2 text-white">
             {COPY.home.openArchive}
           </Link>
           <Link href="/try" className="border border-[var(--line)] px-4 py-2">
