@@ -43,8 +43,9 @@ def test_scope_public_hides_proposed(session, pack):
 
 def test_csv_has_source_column(session, pack):
     a = make_archive(session)
-    rec = make_recording(session, a, consent_scope=AccessLevel.public,
-                         source_kind=SourceKind.own_recording)
+    rec = make_recording(
+        session, a, consent_scope=AccessLevel.public, source_kind=SourceKind.own_recording
+    )
     e = Entry(
         archive_id=a.id,
         canon_key="term:x",

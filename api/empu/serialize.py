@@ -174,9 +174,7 @@ def recording_out(
     )
 
 
-def archive_out(
-    a: Archive, *, recording_count: int = 0, validated_count: int = 0
-) -> ArchiveOut:
+def archive_out(a: Archive, *, recording_count: int = 0, validated_count: int = 0) -> ArchiveOut:
     return ArchiveOut(
         id=a.id,
         slug=a.slug,
