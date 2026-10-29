@@ -10,10 +10,19 @@ from __future__ import annotations
 
 from sqlmodel import Session, select
 
-from empu.enums import AccessLevel, ConsentStatus, EntryStatus, OccurrenceStatus, SourceKind
+from empu.enums import (
+    AccessLevel,
+    ConsentStatus,
+    EntryStatus,
+    OccurrenceStatus,
+    ReviewAction,
+    SourceKind,
+)
 from empu.models import Entry, Occurrence, Recording, ReviewEvent
 
 DOCUMENTER_ACTORS = {"documenter", "syafiq"}
+
+VALIDATING_ACTIONS = {ReviewAction.accept, ReviewAction.edit}
 
 
 def recording_is_public(rec: Recording) -> bool:
@@ -64,15 +73,14 @@ def public_entries(session: Session, archive_id: int) -> list[tuple[Entry, list[
 
 
 def validated_by_expert(session: Session, entry_id: int) -> bool:
-    events = session.exec(select(ReviewEvent).where(ReviewEvent.entry_id == entry_id)).all()
-    return any(ev.actor.strip().lower() not in DOCUMENTER_ACTORS for ev in events)
+    return expert_actor(session, entry_id) is not None
 
 
 def expert_actor(session: Session, entry_id: int) -> str | None:
     events = session.exec(select(ReviewEvent).where(ReviewEvent.entry_id == entry_id)).all()
     for ev in events:
-        actor = ev.actor.strip()
-        if actor.lower() not in DOCUMENTER_ACTORS:
+        actor = (ev.actor or "").strip()
+        if actor and actor.lower() not in DOCUMENTER_ACTORS and ev.action in VALIDATING_ACTIONS:
             return actor
     return None
 

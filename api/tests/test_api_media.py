@@ -56,3 +56,40 @@ def test_public_media_served_without_key(api, session, settings, tmp_path):
     r = api.get(f"/media/{rel}")
     assert r.status_code == 200
     assert r.content == b"0123456789"
+
+
+def test_private_entry_occurrence_media_blocked_without_key(api, session, settings, tmp_path):
+    from empu.enums import AccessLevel, Category, EntryStatus, Source
+    from empu.models import Entry, Occurrence
+
+    a = make_archive(session)
+    rec = make_recording(session, a, consent_scope=AccessLevel.public)
+    rel = f"archives/{a.id}/recordings/{rec.id}/occurrences/1/clip.mp4"
+    path = settings.data_dir / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"secret")
+    e = Entry(
+        archive_id=a.id,
+        canon_key="term:x",
+        term="x",
+        category=Category.tool,
+        status=EntryStatus.accepted,
+        access_level=AccessLevel.private,
+    )
+    session.add(e)
+    session.commit()
+    session.refresh(e)
+    session.add(
+        Occurrence(
+            entry_id=e.id,
+            recording_id=rec.id,
+            source=Source.speech,
+            t_start=1,
+            t_end=2,
+            clip_path=rel,
+        )
+    )
+    session.commit()
+    api.headers.pop("X-Studio-Key", None)
+    r = api.get(f"/media/{rel}")
+    assert r.status_code == 401

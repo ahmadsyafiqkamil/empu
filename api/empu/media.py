@@ -7,7 +7,7 @@ from pathlib import Path, PurePosixPath
 from sqlmodel import Session
 
 from empu.enums import ConsentStatus
-from empu.models import Entry, Recording
+from empu.models import Entry, Occurrence, Recording
 from empu.visibility import entry_is_public, public_occurrences, recording_is_public
 
 
@@ -50,7 +50,22 @@ def can_access_media(session: Session, rel_path: str, *, has_key: bool) -> bool:
             rec = session.get(Recording, int(parts[3]))
         except ValueError:
             return False
-        return rec is not None and recording_is_public(rec)
+        if rec is None or not recording_is_public(rec):
+            return False
+        # Occurrence evidence (clip/audio/keyframe) must also pass entry visibility,
+        # so a private or unreviewed term on a public recording never leaks.
+        if len(parts) >= 6 and parts[4] == "occurrences":
+            try:
+                occ = session.get(Occurrence, int(parts[5]))
+            except ValueError:
+                return False
+            if occ is None:
+                return False
+            entry = session.get(Entry, occ.entry_id)
+            if entry is None:
+                return False
+            return entry_is_public(entry, public_occurrences(session, entry.id))
+        return True
     if len(parts) >= 4 and parts[0] == "archives" and parts[2] == "entries":
         try:
             entry = session.get(Entry, int(parts[3]))

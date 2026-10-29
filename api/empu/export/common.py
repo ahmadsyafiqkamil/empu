@@ -3,7 +3,7 @@ from typing import Literal
 
 from sqlmodel import Session, select
 
-from empu.enums import ConsentStatus, EntryStatus
+from empu.enums import ConsentStatus, EntryStatus, SourceKind
 from empu.models import Archive, Entry, Occurrence, Recording
 from empu.packs import CraftPack
 from empu.visibility import public_entries
@@ -26,6 +26,8 @@ def entries_for_scope(session: Session, archive_id: int, scope: ExportScope):
         for o in session.exec(select(Occurrence).where(Occurrence.entry_id == e.id)).all():
             rec = session.get(Recording, o.recording_id)
             if rec is None or rec.consent_status is ConsentStatus.withdrawn:
+                continue
+            if rec.source_kind is SourceKind.internal_eval:
                 continue
             occs.append(o)
         rows.append((e, occs))

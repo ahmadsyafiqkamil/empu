@@ -5,15 +5,18 @@ from empu.enums import (
     Category,
     ConsentStatus,
     EntryStatus,
+    ReviewAction,
     Source,
     SourceKind,
 )
-from empu.models import Entry, Occurrence
+from empu.models import Entry, Occurrence, ReviewEvent
 from empu.visibility import (
     entry_is_public,
     public_entries,
     public_occurrences,
     recording_is_public,
+    validated_by_expert,
+    validation_label_for,
 )
 
 
@@ -112,3 +115,64 @@ def test_public_entries_skips_rejected(session):
     )
     session.commit()
     assert public_entries(session, a.id) == []
+
+
+def _expert_event(session, e, action, actor):
+    ev = ReviewEvent(entry_id=e.id, action=action, actor=actor)
+    session.add(ev)
+    session.commit()
+    return ev
+
+
+def test_expert_accept_counts_as_validation(session):
+    a = make_archive(session)
+    e = Entry(
+        archive_id=a.id,
+        canon_key="term:x",
+        term="x",
+        category=Category.tool,
+        status=EntryStatus.accepted,
+        access_level=AccessLevel.public,
+    )
+    session.add(e)
+    session.commit()
+    session.refresh(e)
+    _expert_event(session, e, ReviewAction.accept, "Batik Education")
+    assert validated_by_expert(session, e.id) is True
+    assert validation_label_for(session, e.id) == "Validated by the expert · Batik Education"
+
+
+def test_expert_reject_is_not_validation(session):
+    a = make_archive(session)
+    e = Entry(
+        archive_id=a.id,
+        canon_key="term:x",
+        term="x",
+        category=Category.tool,
+        status=EntryStatus.accepted,
+        access_level=AccessLevel.public,
+    )
+    session.add(e)
+    session.commit()
+    session.refresh(e)
+    _expert_event(session, e, ReviewAction.reject, "Batik Education")
+    assert validated_by_expert(session, e.id) is False
+    assert validation_label_for(session, e.id) == "Validated by the documenter"
+
+
+def test_empty_or_documenter_actor_is_not_expert(session):
+    a = make_archive(session)
+    e = Entry(
+        archive_id=a.id,
+        canon_key="term:x",
+        term="x",
+        category=Category.tool,
+        status=EntryStatus.accepted,
+        access_level=AccessLevel.public,
+    )
+    session.add(e)
+    session.commit()
+    session.refresh(e)
+    _expert_event(session, e, ReviewAction.accept, "")
+    _expert_event(session, e, ReviewAction.accept, "documenter")
+    assert validated_by_expert(session, e.id) is False

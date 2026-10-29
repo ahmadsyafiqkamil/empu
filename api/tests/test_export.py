@@ -104,3 +104,30 @@ def test_json_includes_attribution_for_cc_by(session, pack):
     doc = build_json(session, a, pack, "public")
     assert doc["recordings"][0]["license"] == "CC BY 3.0"
     assert doc["entries"][0]["occurrences"][0]["source"] == "speech"
+
+
+def test_all_scope_excludes_internal_eval(session, pack):
+    a = make_archive(session)
+    rec = make_recording(
+        session,
+        a,
+        consent_scope=AccessLevel.private,
+        source_kind=SourceKind.internal_eval,
+    )
+    e = Entry(
+        archive_id=a.id,
+        canon_key="term:x",
+        term="x",
+        category=Category.tool,
+        status=EntryStatus.proposed,
+        access_level=AccessLevel.private,
+    )
+    session.add(e)
+    session.commit()
+    session.refresh(e)
+    session.add(
+        Occurrence(entry_id=e.id, recording_id=rec.id, source=Source.speech, t_start=1, t_end=2)
+    )
+    session.commit()
+    rows = entries_for_scope(session, a.id, "all")
+    assert rows[0][1] == []  # internal_eval occurrences are excluded from all exports
