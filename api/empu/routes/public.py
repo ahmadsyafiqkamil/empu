@@ -27,6 +27,8 @@ def list_public_archives(session: Session = Depends(get_session)) -> list[Archiv
     rows = session.exec(select(Archive).order_by(Archive.is_demo.desc(), Archive.id)).all()
     out = []
     for a in rows:
+        if a.is_sandbox:
+            continue
         pubs = public_entries(session, a.id)
         if not pubs and not a.is_demo:
             continue

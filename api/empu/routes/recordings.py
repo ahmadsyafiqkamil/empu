@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlmodel import Session, select
 
 from empu.api_schemas import EntryOut, RecordingOut, ReprocessIn, UploadAck
+from empu.auth import AuthContext, optional_studio, require_studio
 from empu.config import Settings, get_settings
 from empu.consent import withdraw_consent
 from empu.db import get_session
@@ -41,6 +42,7 @@ async def upload_recording(
     source_creator: str | None = Form(None),
     license: str | None = Form(None),
     attribution: str | None = Form(None),
+    _auth: AuthContext = Depends(require_studio),
     session: Session = Depends(get_session),
     settings: Settings = Depends(get_settings),
 ) -> UploadAck:
@@ -108,14 +110,36 @@ def _load_recording(
     return rec, job, contrib
 
 
+def _authorize_recording(session: Session, recording_id: int, auth: AuthContext) -> Recording:
+    """Studio key, or keyless access restricted to sandbox-archive recordings."""
+    rec = session.get(Recording, recording_id)
+    if rec is None:
+        raise HTTPException(404, "recording not found")
+    if not auth.has_key:
+        arch = session.get(Archive, rec.archive_id)
+        if not (arch and arch.is_sandbox):
+            raise HTTPException(401, "studio key required")
+    return rec
+
+
 @router.get("/api/recordings/{recording_id}", response_model=RecordingOut)
-def get_recording(recording_id: int, session: Session = Depends(get_session)) -> RecordingOut:
+def get_recording(
+    recording_id: int,
+    session: Session = Depends(get_session),
+    auth: AuthContext = Depends(optional_studio),
+) -> RecordingOut:
+    _authorize_recording(session, recording_id, auth)
     rec, job, contrib = _load_recording(session, recording_id)
     return recording_out(rec, job=job, contributor=contrib)
 
 
 @router.get("/api/recordings/{recording_id}/entries", response_model=list[EntryOut])
-def recording_entries(recording_id: int, session: Session = Depends(get_session)) -> list[EntryOut]:
+def recording_entries(
+    recording_id: int,
+    session: Session = Depends(get_session),
+    auth: AuthContext = Depends(optional_studio),
+) -> list[EntryOut]:
+    _authorize_recording(session, recording_id, auth)
     rec, _, contrib = _load_recording(session, recording_id)
     occs = session.exec(select(Occurrence).where(Occurrence.recording_id == recording_id)).all()
     by_entry: dict[int, list[Occurrence]] = {}
@@ -140,7 +164,11 @@ def recording_entries(recording_id: int, session: Session = Depends(get_session)
 
 
 @router.get("/api/recordings/{recording_id}/process-map")
-def recording_process_map(recording_id: int, session: Session = Depends(get_session)) -> dict:
+def recording_process_map(
+    recording_id: int,
+    _auth: AuthContext = Depends(require_studio),
+    session: Session = Depends(get_session),
+) -> dict:
     rec = session.get(Recording, recording_id)
     if rec is None:
         raise HTTPException(404, "recording not found")
@@ -151,6 +179,7 @@ def recording_process_map(recording_id: int, session: Session = Depends(get_sess
 def reprocess(
     recording_id: int,
     body: ReprocessIn | None = None,
+    _auth: AuthContext = Depends(require_studio),
     session: Session = Depends(get_session),
     settings: Settings = Depends(get_settings),
 ) -> UploadAck:
@@ -162,7 +191,11 @@ def reprocess(
 
 
 @router.post("/api/recordings/{recording_id}/withdraw-consent", response_model=RecordingOut)
-def withdraw(recording_id: int, session: Session = Depends(get_session)) -> RecordingOut:
+def withdraw(
+    recording_id: int,
+    _auth: AuthContext = Depends(require_studio),
+    session: Session = Depends(get_session),
+) -> RecordingOut:
     try:
         rec_id = withdraw_consent(session, recording_id).id
     except ValueError as e:

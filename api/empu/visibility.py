@@ -18,7 +18,7 @@ from empu.enums import (
     ReviewAction,
     SourceKind,
 )
-from empu.models import Entry, Occurrence, Recording, ReviewEvent
+from empu.models import Archive, Entry, Occurrence, Recording, ReviewEvent
 
 DOCUMENTER_ACTORS = {"documenter", "syafiq"}
 
@@ -48,7 +48,12 @@ def public_occurrences(session: Session, entry_id: int) -> list[Occurrence]:
     out: list[Occurrence] = []
     for o in occs:
         rec = session.get(Recording, o.recording_id)
-        if rec is not None and occurrence_is_public(o, rec):
+        if rec is None:
+            continue
+        arch = session.get(Archive, rec.archive_id)
+        if arch is not None and arch.is_sandbox:
+            continue
+        if occurrence_is_public(o, rec):
             out.append(o)
     return out
 

@@ -12,6 +12,7 @@ from empu.routes import (
     packs,
     public,
     recordings,
+    sandbox,
 )
 
 
@@ -22,9 +23,10 @@ def create_app() -> FastAPI:
     app.include_router(public.router)
     app.include_router(exports.router)
     app.include_router(eval.router)
+    app.include_router(sandbox.router)
     app.include_router(archives.router, dependencies=[Depends(require_studio)])
-    app.include_router(recordings.router, dependencies=[Depends(require_studio)])
-    app.include_router(jobs.router, dependencies=[Depends(require_studio)])
-    app.include_router(entries.router, dependencies=[Depends(require_studio)])
+    app.include_router(recordings.router)
+    app.include_router(jobs.router)
+    app.include_router(entries.router)
     app.include_router(media.router)
     return app

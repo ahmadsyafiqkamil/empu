@@ -229,6 +229,9 @@ def process_recording(
 
         with tracker.stage(JobStatus.normalizing):
             media = normalize_recording(abs_from_rel(data_dir, rec.original_path), rec_dir)
+            arch = session.get(Archive, rec.archive_id)
+            if arch and arch.is_sandbox and media.duration_s > settings.sandbox_max_duration_s:
+                raise PipelineError("sandbox recordings are limited to 3 minutes")
             rec.display_path = rel_to_data(data_dir, media.display_path)
             rec.analysis_path = rel_to_data(data_dir, media.analysis_path)
             rec.duration_s = round(media.duration_s, 2)

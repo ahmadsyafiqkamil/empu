@@ -7,7 +7,7 @@ from pathlib import Path, PurePosixPath
 from sqlmodel import Session
 
 from empu.enums import ConsentStatus
-from empu.models import Entry, Occurrence, Recording
+from empu.models import Archive, Entry, Occurrence, Recording
 from empu.visibility import entry_is_public, public_occurrences, recording_is_public
 
 
@@ -50,7 +50,13 @@ def can_access_media(session: Session, rel_path: str, *, has_key: bool) -> bool:
             rec = session.get(Recording, int(parts[3]))
         except ValueError:
             return False
-        if rec is None or not recording_is_public(rec):
+        if rec is None:
+            return False
+        arch = session.get(Archive, rec.archive_id)
+        if arch is not None and arch.is_sandbox:
+            # Sandbox media is unlisted but URL-addressable so the judge's view renders.
+            return rec.consent_status is not ConsentStatus.withdrawn
+        if not recording_is_public(rec):
             return False
         # Occurrence evidence (clip/audio/keyframe) must also pass entry visibility,
         # so a private or unreviewed term on a public recording never leaks.
@@ -73,5 +79,8 @@ def can_access_media(session: Session, rel_path: str, *, has_key: bool) -> bool:
             return False
         if entry is None:
             return False
+        arch = session.get(Archive, entry.archive_id)
+        if arch is not None and arch.is_sandbox:
+            return True
         return entry_is_public(entry, public_occurrences(session, entry.id))
     return False

@@ -40,7 +40,8 @@ function videoDurationSeconds(file: File): Promise<number> {
   });
 }
 
-export function UploadForm() {
+export function UploadForm({ variant = "studio" }: { variant?: "studio" | "try" }) {
+  const isTry = variant === "try";
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [archives, setArchives] = useState<Archive[]>([]);
@@ -52,10 +53,11 @@ export function UploadForm() {
   const [creatingArchive, setCreatingArchive] = useState(false);
 
   useEffect(() => {
+    if (isTry) return;
     apiGet<Archive[]>("/api/archives")
       .then(setArchives)
       .catch((e) => setError(String(e)));
-  }, []);
+  }, [isTry]);
 
   const validateFile = useCallback(async (file: File): Promise<string | null> => {
     if (file.size > MAX_UPLOAD_BYTES) {
@@ -113,10 +115,9 @@ export function UploadForm() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!consent || archives.length === 0) return;
+    if (!consent) return;
+    if (!isTry && archives.length === 0) return;
     const fd = new FormData(e.currentTarget);
-    fd.set("consent_confirmed", "true");
-    fd.set("source_kind", kind);
     const file = fd.get("file");
     if (file instanceof File) {
       const problem = await validateFile(file);
@@ -125,8 +126,22 @@ export function UploadForm() {
         return;
       }
     }
-    const archiveId = fd.get("archive_id");
     try {
+      if (isTry) {
+        const body = new FormData();
+        if (file instanceof File) body.append("file", file);
+        body.append("title", String(fd.get("title") ?? ""));
+        body.append("consent_confirmed", "true");
+        const res = await apiSend<{ recording_id: number; job_id: number }>(
+          "/api/sandbox/recordings",
+          { method: "POST", body },
+        );
+        router.push(`/studio/jobs/${res.job_id}`);
+        return;
+      }
+      fd.set("consent_confirmed", "true");
+      fd.set("source_kind", kind);
+      const archiveId = fd.get("archive_id");
       const res = await apiSend<{ recording_id: number; job_id: number }>(
         `/api/archives/${archiveId}/recordings`,
         { method: "POST", body: fd },
@@ -138,6 +153,84 @@ export function UploadForm() {
   }
 
   const hasArchive = archives.length > 0;
+
+  if (isTry) {
+    return (
+      <form onSubmit={onSubmit} className="mx-auto max-w-xl space-y-4 p-6">
+        <h1 className="text-2xl">Try it</h1>
+        <p className="text-sm text-[var(--muted)]">{COPY.try.sandbox}</p>
+        {error && <p className="text-[var(--danger)]">{error}</p>}
+
+        <div className="block text-sm">
+          <span>Video</span>
+          <div
+            className={cn(
+              "mt-1 flex min-h-28 cursor-pointer flex-col items-center justify-center border border-dashed p-6 text-center",
+              dragOver ? "border-[var(--wax)] bg-[var(--surface)]" : "border-[var(--line)]",
+            )}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDragOver(false);
+              const file = e.dataTransfer.files.item(0);
+              void assignFile(file);
+            }}
+            onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <p className="text-[var(--muted)]">
+              {fileLabel ?? "Drop a clip here or click to choose (max 3 minutes)"}
+            </p>
+          </div>
+          <input
+            ref={fileInputRef}
+            name="file"
+            type="file"
+            accept="video/*"
+            required
+            className="sr-only"
+            onChange={(e) => void assignFile(e.target.files?.item(0) ?? null)}
+          />
+        </div>
+
+        <label className="block text-sm">
+          Title
+          <input
+            name="title"
+            required
+            className="mt-1 w-full border border-[var(--line)] bg-transparent p-2"
+          />
+        </label>
+
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+          />
+          {COPY.consent.checkbox}
+        </label>
+
+        <button
+          disabled={!consent}
+          className="bg-[var(--accent)] px-4 py-2 text-black disabled:opacity-40"
+        >
+          Process 3-minute clip
+        </button>
+      </form>
+    );
+  }
 
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-xl space-y-4 p-6">

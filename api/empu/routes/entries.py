@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, col, or_, select
 
 from empu.api_schemas import EntryListItem, EntryOut, ReviewIn
+from empu.auth import AuthContext, optional_studio, require_studio
 from empu.db import get_session
 from empu.enums import EntryStatus, Source
-from empu.models import Contributor, Entry, Occurrence, Recording
+from empu.models import Archive, Contributor, Entry, Occurrence, Recording
 from empu.review import ReviewError, apply_review
 from empu.serialize import entry_list_item, entry_out
 
@@ -19,6 +20,7 @@ def list_entries(
     is_novel: bool | None = None,
     stage: str | None = None,
     q: str | None = None,
+    _auth: AuthContext = Depends(require_studio),
     session: Session = Depends(get_session),
 ) -> list[EntryListItem]:
     stmt = select(Entry).where(Entry.archive_id == archive_id, Entry.status != EntryStatus.merged)
@@ -48,7 +50,11 @@ def list_entries(
 
 
 @router.get("/api/entries/{entry_id}", response_model=EntryOut)
-def get_entry(entry_id: int, session: Session = Depends(get_session)) -> EntryOut:
+def get_entry(
+    entry_id: int,
+    _auth: AuthContext = Depends(require_studio),
+    session: Session = Depends(get_session),
+) -> EntryOut:
     e = session.get(Entry, entry_id)
     if e is None:
         raise HTTPException(404, "entry not found")
@@ -66,8 +72,16 @@ def get_entry(entry_id: int, session: Session = Depends(get_session)) -> EntryOu
 
 @router.post("/api/entries/{entry_id}/review", response_model=EntryOut)
 def review_entry(
-    entry_id: int, body: ReviewIn, session: Session = Depends(get_session)
+    entry_id: int,
+    body: ReviewIn,
+    session: Session = Depends(get_session),
+    auth: AuthContext = Depends(optional_studio),
 ) -> EntryOut:
+    if not auth.has_key:
+        e = session.get(Entry, entry_id)
+        arch = session.get(Archive, e.archive_id) if e else None
+        if not (arch and arch.is_sandbox):
+            raise HTTPException(401, "studio key required")
     try:
         e = apply_review(session, entry_id, body)
     except ReviewError as err:
