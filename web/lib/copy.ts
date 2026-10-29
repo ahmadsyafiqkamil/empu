@@ -6,6 +6,20 @@ export const COPY = {
     openArchive: "Open the Batik Tulis archive",
     tryClip: "Try it with a 3-minute clip",
     seeEvidence: "See the evidence",
+    steps: [
+      "A master works and explains.",
+      "Muse Spark 1.3 watches and listens; SAM 3.1 finds the tool.",
+      "A person accepts, edits, or rejects. Only accepted terms go public.",
+    ],
+    principles: [
+      "Evidence with every term.",
+      "Every source labeled.",
+      "Nothing public without a person's approval.",
+      "Original frames only.",
+    ],
+    vision: "Batik today. Weaving and gamelan next. Every craft that was never written down.",
+    frameAttribution:
+      "Frames from \"Proses nyanting batik tulis\" by TEBAK teras batik kaindra and \"Macam Canting dalam Batik Tulis\" by Batik Education, both CC BY 3.0 on YouTube. Trimmed by Empu.",
   },
   source: {
     speech: "Spoken",
