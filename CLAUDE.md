@@ -62,3 +62,4 @@ pnpm test && pnpm lint
 - H0 (Rab 28 Okt): dokumen konteks selesai. Plan di `docs/superpowers/plans/2026-10-28-empu/` (ikhtisar, H0, H1 sebagian). Keputusan: demo pakai video YouTube CC BY dengan atribusi (spec diperbarui). Gate 0 selesai (`docs/reference/hasil-gate0.md`): audio lulus, recall 4/8 dengan waktu (7/8 isi) → **Mode B** (faster-whisper sebagai jangkar waktu), SAM lulus dengan prompt deskriptif Inggris + bbox saja, structured output skema penuh didukung. Berikutnya: hubungi kreator CC BY, lalu H1.
 - H2 (Jum 30 Okt): Gate 1 lulus (lihat `docs/reference/hasil-gate1.md`). Arsip `batik-tulis` berisi 2 video CC BY. Berikutnya: H3.
 - H3 (Sab 31 Okt): API + Studio jalan; video CC BY divalidasi lewat UI. Berikutnya: H4 kamus + ekspor.
+- H4 (Min 1 Nov): kamus publik + ekspor JSON/CSV/ELAN. Berikutnya: H5 evaluasi + halaman Bukti.

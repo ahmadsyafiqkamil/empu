@@ -11,6 +11,9 @@ export default function StudioHome() {
           <Link className="border border-[var(--line)] px-4 py-3" href="/studio/upload">
             Upload recording
           </Link>
+          <Link className="border border-[var(--line)] px-4 py-3" href="/studio/export">
+            Export
+          </Link>
         </div>
       </main>
     </StudioKeyGate>

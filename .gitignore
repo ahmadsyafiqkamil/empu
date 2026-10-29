@@ -33,6 +33,8 @@ node_modules/
 .next/
 dist/
 build/
+*.tsbuildinfo
+next-env.d.ts
 
 # Git worktrees (isolated checkouts)
 .worktrees/
