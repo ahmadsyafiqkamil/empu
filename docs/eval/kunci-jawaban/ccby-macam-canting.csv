@@ -1,0 +1,27 @@
+clip_id,t_start,t_end,spoken,term,category,source,stage,visible_object,note,annotator
+ccby-macam-canting,25.5,28.0,mori,mori,material,visual_only,nglowong,patterned fabric,DRAFT,DRAFT
+ccby-macam-canting,25.92,26.68,membatik tulis,batik tulis,technique,speech,nglowong,,DRAFT,DRAFT
+ccby-macam-canting,195.0,218.0,batik,batik tulis,technique,visual_only,,batik fabric,DRAFT,DRAFT
+ccby-macam-canting,29.98,30.72,canting,canting,tool,speech,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,35.82,37.14,canting klowong,canting klowongan,tool,speech,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,70.7,71.3,canting klowong,canting klowongan,tool,speech,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,82.5,85.0,KLOWONG,canting klowongan,tool,on_screen_text,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,171.0,174.0,KLOWONG,canting klowongan,tool,on_screen_text,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,37.64,38.36,lowong,nglowong,stage,speech,nglowong,,DRAFT,DRAFT
+ccby-macam-canting,45.94,46.82,pola,memola,stage,speech,memola,,DRAFT,DRAFT
+ccby-macam-canting,48.66,49.04,motif,motif,motif,speech,nglowong,,DRAFT,DRAFT
+ccby-macam-canting,56.14,56.72,cucuknya,cucuk,tool_part,speech,nglowong,canting spout tip,DRAFT,DRAFT
+ccby-macam-canting,55.54,55.92,paruh,paruh,tool_part,speech,nglowong,canting spout tip,DRAFT,DRAFT
+ccby-macam-canting,68.16,68.56,paruh,paruh,tool_part,speech,,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,72.04,72.7,canting cecek,canting cecekan,tool,speech,ngiseni,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,173.0,176.0,CECEK,canting cecekan,tool,on_screen_text,ngiseni,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,76.74,77.66,isian-isian cecek,cecek,technique,speech,ngiseni,,DRAFT,DRAFT
+ccby-macam-canting,131.29,132.05,menutupi,nembok,stage,speech,nembok,batik fabric,DRAFT,DRAFT
+ccby-macam-canting,141.59,142.09,menembok,nembok,stage,speech,nembok,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,105.0,110.0,malam,malam,material,visual_only,nglowong,wax pot,DRAFT,DRAFT
+ccby-macam-canting,149.39,150.03,Lilin,malam,material,speech,nembok,,DRAFT,DRAFT
+ccby-macam-canting,160.09,161.01,pewarnaan,pewarnaan,stage,speech,pewarnaan,dyed batik fabric,DRAFT,DRAFT
+ccby-macam-canting,21.5,24.5,TEMBOKAN,canting tembokan,tool,on_screen_text,nembok,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,121.43,122.05,canting tembok,canting tembokan,tool,speech,nembok,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,123.5,126.0,TEMBOKAN,canting tembokan,tool,on_screen_text,nembok,copper wax pen,DRAFT,DRAFT
+ccby-macam-canting,161.01,162.91,Canting tembok,canting tembokan,tool,speech,nembok,copper wax pen,DRAFT,DRAFT
