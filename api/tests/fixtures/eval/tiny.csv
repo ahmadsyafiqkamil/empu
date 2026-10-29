@@ -1,0 +1,4 @@
+clip_id,t_start,t_end,spoken,term,category,source,stage,visible_object,note,annotator
+demo,85,88,pola,pola,stage,speech,memola,pensil,ok,syafiq
+demo,66,68,nyamplung,nyamplung,tool_part,on_screen_text,,diagram,bukan ucapan,syafiq
+demo,1,2,x,x,tool,speech,,,contoh,contoh
