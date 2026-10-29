@@ -63,3 +63,5 @@ pnpm test && pnpm lint
 - H2 (Jum 30 Okt): Gate 1 lulus (lihat `docs/reference/hasil-gate1.md`). Arsip `batik-tulis` berisi 2 video CC BY. Berikutnya: H3.
 - H3 (Sab 31 Okt): API + Studio jalan; video CC BY divalidasi lewat UI. Berikutnya: H4 kamus + ekspor.
 - H4 (Min 1 Nov): kamus publik + ekspor JSON/CSV/ELAN. Berikutnya: H5 evaluasi + halaman Bukti.
+- H5 (Sen 2 Nov): evaluasi (runner/CLI `empu eval`) + halaman Bukti selesai di kode; anotasi gold + `latest.json` (Gate 2) masih pending. Berikutnya: anotasi gold → run eval.
+- H6 (Sel 3 Nov): withdraw consent, sandbox tanpa key, Docker/Caddy/README siap. URL publik belum (deploy VPS belum). Berikutnya: deploy + H7.
