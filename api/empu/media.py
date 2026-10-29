@@ -7,7 +7,8 @@ from pathlib import Path, PurePosixPath
 from sqlmodel import Session
 
 from empu.enums import ConsentStatus
-from empu.models import Recording
+from empu.models import Entry, Recording
+from empu.visibility import entry_is_public, public_occurrences, recording_is_public
 
 
 def recording_dir(data_dir: Path, archive_id: int, recording_id: int) -> Path:
@@ -36,16 +37,26 @@ def abs_from_rel(data_dir: Path, rel: str) -> Path:
 def can_access_media(session: Session, rel_path: str, *, has_key: bool) -> bool:
     rel = rel_path.lstrip("/")
     parts = PurePosixPath(rel).parts
-    if len(parts) < 4 or parts[0] != "archives" or parts[2] != "recordings":
-        if not has_key:
+    if has_key:
+        if len(parts) >= 4 and parts[0] == "archives" and parts[2] == "recordings":
+            try:
+                rec = session.get(Recording, int(parts[3]))
+            except ValueError:
+                return False
+            return rec is not None and rec.consent_status is not ConsentStatus.withdrawn
+        return bool(parts) and parts[0] == "archives"
+    if len(parts) >= 4 and parts[0] == "archives" and parts[2] == "recordings":
+        try:
+            rec = session.get(Recording, int(parts[3]))
+        except ValueError:
             return False
-        if len(parts) >= 4 and parts[0] == "archives" and parts[2] == "entries":
-            return has_key
-        return False
-    try:
-        rec = session.get(Recording, int(parts[3]))
-    except ValueError:
-        return False
-    if rec is None or rec.consent_status is ConsentStatus.withdrawn:
-        return False
-    return has_key
+        return rec is not None and recording_is_public(rec)
+    if len(parts) >= 4 and parts[0] == "archives" and parts[2] == "entries":
+        try:
+            entry = session.get(Entry, int(parts[3]))
+        except ValueError:
+            return False
+        if entry is None:
+            return False
+        return entry_is_public(entry, public_occurrences(session, entry.id))
+    return False
