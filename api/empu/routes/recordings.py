@@ -12,7 +12,7 @@ from empu.db import get_session
 from empu.enums import AccessLevel, SourceKind
 from empu.intake import IntakeError, RecordingMeta, create_recording, enqueue_job
 from empu.models import Archive, Contributor, Entry, Job, Occurrence, Recording
-from empu.serialize import entry_out, recording_out
+from empu.serialize import entry_out, process_map_out, recording_out
 
 router = APIRouter()
 
@@ -138,6 +138,14 @@ def recording_entries(
         )
     out.sort(key=lambda x: x.term)
     return out
+
+
+@router.get("/api/recordings/{recording_id}/process-map")
+def recording_process_map(recording_id: int, session: Session = Depends(get_session)) -> dict:
+    rec = session.get(Recording, recording_id)
+    if rec is None:
+        raise HTTPException(404, "recording not found")
+    return process_map_out(session, rec, public_only=False)
 
 
 @router.post("/api/recordings/{recording_id}/reprocess", response_model=UploadAck)

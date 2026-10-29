@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlmodel import select
+
 from empu.api_schemas import (
     ArchiveOut,
     ContributorOut,
@@ -11,7 +13,7 @@ from empu.api_schemas import (
     RecordingOut,
 )
 from empu.enums import JobStatus
-from empu.models import Archive, Contributor, Entry, Job, Occurrence, Recording
+from empu.models import Archive, Contributor, Entry, Job, Occurrence, ProcessStep, Recording
 from empu.pipeline.run import JOB_STAGES
 
 
@@ -185,3 +187,43 @@ def archive_out(a: Archive, *, recording_count: int = 0, validated_count: int = 
         recording_count=recording_count,
         validated_count=validated_count,
     )
+
+
+def process_map_out(session, rec: Recording, *, public_only: bool) -> dict:
+    from empu.visibility import entry_is_public, public_occurrences, recording_is_public
+
+    if public_only and not recording_is_public(rec):
+        return {}
+    steps = session.exec(
+        select(ProcessStep).where(ProcessStep.recording_id == rec.id).order_by(ProcessStep.order)
+    ).all()
+    occs = session.exec(select(Occurrence).where(Occurrence.recording_id == rec.id)).all()
+    out_steps = []
+    for s in steps:
+        linked, seen = [], set()
+        for o in occs:
+            hit = o.stage_id == s.pack_stage_id or (s.t_start <= o.t_start <= s.t_end)
+            if not hit or o.entry_id in seen:
+                continue
+            e = session.get(Entry, o.entry_id)
+            if e is None:
+                continue
+            if public_only and not entry_is_public(e, public_occurrences(session, e.id)):
+                continue
+            seen.add(o.entry_id)
+            linked.append({"id": e.id, "term": e.term, "keyframe_url": media_url(o.keyframe_path)})
+        out_steps.append(
+            {
+                "pack_stage_id": s.pack_stage_id,
+                "name": s.name_raw,
+                "t_start": s.t_start,
+                "t_end": s.t_end,
+                "entries": linked,
+            }
+        )
+    return {
+        "recording_id": rec.id,
+        "title": rec.title,
+        "duration_s": rec.duration_s,
+        "steps": out_steps,
+    }

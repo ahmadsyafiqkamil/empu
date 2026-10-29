@@ -4,7 +4,7 @@ from sqlmodel import Session, select
 from empu.api_schemas import ArchiveOut, EntryListItem, EntryOut
 from empu.db import get_session
 from empu.models import Archive, Contributor, Entry, Recording
-from empu.serialize import archive_out, entry_list_item, entry_out
+from empu.serialize import archive_out, entry_list_item, entry_out, process_map_out
 from empu.visibility import (
     entry_is_public,
     public_entries,
@@ -87,3 +87,16 @@ def get_public_entry(entry_id: int, session: Session = Depends(get_session)) -> 
         attribution=rec.attribution if rec else None,
         validation_label=validation_label_for(session, e.id),
     )
+
+
+@router.get("/api/public/recordings/{recording_id}/process-map")
+def public_recording_process_map(
+    recording_id: int, session: Session = Depends(get_session)
+) -> dict:
+    rec = session.get(Recording, recording_id)
+    if rec is None:
+        raise HTTPException(404, "not found")
+    out = process_map_out(session, rec, public_only=True)
+    if not out:
+        raise HTTPException(404, "not found")
+    return out
