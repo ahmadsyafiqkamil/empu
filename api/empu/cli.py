@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import time
 from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path
 
 import typer
+import yaml
 from sqlmodel import Session, col, func, select
 
 from empu.cache import ResponseCache
-from empu.config import Settings, get_settings
+from empu.config import REPO_ROOT, Settings, get_settings
 from empu.db import init_db, make_engine
-from empu.enums import AccessLevel, ContributorRole, PipelineMode, SourceKind
+from empu.enums import AccessLevel, ContributorRole, PipelineMode, Source, SourceKind
+from empu.evaluation.baseline import baseline_against_pack, parse_vtt
+from empu.evaluation.gold import load_gold
+from empu.evaluation.runner import pred_from_db, run_clip, write_results
 from empu.intake import (
     IntakeError,
     RecordingMeta,
@@ -286,3 +292,183 @@ def status(archive: str | None = typer.Option(None, "--archive")) -> None:
                 typer.echo(
                     f"  rec {rec.id} '{rec.title}' {rec.status.value} occ={n_occ} job={job_txt}"
                 )
+
+
+eval_app = typer.Typer(no_args_is_help=True)
+app.add_typer(eval_app, name="eval", help="Evaluation commands.")
+
+GOLD_FIELDS = [
+    "clip_id",
+    "t_start",
+    "t_end",
+    "spoken",
+    "term",
+    "category",
+    "source",
+    "stage",
+    "visible_object",
+    "note",
+    "annotator",
+]
+
+
+def _clips_from_set(set_path: Path) -> list[dict]:
+    data = yaml.safe_load(set_path.read_text(encoding="utf-8")) or {}
+    out: list[dict] = []
+    for item in data.get("clips") or []:
+        if isinstance(item, dict) and item.get("id"):
+            out.append(item)
+    for item in data.get("demo_cc_by") or []:
+        if isinstance(item, dict) and item.get("id"):
+            out.append(item)
+    return out
+
+
+def _clip_by_id(set_path: Path, clip_id: str) -> dict | None:
+    return next((i for i in _clips_from_set(set_path) if i.get("id") == clip_id), None)
+
+
+def _find_recording_by_youtube(session: Session, youtube_id: str | None) -> Recording | None:
+    if not youtube_id:
+        return None
+    for rec in session.exec(select(Recording)):
+        if rec.source_url and youtube_id in rec.source_url:
+            return rec
+    return None
+
+
+def _find_vtt(testdata_dir: Path, youtube_id: str | None) -> Path | None:
+    if not youtube_id:
+        return None
+    root = Path(testdata_dir)
+    if not root.exists():
+        return None
+    for suffix in (".id.vtt", ".id-orig.vtt", ".vtt"):
+        for p in root.rglob(f"*[{youtube_id}]*{suffix}"):
+            return p
+    return None
+
+
+def _gold_path(item: dict, gold_dir: Path) -> Path | None:
+    """Resolve a clip's gold CSV. Returns None for an explicit control clip
+    (gold: null) or when the file is absent."""
+    if "gold" not in item:
+        p = Path(gold_dir) / f"{item['id']}.csv"
+        return p if p.is_file() else None
+    raw = item["gold"]
+    if raw is None:
+        return None  # control clip
+    p = Path(str(raw))
+    if not p.is_absolute():
+        p = REPO_ROOT / str(raw)
+    return p if p.is_file() else None
+
+
+def _aggregate(clips: dict) -> dict:
+    def _mean(key: str) -> float | None:
+        vals = [m[key] for m in clips.values() if isinstance(m, dict) and m.get(key) is not None]
+        return round(sum(vals) / len(vals), 4) if vals else None
+
+    return {
+        "speech_recall": _mean("speech_recall"),
+        "speech_precision": _mean("speech_precision"),
+        "median_time_error_s": _mean("median_time_error_s"),
+        "source_accuracy": _mean("source_accuracy"),
+    }
+
+
+@eval_app.command("run")
+def eval_run(
+    set_path: Path = typer.Option(..., "--set", exists=True, dir_okay=False),
+    gold_dir: Path = typer.Option(..., "--gold", exists=True, file_okay=False),
+    out: Path = typer.Option(..., "--out"),
+) -> None:
+    """Score every clip in a test-set against gold and write an aggregate JSON."""
+    settings = get_settings()
+    pack = load_pack(_default_pack_id(settings), settings.packs_dir)
+    clips: dict = {}
+    notes: list[str] = []
+    with Session(_engine(settings)) as session:
+        for item in _clips_from_set(set_path):
+            cid = item["id"]
+            rec = _find_recording_by_youtube(session, item.get("youtube_id"))
+            pred = pred_from_db(session, rec.id) if rec else []
+            gold_path = _gold_path(item, gold_dir)
+            if gold_path is None:
+                clips[cid] = {
+                    "n_pred_speech": sum(1 for p in pred if p.source is Source.speech),
+                    "n_pred": len(pred),
+                }
+                continue
+            if rec is None:
+                notes.append(f"{cid}: no recording matched youtube_id {item.get('youtube_id')}")
+                clips[cid] = {"error": "no recording", "n_pred": 0}
+                continue
+            baseline = None
+            vtt = _find_vtt(settings.testdata_dir, item.get("youtube_id"))
+            if vtt is not None:
+                baseline = baseline_against_pack(parse_vtt(vtt), pack)
+            clips[cid] = run_clip(load_gold(gold_path), pred, pack, baseline=baseline)
+    payload = {
+        "created_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "pack": f"{pack.id}@{pack.version}",
+        "mode": settings.pipeline_mode,
+        "clips": clips,
+        "aggregate": _aggregate(clips),
+        "notes": notes,
+    }
+    write_results(out, payload)
+    typer.echo(f"wrote {out}: {len(clips)} clips")
+
+
+@eval_app.command("draft-gold")
+def draft_gold(
+    clip_id: str = typer.Argument(...),
+    set_path: Path = typer.Option(None, "--set", exists=True, dir_okay=False),
+    out: Path = typer.Option(None, "--out"),
+) -> None:
+    """Draft a gold answer-key CSV from a clip's DB occurrences (annotator=DRAFT)."""
+    settings = get_settings()
+    set_path = set_path or REPO_ROOT / "docs" / "eval" / "test-set.yaml"
+    if not set_path.is_file():
+        typer.echo(f"error: test set not found: {set_path}", err=True)
+        raise typer.Exit(2)
+    item = _clip_by_id(set_path, clip_id)
+    if item is None:
+        typer.echo(f"error: clip {clip_id!r} not found in {set_path}", err=True)
+        raise typer.Exit(2)
+    with Session(_engine(settings)) as session:
+        rec = _find_recording_by_youtube(session, item.get("youtube_id"))
+        if rec is None:
+            typer.echo(
+                f"error: no recording for {clip_id!r} (youtube {item.get('youtube_id')})",
+                err=True,
+            )
+            raise typer.Exit(2)
+        rows = []
+        for o in session.exec(select(Occurrence).where(Occurrence.recording_id == rec.id)):
+            e = session.get(Entry, o.entry_id)
+            if e is None:
+                continue
+            rows.append(
+                {
+                    "clip_id": clip_id,
+                    "t_start": o.t_start,
+                    "t_end": o.t_end,
+                    "spoken": o.spoken or e.term,
+                    "term": e.term,
+                    "category": e.category.value,
+                    "source": o.source.value,
+                    "stage": o.stage_id or "",
+                    "visible_object": o.visible_object_en or "",
+                    "note": "DRAFT",
+                    "annotator": "DRAFT",
+                }
+            )
+    out = out or REPO_ROOT / "docs" / "eval" / "kunci-jawaban" / f"{clip_id}.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=GOLD_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+    typer.echo(f"wrote {out}: {len(rows)} rows (annotator=DRAFT)")
