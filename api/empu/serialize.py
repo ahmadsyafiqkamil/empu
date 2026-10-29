@@ -82,6 +82,7 @@ def entry_out(
     recording_title: str = "",
     contributor_name: str | None = None,
     attribution: str | None = None,
+    validation_label: str | None = None,
 ) -> EntryOut:
     item = entry_list_item(e, occs, recording_title=recording_title)
     best = _best(e, occs)
@@ -96,6 +97,7 @@ def entry_out(
         occurrences=[occurrence_out(o, recording_title=recording_title) for o in occs],
         attribution=attribution,
         contributor_name=contributor_name,
+        validation_label=validation_label,
     )
 
 

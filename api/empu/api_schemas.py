@@ -115,6 +115,7 @@ class EntryOut(EntryListItem):
     occurrences: list[OccurrenceOut] = []
     attribution: str | None = None
     contributor_name: str | None = None
+    validation_label: str | None = None
 
 
 class JobStageOut(APIModel):
