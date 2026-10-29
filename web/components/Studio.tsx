@@ -198,6 +198,14 @@ useEffect(() => {
     [current],
   );
 
+  const withdraw = useCallback(async () => {
+    if (!window.confirm("Hide this recording from the public dictionary?")) return;
+    const updated = await apiSend<Recording>(`/api/recordings/${recordingId}/withdraw-consent`, {
+      method: "POST",
+    });
+    setRec((r) => (r ? { ...r, ...updated } : r));
+  }, [recordingId]);
+
   useEffect(() => {
     function onKey(ev: KeyboardEvent) {
       if (ev.target instanceof HTMLInputElement || ev.target instanceof HTMLTextAreaElement) {
@@ -238,6 +246,17 @@ useEffect(() => {
             {COPY.studio.accept} · {COPY.studio.edit} · {COPY.studio.reject} ·{" "}
             {COPY.studio.previous} · {COPY.studio.next}
           </span>
+          {rec.consent_status !== "withdrawn" ? (
+            <button
+              type="button"
+              className="underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--wax)]"
+              onClick={() => void withdraw()}
+            >
+              Withdraw consent
+            </button>
+          ) : (
+            <span>hidden from public</span>
+          )}
         </div>
       </header>
       <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.2fr)_minmax(24rem,1fr)]">

@@ -8,6 +8,7 @@ from sqlmodel import Session, select
 
 from empu.api_schemas import EntryOut, RecordingOut, ReprocessIn, UploadAck
 from empu.config import Settings, get_settings
+from empu.consent import withdraw_consent
 from empu.db import get_session
 from empu.enums import AccessLevel, SourceKind
 from empu.intake import IntakeError, RecordingMeta, create_recording, enqueue_job
@@ -114,9 +115,7 @@ def get_recording(recording_id: int, session: Session = Depends(get_session)) ->
 
 
 @router.get("/api/recordings/{recording_id}/entries", response_model=list[EntryOut])
-def recording_entries(
-    recording_id: int, session: Session = Depends(get_session)
-) -> list[EntryOut]:
+def recording_entries(recording_id: int, session: Session = Depends(get_session)) -> list[EntryOut]:
     rec, _, contrib = _load_recording(session, recording_id)
     occs = session.exec(select(Occurrence).where(Occurrence.recording_id == recording_id)).all()
     by_entry: dict[int, list[Occurrence]] = {}
@@ -160,3 +159,13 @@ def reprocess(
         raise HTTPException(404, "recording not found")
     job = enqueue_job(session, settings, rec, mode=body.mode if body else None)
     return UploadAck(recording_id=rec.id, job_id=job.id)
+
+
+@router.post("/api/recordings/{recording_id}/withdraw-consent", response_model=RecordingOut)
+def withdraw(recording_id: int, session: Session = Depends(get_session)) -> RecordingOut:
+    try:
+        rec_id = withdraw_consent(session, recording_id).id
+    except ValueError as e:
+        raise HTTPException(404, str(e)) from e
+    rec, job, contrib = _load_recording(session, rec_id)
+    return recording_out(rec, job=job, contributor=contrib)

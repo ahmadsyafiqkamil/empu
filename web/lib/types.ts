@@ -112,6 +112,7 @@ export type Recording = {
   job: Job | null;
   attribution: string | null;
   source_kind: string;
+  consent_status: string | null;
 };
 
 export type Archive = {
