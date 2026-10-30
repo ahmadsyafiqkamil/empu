@@ -64,6 +64,10 @@ class ArchiveIn(APIModel):
     owner_name: str = ""
 
 
+class PackYamlIn(APIModel):
+    yaml: str
+
+
 class OccurrenceOut(APIModel):
     id: int
     entry_id: int

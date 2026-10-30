@@ -4,7 +4,16 @@ import pytest
 import yaml
 from conftest import REPO_ROOT
 
-from empu.packs import CraftPack, PackError, PackRef, list_packs, load_pack
+from empu.packs import (
+    CraftPack,
+    PackError,
+    PackRef,
+    is_valid_pack_id,
+    list_packs,
+    load_pack,
+    parse_yaml,
+    write_pack,
+)
 
 PACK_FILE = REPO_ROOT / "packs" / "batik_tulis.yaml"
 
@@ -81,3 +90,31 @@ def test_load_pack_errors(tmp_path):
 
 def test_list_packs():
     assert "batik_tulis" in [p.id for p in list_packs(REPO_ROOT / "packs")]
+
+
+def test_is_valid_pack_id():
+    assert is_valid_pack_id("gamelan")
+    assert is_valid_pack_id("batik_tulis")
+    assert not is_valid_pack_id("../escape")
+    assert not is_valid_pack_id("Bad Name")
+    assert not is_valid_pack_id("")
+    assert not is_valid_pack_id(None)
+
+
+def test_write_pack_roundtrip(tmp_path):
+    data = raw_pack()
+    pack = CraftPack.model_validate(data)
+    path = write_pack(pack, tmp_path)
+    assert (tmp_path / "batik_tulis.yaml").exists()
+    reloaded = load_pack("batik_tulis", tmp_path)
+    assert reloaded.id == pack.id
+    assert len(reloaded.terms) == len(pack.terms)
+
+
+def test_parse_yaml_valid_and_invalid():
+    pack = parse_yaml(PACK_FILE.read_text())
+    assert pack.id == "batik_tulis"
+    with pytest.raises(PackError, match="invalid"):
+        parse_yaml("id: nope\nterms: [{label: x}]\n")
+    with pytest.raises(PackError, match="mapping"):
+        parse_yaml("- just\n- a list\n")

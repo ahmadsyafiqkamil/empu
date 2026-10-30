@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Literal, NamedTuple
@@ -11,6 +12,8 @@ from pydantic import BaseModel, ConfigDict, ValidationError, model_validator
 
 from empu.enums import Category
 from empu.text import normalize
+
+PACK_ID_RE = re.compile(r"^[a-z0-9_]+$")
 
 
 class PackError(ValueError):
@@ -137,3 +140,33 @@ def load_pack(pack_id: str, packs_dir: Path) -> CraftPack:
 
 def list_packs(packs_dir: Path) -> list[CraftPack]:
     return [load_pack(p.stem, packs_dir) for p in sorted(Path(packs_dir).glob("*.yaml"))]
+
+
+def is_valid_pack_id(pack_id: str) -> bool:
+    """Pack ids become filenames; allow only safe slug characters."""
+    return bool(PACK_ID_RE.match(pack_id or ""))
+
+
+def parse_yaml(text: str) -> CraftPack:
+    """Parse a YAML document into a validated CraftPack, or raise PackError."""
+    try:
+        doc = yaml.safe_load(text)
+    except yaml.YAMLError as e:
+        raise PackError(f"pack is not valid YAML: {e}") from e
+    if not isinstance(doc, dict):
+        raise PackError("pack must be a YAML mapping (top-level keys like id, name, stages…)")
+    try:
+        return CraftPack.model_validate(doc)
+    except (ValidationError, ValueError) as e:
+        raise PackError(f"pack is invalid: {e}") from e
+
+
+def write_pack(pack: CraftPack, packs_dir: Path) -> Path:
+    """Write a validated pack to packs/<id>.yaml and return the path."""
+    path = Path(packs_dir) / f"{pack.id}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump(pack.model_dump(mode="json"), sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
+    return path

@@ -1,0 +1,127 @@
+# Craft pack: Gamelan — DRAF v0.1.0
+#
+# Struktur sama dengan batik_tulis.yaml. Pengetahuan khusus keahlian hanya hidup di file ini;
+# kode pipeline membaca pack dan tidak boleh berisi istilah hardcode.
+#
+# Kategori: tool | tool_part | material | dye | stage | technique | motif | other
+# visual: true -> layak dipotong dengan SAM 3.1 (wajib sam_prompt, bahasa Inggris, pendek).
+# Aturan validasi: id unik; varian tidak boleh dipakai dua kali (antar-istilah maupun antara
+# istilah dan tahap); stage pada istilah harus merujuk id tahap yang ada.
+# Semua entri berstatus draf (verified: false) sampai dicek seniman/manuskrip.
+
+id: gamelan
+version: 0.1.0
+name:
+  id: Gamelan
+  en: Javanese gamelan
+languages: [id, jv]
+prompt_context: >
+  Gamelan adalah ansambel musik tradisional Jawa dari berbagai instrumen yang sebagian besar
+  berupa alat pukul berbahan perunggu, ditata menurut laras slendro atau pelog. Narasumber
+  biasanya menyebut nama instrumen (saron, bonang, gong, kendang), teknik tabuh, dan istilah
+  garap. Istilah bisa berbeda antardaerah (Solo, Yogyakarta, dan lain-lain).
+
+# Contoh salah tulis pengenal suara (opsional). Dipakai di prompt Mode B.
+asr_error_examples: []
+
+stages:
+  - id: penyiapan
+    label: {id: Menyiapkan instrumen, en: Preparing the instruments}
+    variants: [menyiapkan, menyetem, setem, laras]
+  - id: notasi
+    label: {id: Membaca notasi, en: Reading notation}
+    variants: [notasi, titilaras, kepatihan, membaca notasi]
+  - id: tabuhan
+    label: {id: Menabuh, en: Playing}
+    variants: [menabuh, tabuhan, ditabuh, nabuh]
+
+terms:
+  # --- Alat ---
+  - id: saron
+    label: saron
+    category: tool
+    variants: [saron, saron barung, saron demung, demung]
+    stage: tabuhan
+    gloss_id: alat pukul perunggu berbilah dengan pemukul kayu
+    gloss_en: bronze metallophone struck with a wooden mallet
+    visual: true
+    sam_prompt: bronze metallophone with wooden bars on a low wooden frame
+    verified: false
+  - id: bonang
+    label: bonang
+    category: tool
+    variants: [bonang, bonang barung, bonang penerus]
+    stage: tabuhan
+    gloss_id: deretan gong kecil di atas rak kayu, ditabuh dengan pemukul berbalut
+    gloss_en: row of small gongs on a wooden rack, struck with padded mallets
+    visual: true
+    sam_prompt: set of small bronze gongs on a wooden rack
+    verified: false
+  - id: gong
+    label: gong
+    category: tool
+    variants: [gong, gong ageng]
+    stage: tabuhan
+    gloss_id: gong besar yang ditabuh sebagai penanda akhiran frasa
+    gloss_en: large hanging gong marking the end of a phrase
+    visual: true
+    sam_prompt: large hanging bronze gong
+    verified: false
+  - id: kendang
+    label: kendang
+    category: tool
+    variants: [kendang, kendhang, kendang ageng, kendang ketipung]
+    stage: tabuhan
+    gloss_id: gendang dua sisi yang mengatur tempo dan dinamika
+    gloss_en: double-headed drum that leads tempo and dynamics
+    visual: true
+    sam_prompt: barrel-shaped drum on a wooden stand
+    verified: false
+  - id: gambang
+    label: gambang
+    category: tool
+    variants: [gambang]
+    stage: tabuhan
+    gloss_id: alat pukul berbilah kayu
+    gloss_en: wooden-barred xylophone
+    visual: true
+    sam_prompt: wooden xylophone with rectangular bars
+    verified: false
+
+  # --- Bagian instrumen ---
+  - id: wilah
+    label: wilah
+    category: tool_part
+    variants: [wilah, bilah]
+    gloss_id: bilah perunggu atau kayu yang dipukul
+    gloss_en: the individual bar struck on a metallophone
+    visual: true
+    sam_prompt: bronze bar of a metallophone
+    verified: false
+
+  # --- Teknik ---
+  - id: gembyang
+    label: gembyang
+    category: technique
+    variants: [gembyang]
+    stage: tabuhan
+    gloss_id: teknik memukul dua nada secara bersamaan pada saron
+    gloss_en: striking two notes together on the saron
+    visual: false
+    verified: false
+  - id: pelog
+    label: pelog
+    category: technique
+    variants: [pelog]
+    gloss_id: salah satu laras gamelan dengan interval tujuh nada
+    gloss_en: one of the gamelan tuning systems with seven tones
+    visual: false
+    verified: false
+  - id: slendro
+    label: slendro
+    category: technique
+    variants: [slendro]
+    gloss_id: laras gamelan dengan lima nada berinterval hampir sama
+    gloss_en: the five-tone gamelan tuning system
+    visual: false
+    verified: false
