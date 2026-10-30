@@ -34,8 +34,9 @@ function Form() {
   const [packs, setPacks] = useState<Pack[]>([]);
   const [yaml, setYaml] = useState("");
   const [result, setResult] = useState<ValidateResult | null>(null);
-  const [busy, setBusy] = useState<"validate" | "create" | null>(null);
+  const [busy, setBusy] = useState<"validate" | "create" | "load" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sourceId, setSourceId] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     apiGet<Pack[]>("/api/packs")
@@ -46,6 +47,21 @@ function Form() {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  async function loadSource(id: string) {
+    setBusy("load");
+    setError(null);
+    try {
+      const r = await apiGet<{ yaml: string }>(`/api/packs/${id}/source`);
+      setYaml(r.yaml);
+      setResult(null);
+      setSourceId(id);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setBusy(null);
+    }
+  }
 
   async function validate() {
     setBusy("validate");
@@ -103,15 +119,30 @@ function Form() {
             <li className="p-3 text-sm text-[var(--muted)]">No packs yet.</li>
           ) : (
             packs.map((p) => (
-              <li key={p.id} className="flex items-baseline justify-between gap-3 p-3 text-sm">
-                <span className="font-medium">{p.name.id}</span>
-                <span className="font-mono text-xs text-[var(--muted)]">
-                  {p.id} · v{p.version}
-                </span>
+              <li key={p.id} className="flex items-center justify-between gap-3 p-3 text-sm">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-medium">{p.name.id}</span>
+                  <span className="font-mono text-xs text-[var(--muted)]">
+                    {p.id} · v{p.version}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void loadSource(p.id)}
+                  disabled={busy !== null}
+                  className="text-xs text-[var(--accent)] underline disabled:opacity-40"
+                >
+                  {busy === "load" && sourceId === p.id ? "Loading…" : "Load as example"}
+                </button>
               </li>
             ))
           )}
         </ul>
+        {sourceId ? (
+          <p className="text-xs text-[var(--muted)]">
+            Loaded {sourceId}. Edit the id field before creating a new pack.
+          </p>
+        ) : null}
       </section>
 
       <section className="space-y-3">

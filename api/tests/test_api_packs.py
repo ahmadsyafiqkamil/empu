@@ -98,3 +98,24 @@ def test_create_pack_unsafe_id_rejected(tmp_path):
     bad = VALID_YAML.replace("id: tenun", "id: ../tenun")
     r = c.post("/api/packs", json={"yaml": bad}, headers=h)
     assert r.status_code == 400
+
+
+def test_pack_source_requires_key(tmp_path):
+    c = client(tmp_path)
+    r = c.get("/api/packs/batik_tulis/source")
+    assert r.status_code == 401
+
+
+def test_pack_source_ok(tmp_path):
+    c = client(tmp_path)
+    h = {"X-Studio-Key": "studio-test"}
+    assert c.post("/api/packs", json={"yaml": VALID_YAML}, headers=h).status_code == 201
+    r = c.get("/api/packs/tenun/source", headers=h)
+    assert r.status_code == 200
+    assert "id: tenun" in r.json()["yaml"]
+
+
+def test_pack_source_missing_404(tmp_path):
+    c = client(tmp_path)
+    r = c.get("/api/packs/nope/source", headers={"X-Studio-Key": "studio-test"})
+    assert r.status_code == 404

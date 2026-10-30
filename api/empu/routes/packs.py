@@ -32,6 +32,21 @@ def pack_detail(pack_id: str, settings: Settings = Depends(get_settings)) -> dic
     return p.model_dump()
 
 
+@router.get("/api/packs/{pack_id}/source")
+def pack_source(
+    pack_id: str,
+    settings: Settings = Depends(get_settings),
+    _auth: AuthContext = Depends(require_studio),
+) -> dict:
+    """Return the raw YAML so the studio can load an existing pack as a template."""
+    if not is_valid_pack_id(pack_id):
+        raise HTTPException(404, "pack not found")
+    path = settings.packs_dir / f"{pack_id}.yaml"
+    if not path.exists():
+        raise HTTPException(404, "pack not found")
+    return {"yaml": path.read_text(encoding="utf-8")}
+
+
 def _parse_body(yaml_text: str):
     try:
         return parse_yaml(yaml_text)
