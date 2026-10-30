@@ -30,8 +30,6 @@ def list_public_archives(session: Session = Depends(get_session)) -> list[Archiv
         if a.is_sandbox:
             continue
         pubs = public_entries(session, a.id)
-        if not pubs and not a.is_demo:
-            continue
         n_rec = len({o.recording_id for _, occs in pubs for o in occs})
         out.append(archive_out(a, recording_count=n_rec, validated_count=len(pubs)))
     return out

@@ -43,6 +43,25 @@ def test_public_list_no_key(api, session):
     assert r.json()[0]["slug"] == "hidup-batik"
 
 
+def test_empty_archive_listed(api, session):
+    make_archive(session, slug="kosong", title="Kosong", is_demo=False)
+    api.headers.pop("X-Studio-Key", None)
+    r = api.get("/api/public/archives")
+    assert r.status_code == 200
+    slugs = [a["slug"] for a in r.json()]
+    assert "kosong" in slugs
+    empty = next(a for a in r.json() if a["slug"] == "kosong")
+    assert empty["validated_count"] == 0
+
+
+def test_sandbox_not_listed(api, session):
+    make_archive(session, slug="sandbox", title="Sandbox", is_sandbox=True)
+    api.headers.pop("X-Studio-Key", None)
+    r = api.get("/api/public/archives")
+    slugs = [a["slug"] for a in r.json()]
+    assert "sandbox" not in slugs
+
+
 def test_proposed_not_listed(api, session):
     a, e = _setup(session)
     e.status = EntryStatus.proposed
