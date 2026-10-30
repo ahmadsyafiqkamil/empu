@@ -163,3 +163,36 @@ def test_sam_disabled_skips(session, settings, job_for):
     process_recording(session, job.id, client=client, settings=settings)
     canting = entries(session)["term:canting"]
     assert client.sam_calls == [] and canting.sam_status is SamStatus.skipped
+
+
+@requires_ffmpeg
+def test_sandbox_over_limit_rejected_before_transcode(session, settings, sample_video, monkeypatch):
+    a = make_archive(session, is_sandbox=True)
+    r = make_recording(session, a)
+    dst = recording_dir(settings.data_dir, a.id, r.id) / "original.mp4"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(sample_video, dst)
+    r.original_path = rel_to_data(settings.data_dir, dst)
+    job = Job(
+        recording_id=r.id,
+        mode=PipelineMode.A,
+        model=settings.muse_model,
+        prompt_version="analyze-v3",
+    )
+    session.add_all([r, job])
+    session.commit()
+    settings.sandbox_max_duration_s = 3.0  # sample video is 12s
+
+    calls: list[object] = []
+
+    def fake_normalize(src: object, out_dir: object, **kw: object) -> None:
+        calls.append(src)
+        raise AssertionError("normalize_recording must not run for over-limit sandbox")
+
+    monkeypatch.setattr("empu.pipeline.run.normalize_recording", fake_normalize)
+
+    process_recording(session, job.id, client=FakeClient([]), settings=settings)
+    session.refresh(job)
+    assert job.status is JobStatus.failed
+    assert "sandbox recordings are limited to 3 minutes" in job.error
+    assert calls == []
