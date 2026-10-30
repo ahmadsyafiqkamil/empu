@@ -21,6 +21,8 @@ const API = process.env.EMPU_API_ORIGIN ?? "http://127.0.0.1:8000";
 
 export const dynamic = "force-dynamic";
 
+type ArchiveMeta = { title: string };
+
 function quoteCaption(source: Source, t: number): string {
   return source === "on_screen_text" ? shownOnScreenAt(formatTime(t)) : saidAt(formatTime(t));
 }
@@ -31,6 +33,12 @@ export default async function EntryPage({
   params: Promise<{ slug: string; id: string }>;
 }) {
   const { slug, id } = await params;
+  const archive: ArchiveMeta | null = await fetch(
+    `${API}/api/public/archives/${slug}`,
+    { cache: "no-store" },
+  )
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
   const r = await fetch(`${API}/api/public/entries/${id}`, { cache: "no-store" });
   if (!r.ok) {
     return <p className="p-8">{COPY.empty.entry404}</p>;
@@ -46,7 +54,7 @@ export default async function EntryPage({
       <div className="space-y-4">
         <p className="text-sm text-[var(--muted)]">
           <Link href={`/d/${slug}`} className="underline">
-            Living Archive · Batik Tulis
+            {archive?.title ?? slug}
           </Link>
         </p>
         {occ ? (

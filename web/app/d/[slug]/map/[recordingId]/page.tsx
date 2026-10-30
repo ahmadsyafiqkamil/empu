@@ -13,12 +13,20 @@ type ProcessMap = {
   steps: MapStep[];
 };
 
+type ArchiveMeta = { title: string };
+
 export default async function ProcessMapPage({
   params,
 }: {
   params: Promise<{ slug: string; recordingId: string }>;
 }) {
   const { slug, recordingId } = await params;
+  const archive: ArchiveMeta | null = await fetch(
+    `${API}/api/public/archives/${slug}`,
+    { cache: "no-store" },
+  )
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
   const r = await fetch(`${API}/api/public/recordings/${recordingId}/process-map`, {
     cache: "no-store",
   });
@@ -36,7 +44,7 @@ export default async function ProcessMapPage({
     <main className="mx-auto max-w-5xl px-6 py-8">
       <p className="text-sm text-[var(--muted)]">
         <Link href={`/d/${slug}`} className="underline">
-          Batik Tulis
+          {archive?.title ?? slug}
         </Link>{" "}
         · {map.title}
       </p>

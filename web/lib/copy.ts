@@ -3,7 +3,7 @@ export const COPY = {
   home: {
     paragraph:
       "Empu turns a master's narrated work video into a watchable craft dictionary. Every term links to the original speech, a short clip of the movement, and the real tool, cropped from the original frame. AI proposes; a person decides.",
-    openArchive: "Open the Batik Tulis archive",
+    openArchive: "Open the archive",
     tryClip: "Try it with a 3-minute clip",
     seeEvidence: "See the evidence",
     steps: [
@@ -46,7 +46,7 @@ export const COPY = {
   },
   novel: {
     label: "New term",
-    tooltip: "Not in the Batik Tulis craft pack yet. Check with the maker.",
+    tooltip: "Not in this craft pack yet. Check with the maker.",
   },
   validation: {
     documenter: "Validated by the documenter",

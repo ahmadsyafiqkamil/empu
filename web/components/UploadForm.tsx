@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { apiGet, apiSend } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { COPY } from "@/lib/copy";
-import type { Archive, SourceKind } from "@/lib/types";
+import type { Archive, Pack, SourceKind } from "@/lib/types";
 
 const MAX_UPLOAD_BYTES = 500 * 1024 * 1024;
 const MAX_DURATION_S = 20 * 60;
@@ -45,18 +45,33 @@ export function UploadForm({ variant = "studio" }: { variant?: "studio" | "try" 
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [archives, setArchives] = useState<Archive[]>([]);
+  const [packs, setPacks] = useState<Pack[]>([]);
   const [consent, setConsent] = useState(false);
   const [kind, setKind] = useState<SourceKind>("own_recording");
   const [error, setError] = useState<string | null>(null);
   const [fileLabel, setFileLabel] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [creatingArchive, setCreatingArchive] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
+  const [newSlug, setNewSlug] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newPackId, setNewPackId] = useState("");
 
   useEffect(() => {
     if (isTry) return;
     apiGet<Archive[]>("/api/archives")
       .then(setArchives)
       .catch((e) => setError(String(e)));
+  }, [isTry]);
+
+  useEffect(() => {
+    if (isTry) return;
+    apiGet<Pack[]>("/api/packs")
+      .then((ps) => {
+        setPacks(ps);
+        if (ps.length > 0) setNewPackId(ps[0].id);
+      })
+      .catch(() => setPacks([]));
   }, [isTry]);
 
   const validateFile = useCallback(async (file: File): Promise<string | null> => {
@@ -100,12 +115,23 @@ export function UploadForm({ variant = "studio" }: { variant?: "studio" | "try" 
     setCreatingArchive(true);
     setError(null);
     try {
+      const pack = packs.find((p) => p.id === newPackId) ?? packs[0];
+      const slug = newSlug.trim() || pack?.id || "demo";
+      const title =
+        newTitle.trim() || (pack ? `Living Archive · ${pack.name.id}` : "Living Archive");
       const a = await apiSend<Archive>("/api/archives", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: "demo", title: "Living Archive · Batik Tulis" }),
+        body: JSON.stringify({
+          slug,
+          title,
+          craft_pack_id: pack?.id ?? "",
+        }),
       });
-      setArchives([a]);
+      setArchives((prev) => [...prev, a]);
+      setShowCreate(false);
+      setNewSlug("");
+      setNewTitle("");
     } catch (err) {
       setError(String(err));
     } finally {
@@ -232,23 +258,70 @@ export function UploadForm({ variant = "studio" }: { variant?: "studio" | "try" 
     );
   }
 
+  const createForm = (
+    <div className="space-y-3 border border-[var(--line)] bg-[var(--surface)] p-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-[var(--muted)]">Create a new archive.</p>
+        {hasArchive ? (
+          <button
+            type="button"
+            className="text-xs text-[var(--muted)] underline"
+            onClick={() => setShowCreate(false)}
+          >
+            Cancel
+          </button>
+        ) : null}
+      </div>
+      <label className="block text-sm">
+        Archive slug
+        <input
+          value={newSlug}
+          onChange={(e) => setNewSlug(e.target.value)}
+          placeholder="gamelan"
+          className="mt-1 w-full border border-[var(--line)] bg-transparent p-2"
+        />
+      </label>
+      <label className="block text-sm">
+        Title
+        <input
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          placeholder="Living Archive · Gamelan"
+          className="mt-1 w-full border border-[var(--line)] bg-transparent p-2"
+        />
+      </label>
+      <label className="block text-sm">
+        Craft pack
+        <select
+          value={newPackId}
+          onChange={(e) => setNewPackId(e.target.value)}
+          className="mt-1 w-full border border-[var(--line)] bg-transparent p-2"
+        >
+          {packs.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name.id}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        type="button"
+        className="border border-[var(--line)] px-4 py-2 disabled:opacity-40"
+        disabled={creatingArchive || packs.length === 0}
+        onClick={() => void createDemoArchive()}
+      >
+        {creatingArchive ? "Creating…" : "Create archive"}
+      </button>
+    </div>
+  );
+
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-xl space-y-4 p-6">
       <h1 className="text-2xl">Upload recording</h1>
       {error && <p className="text-[var(--danger)]">{error}</p>}
 
-      {!hasArchive ? (
-        <div className="space-y-3 border border-[var(--line)] bg-[var(--surface)] p-4">
-          <p className="text-sm text-[var(--muted)]">Create an archive before uploading a recording.</p>
-          <button
-            type="button"
-            className="border border-[var(--line)] px-4 py-2 disabled:opacity-40"
-            disabled={creatingArchive}
-            onClick={() => void createDemoArchive()}
-          >
-            Create archive
-          </button>
-        </div>
+      {!hasArchive || showCreate ? (
+        createForm
       ) : (
         <>
           <label className="block text-sm">
@@ -265,6 +338,14 @@ export function UploadForm({ variant = "studio" }: { variant?: "studio" | "try" 
               ))}
             </select>
           </label>
+
+          <button
+            type="button"
+            className="text-xs text-[var(--muted)] underline"
+            onClick={() => setShowCreate(true)}
+          >
+            + Create new archive
+          </button>
 
           <div className="block text-sm">
             <span>Video</span>

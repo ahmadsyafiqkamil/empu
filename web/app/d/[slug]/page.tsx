@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 type Pack = {
   id: string;
   version: string;
+  name: { id: string; en: string };
   stages: { id: string; label: { id: string; en: string } }[];
 };
 
@@ -86,10 +87,10 @@ export default async function DictionaryPage({
           </Link>{" "}
           · Living Archive
         </p>
-        <h1 className="font-display text-3xl">{archive.title} · Batik Tulis</h1>
+        <h1 className="font-display text-3xl">{archive.title}</h1>
         <p className="text-sm text-[var(--muted)]">
           {archive.validated_count} validated terms · {archive.recording_count} recordings
-          {pack ? ` · batik_tulis v${pack.version}` : ""}
+          {pack ? ` · ${pack.name.id} v${pack.version}` : ""}
         </p>
         <div className="flex flex-wrap gap-3 text-sm">
           <Link href={`/api/archives/${archive.id}/export?format=zip&scope=public`} className="underline">

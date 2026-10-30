@@ -125,3 +125,18 @@ export type Archive = {
   recording_count: number;
   validated_count: number;
 };
+
+export type Pack = {
+  id: string;
+  version: string;
+  name: { id: string; en: string };
+};
+
+export type PackDetail = {
+  id: string;
+  version: string;
+  name: { id: string; en: string };
+  languages: string[];
+  n_stages: number;
+  n_terms: number;
+};

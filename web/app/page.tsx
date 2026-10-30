@@ -19,7 +19,7 @@ export default async function Home() {
     .then((r) => r.json())
     .catch(() => []);
   const demoSrc = archives.find((a) => a.is_demo) ?? archives[0];
-  const demoSlug = demoSrc?.slug ?? "batik-tulis";
+  const demoSlug = demoSrc?.slug ?? "";
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
@@ -31,9 +31,11 @@ export default async function Home() {
         <h1 className="mt-4 max-w-xl font-display text-4xl leading-tight">{COPY.tagline}</h1>
         <p className="mt-5 max-w-xl text-[var(--muted)]">{COPY.home.paragraph}</p>
         <div className="mt-7 flex flex-wrap gap-3">
-          <Link href={`/d/${demoSlug}`} className="bg-[var(--accent)] px-4 py-2 text-white">
-            {COPY.home.openArchive}
-          </Link>
+          {demoSlug ? (
+            <Link href={`/d/${demoSlug}`} className="bg-[var(--accent)] px-4 py-2 text-white">
+              {COPY.home.openArchive}
+            </Link>
+          ) : null}
           <Link href="/try" className="border border-[var(--line)] px-4 py-2">
             {COPY.home.tryClip}
           </Link>
@@ -98,7 +100,7 @@ export default async function Home() {
           {archives.map((a) => (
             <li key={a.id} className="border border-[var(--line)] p-4">
               <Link href={`/d/${a.slug}`} className="font-display text-xl">
-                {a.title} · Batik Tulis
+                {a.title}
               </Link>
               <p className="mt-1 text-sm text-[var(--muted)]">
                 {a.validated_count} validated terms · {a.recording_count} recordings
