@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Cookie, Depends, Header, HTTPException, status
 
 from empu.config import Settings, get_settings
 
 STUDIO_HEADER = "X-Studio-Key"
+# Media tags (<video>, <img>) cannot send custom headers, so the browser must
+# prove the studio key through a cookie; it is sent with every same-origin
+# media request. optional_studio accepts the key from either source.
+STUDIO_COOKIE = "empu_studio_key"
 
 
 @dataclass(frozen=True)
@@ -22,9 +26,12 @@ def _match(settings: Settings, x_studio_key: str | None) -> bool:
 
 def optional_studio(
     x_studio_key: str | None = Header(default=None, alias=STUDIO_HEADER),
+    empu_studio_key: str | None = Cookie(default=None, alias=STUDIO_COOKIE),
     settings: Settings = Depends(get_settings),  # noqa: B008
 ) -> AuthContext:
-    return AuthContext(has_key=_match(settings, x_studio_key))
+    # Header wins when present; the cookie is a fallback for browser media tags.
+    candidate = x_studio_key or empu_studio_key
+    return AuthContext(has_key=_match(settings, candidate))
 
 
 def require_studio(auth: AuthContext = Depends(optional_studio)) -> AuthContext:  # noqa: B008

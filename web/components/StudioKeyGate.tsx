@@ -29,7 +29,11 @@ export function StudioKeyGate({ children }: { children: React.ReactNode }) {
       if (!cancelled) setGate("checking");
       try {
         await apiGet<unknown>("/api/archives");
-        if (!cancelled) setGate("open");
+        // Ensure the cookie mirror is written (covers keys sourced from env).
+        if (!cancelled) {
+          setStudioKey(storedKey);
+          setGate("open");
+        }
       } catch (error) {
         if (cancelled) return;
         setStudioKey("");

@@ -1,4 +1,5 @@
 const KEY_STORAGE = "empu.studioKey";
+const KEY_COOKIE = "empu_studio_key";
 
 export function getStudioKey(): string {
   if (typeof window === "undefined") return "";
@@ -6,8 +7,16 @@ export function getStudioKey(): string {
 }
 
 export function setStudioKey(key: string) {
-  if (key) sessionStorage.setItem(KEY_STORAGE, key);
-  else sessionStorage.removeItem(KEY_STORAGE);
+  if (key) {
+    sessionStorage.setItem(KEY_STORAGE, key);
+    // Mirror the key into a cookie so <video>/<img> media requests (which
+    // cannot carry the X-Studio-Key header) are still authorized server-side.
+    const value = encodeURIComponent(key);
+    document.cookie = `${KEY_COOKIE}=${value}; path=/; samesite=lax; max-age=86400`;
+  } else {
+    sessionStorage.removeItem(KEY_STORAGE);
+    document.cookie = `${KEY_COOKIE}=; path=/; samesite=lax; max-age=0`;
+  }
 }
 
 export function studioHeaders(extra?: HeadersInit): Headers {
