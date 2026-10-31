@@ -1,0 +1,41 @@
+clip_id,t_start,t_end,spoken,term,category,source,stage,visible_object,note,annotator
+ccby-nyanting,0.0,74.0,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,11.0,45.0,Cara Mencanting,canting,tool,on_screen_text,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,70.0,139.0,Mencanting,canting,tool,on_screen_text,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,130.0,138.0,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,198.0,265.0,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,260.0,265.0,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,341.0,376.0,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,390.0,399.8,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,460.5,484.5,canting,canting,tool,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,0.0,75.0,kain putih,mori,material,visual_only,nglowong,white cotton fabric,DRAFT,DRAFT
+ccby-nyanting,65.0,140.0,mori,mori,material,visual_only,nglowong,white batik cloth,DRAFT,DRAFT
+ccby-nyanting,130.0,142.0,mori,mori,material,visual_only,nglowong,white cotton fabric,DRAFT,DRAFT
+ccby-nyanting,195.0,270.0,mori,mori,material,visual_only,nglowong,white cotton fabric,DRAFT,DRAFT
+ccby-nyanting,260.0,265.0,mori,mori,material,visual_only,nglowong,white fabric,DRAFT,DRAFT
+ccby-nyanting,325.0,331.0,mori,mori,material,visual_only,nglowong,white fabric,DRAFT,DRAFT
+ccby-nyanting,390.0,399.8,mori,mori,material,visual_only,nglowong,white fabric,DRAFT,DRAFT
+ccby-nyanting,455.0,485.0,mori,mori,material,visual_only,nglowong,white fabric,DRAFT,DRAFT
+ccby-nyanting,1.0,6.0,Batik Pajampangan,Batik Pajampangan,other,on_screen_text,nglowong,,DRAFT,DRAFT
+ccby-nyanting,0.0,74.0,malam,malam,material,visual_only,nglowong,hot batik wax,DRAFT,DRAFT
+ccby-nyanting,65.0,140.0,malam,malam,material,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,130.0,142.0,malam,malam,material,visual_only,nglowong,hot batik wax,DRAFT,DRAFT
+ccby-nyanting,270.0,274.0,malam,malam,material,visual_only,nglowong,molten batik wax,DRAFT,DRAFT
+ccby-nyanting,395.0,446.5,lilin,malam,material,on_screen_text,nglowong,hot batik wax,DRAFT,DRAFT
+ccby-nyanting,455.0,485.0,malam,malam,material,visual_only,nglowong,brown wax lines,DRAFT,DRAFT
+ccby-nyanting,65.0,140.0,nglowong,nglowong,stage,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,130.0,187.0,nglowong,nglowong,stage,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,260.0,322.0,nglowong,nglowong,stage,visual_only,nglowong,copper wax pen,DRAFT,DRAFT
+ccby-nyanting,340.0,376.0,nglowong,nglowong,stage,visual_only,nglowong,white fabric with wax pattern,DRAFT,DRAFT
+ccby-nyanting,390.0,450.0,nglowong,nglowong,stage,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,460.5,484.5,nglowong,nglowong,stage,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,24.0,45.0,gawangan,gawangan,tool,visual_only,nglowong,wooden cloth stretching frame,DRAFT,DRAFT
+ccby-nyanting,193.0,198.0,gawangan,gawangan,tool,visual_only,nglowong,wooden cloth stretching frame,DRAFT,DRAFT
+ccby-nyanting,264.0,267.0,gawangan,gawangan,tool,visual_only,nglowong,wooden fabric stand,DRAFT,DRAFT
+ccby-nyanting,260.0,322.0,batik tulis,batik tulis,technique,visual_only,nglowong,,DRAFT,DRAFT
+ccby-nyanting,32.0,38.0,wajan,wajan,tool,visual_only,nglowong,small metal wax pan,DRAFT,DRAFT
+ccby-nyanting,270.0,274.0,wajan,wajan,tool,visual_only,nglowong,small wax pan,DRAFT,DRAFT
+ccby-nyanting,415.5,419.0,wajan,wajan,tool,visual_only,nglowong,small metal wax pot,DRAFT,DRAFT
+ccby-nyanting,270.0,274.0,kompor,kompor,tool,visual_only,nglowong,batik stove,DRAFT,DRAFT
+ccby-nyanting,270.0,274.0,taplak,taplak,tool,visual_only,nglowong,patterned mat,DRAFT,DRAFT
+ccby-nyanting,485.0,494.0,bunga,fiksasi,motif,visual_only,nglowong,floral batik pattern,DRAFT,DRAFT

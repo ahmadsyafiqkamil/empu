@@ -54,6 +54,13 @@ export default async function EvidencePage() {
         <p className="mt-3 max-w-[720px] text-[15px] text-[var(--color-neutral-800)]">
           {COPY.evidence.subtitle}
         </p>
+        {data ? (
+          <p className="mono mt-2 text-[12px] text-[var(--color-neutral-700)]">
+            {[data.pack, data.mode ? `mode ${data.mode}` : null, data.created_at]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        ) : null}
 
         <div className="mt-8 grid grid-cols-[minmax(0,1fr)] border-t-2 border-l-2 border-[var(--color-divider)] sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((s) => (
