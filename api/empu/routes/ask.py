@@ -15,6 +15,7 @@ from sqlmodel import Session, select
 
 from empu.api_schemas import AskAnswerOut, AskEvidenceOut, AskIn
 from empu.ask import AskError, AskResult, answer_question
+from empu.ask.engine import pack_display_name
 from empu.ask.prompts import ASK_PROMPT_VERSION, RESPONSE_SCHEMA
 from empu.ask.ratelimit import RateLimiter
 from empu.cache import ResponseCache
@@ -22,7 +23,6 @@ from empu.config import Settings, get_settings
 from empu.db import get_session
 from empu.meta_client import AnalyzeResult, MetaAPIError, MetaClient
 from empu.models import Archive, Recording
-from empu.packs import PackError, load_pack
 from empu.serialize import entry_list_item, occurrence_out
 
 router = APIRouter()
@@ -86,13 +86,6 @@ def _client_key(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
-def _pack_name(archive: Archive, settings: Settings) -> str:
-    try:
-        return load_pack(archive.craft_pack_id, settings.packs_dir).name.en
-    except (PackError, AttributeError, KeyError):
-        return archive.craft_pack_id
-
-
 def _to_out(session: Session, result: AskResult) -> AskAnswerOut:
     evidence: list[AskEvidenceOut] = []
     for cited in result.evidence:
@@ -135,7 +128,7 @@ def _run(
             ask_model=ask_model,
             cache=cache,
             model=settings.muse_model,
-            pack_name=_pack_name(archive, settings),
+            pack_name=pack_display_name(archive, settings),
             max_entries=settings.ask_max_entries,
         )
     except (AskError, MetaAPIError, httpx.HTTPError, RuntimeError) as exc:

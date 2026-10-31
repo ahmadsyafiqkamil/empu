@@ -134,3 +134,58 @@ def test_one_failure_does_not_stop_the_rest(session, tmp_path):
 
     assert out[0].error is not None
     assert out[1].error is None and out[1].refused is False
+
+
+class _FakeAskClient:
+    def __init__(self, payload: dict) -> None:
+        self.payload = payload
+        self.calls = 0
+
+    def respond_text(self, prompt: str, *, model: str, schema=None, **kw) -> AnalyzeResult:
+        self.calls += 1
+        return AnalyzeResult(
+            raw={},
+            text="",
+            parsed=self.payload,
+            parse_error=None,
+            usage={},
+            latency_s=0.0,
+        )
+
+
+def test_ask_warm_reports_per_question(session, settings, tmp_path, monkeypatch):
+    from typer.testing import CliRunner
+
+    import empu.cli as cli
+
+    a, ids = seed_two_public_entries(session)
+    qfile = tmp_path / "q.txt"
+    qfile.write_text("apa itu canting\napa itu mori\n", encoding="utf-8")
+    fake = _FakeAskClient(
+        {"answer": "ok", "lang": "id", "entry_ids": [ids[0]], "insufficient": False}
+    )
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    monkeypatch.setattr(cli, "make_client", lambda s: fake)
+
+    r = CliRunner().invoke(cli.app, ["ask", "warm", "--archive", "uji", "--questions", str(qfile)])
+
+    assert r.exit_code == 0, r.output
+    assert "warmed 2 of 2" in r.output
+    assert "model calls" in r.output
+
+
+def test_ask_warm_unknown_archive(tmp_path, settings, monkeypatch):
+    from typer.testing import CliRunner
+
+    import empu.cli as cli
+
+    qfile = tmp_path / "q.txt"
+    qfile.write_text("apa itu canting\n", encoding="utf-8")
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+
+    r = CliRunner().invoke(
+        cli.app, ["ask", "warm", "--archive", "tidak-ada", "--questions", str(qfile)]
+    )
+
+    assert r.exit_code == 2
+    assert "not found" in r.output

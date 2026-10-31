@@ -23,9 +23,11 @@ from sqlmodel import Session, select
 from empu.ask.index import IndexEntry, build_index, prefilter
 from empu.ask.prompts import ASK_PROMPT_VERSION, MAX_CITATIONS, build_prompt
 from empu.cache import ResponseCache
+from empu.config import Settings
 from empu.enums import ConsentStatus, EntryStatus, OccurrenceStatus
 from empu.meta_client import AnalyzeResult
 from empu.models import Archive, Entry, Occurrence, Recording
+from empu.packs import PackError, load_pack
 from empu.visibility import entry_is_public, public_entries, public_occurrences
 
 REFUSAL_NO_ENTRIES = "This archive has no published terms yet, so there is nothing to answer from."
@@ -33,6 +35,14 @@ REFUSAL_NO_ENTRIES = "This archive has no published terms yet, so there is nothi
 REFUSAL_UNCITED = "I couldn't tie that answer to a term the archive can show, so I won't give one."
 
 STUDIO_SKIP_STATUSES = (EntryStatus.rejected, EntryStatus.merged)
+
+
+def pack_display_name(archive: Archive, settings: Settings) -> str:
+    """The craft pack's English name, or its id when the pack cannot be read."""
+    try:
+        return load_pack(archive.craft_pack_id, settings.packs_dir).name.en
+    except (PackError, AttributeError, KeyError):
+        return archive.craft_pack_id
 
 
 class AskError(RuntimeError):

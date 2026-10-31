@@ -13,8 +13,10 @@ import typer
 import yaml
 from sqlmodel import Session, col, func, select
 
-from empu.ask import collect_entries
+from empu.ask import collect_entries, read_questions, warm_questions
+from empu.ask.engine import pack_display_name
 from empu.ask.index import build_index
+from empu.ask.prompts import RESPONSE_SCHEMA
 from empu.cache import ResponseCache
 from empu.config import REPO_ROOT, Settings, get_settings
 from empu.db import init_db, make_engine
@@ -508,3 +510,47 @@ def eval_retrieval(
     for miss in report.misses:
         missing = "|".join(miss["missing"])
         typer.echo(f"miss: {miss['question']} missing={missing} rank={miss['rank']}")
+
+
+ask_app = typer.Typer(no_args_is_help=True)
+app.add_typer(ask_app, name="ask", help="Ask Empu commands.")
+
+
+@ask_app.command("warm")
+def ask_warm(
+    archive: str = typer.Option(..., "--archive", help="Archive slug."),
+    questions: Path = typer.Option(..., "--questions", exists=True, dir_okay=False),
+    scope: str = typer.Option("public", "--scope", help="public | studio"),
+) -> None:
+    """Answer the demo questions now and keep them in the same cache the server reads."""
+    settings = get_settings()
+    items = read_questions(questions)
+    calls = 0
+    with Session(_engine(settings)) as session:
+        arch = session.exec(select(Archive).where(Archive.slug == archive)).first()
+        if arch is None:
+            typer.echo(f"error: archive not found: {archive}", err=True)
+            raise typer.Exit(2)
+        client = make_client(settings)
+        model_name = settings.muse_model
+
+        def ask(prompt: str):
+            nonlocal calls
+            calls += 1
+            return client.respond_text(prompt, model=model_name, schema=RESPONSE_SCHEMA)
+
+        results = warm_questions(
+            session,
+            archive_id=arch.id,
+            questions=items,
+            ask_model=ask,
+            cache=ResponseCache(settings.data_dir / "cache" / "ask"),
+            model=model_name,
+            pack_name=pack_display_name(arch, settings),
+            scope=scope,
+        )
+    for r in results:
+        line = f"cached={r.cached} refused={r.refused} evidence={r.n_evidence} {r.question}"
+        typer.echo(f"{line} error={r.error}" if r.error else line)
+    warmed = sum(1 for r in results if r.error is None)
+    typer.echo(f"warmed {warmed} of {len(results)} ({calls} model calls)")
