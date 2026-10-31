@@ -9,6 +9,7 @@ import { COPY } from "@/lib/copy";
 import { askSuggestions } from "@/lib/ask";
 import {
   archiveSlugFromPathname,
+  isTypingTarget,
   pickArchiveSlug,
   shouldCloseOnHide,
   shouldShowLauncher,
@@ -76,10 +77,12 @@ export function AskLauncher() {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        toggleAsk();
-      }
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "k") return;
+      const target = event.target as HTMLElement | null;
+      const inAskField = target?.id === "ask-question";
+      if (!inAskField && (isTypingTarget(target?.tagName) || target?.isContentEditable)) return;
+      event.preventDefault();
+      toggleAsk();
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);

@@ -37,3 +37,11 @@ export function termQuestion(term: string): string {
 export function shouldCloseOnHide(visible: boolean, open: boolean): boolean {
   return !visible && open;
 }
+
+const TYPING_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
+
+/** True when the focused element is a text field, so a shortcut is not ours to take. */
+export function isTypingTarget(tagName: string | null | undefined): boolean {
+  if (!tagName) return false;
+  return TYPING_TAGS.has(tagName.toUpperCase());
+}

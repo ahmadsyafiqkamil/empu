@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   archiveSlugFromPathname,
+  isTypingTarget,
   pickArchiveSlug,
   shouldCloseOnHide,
   shouldShowLauncher,
@@ -80,5 +81,16 @@ describe("shouldCloseOnHide", () => {
     expect(shouldCloseOnHide(false, false)).toBe(false);
     expect(shouldCloseOnHide(true, true)).toBe(false);
     expect(shouldCloseOnHide(true, false)).toBe(false);
+  });
+});
+
+describe("isTypingTarget", () => {
+  it("does not steal the shortcut from a text field", () => {
+    expect(isTypingTarget("INPUT")).toBe(true);
+    expect(isTypingTarget("textarea")).toBe(true);
+    expect(isTypingTarget("SELECT")).toBe(true);
+    expect(isTypingTarget("DIV")).toBe(false);
+    expect(isTypingTarget(null)).toBe(false);
+    expect(isTypingTarget(undefined)).toBe(false);
   });
 });
