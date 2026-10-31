@@ -7,10 +7,30 @@ import { COPY } from "@/lib/copy";
 import type { Archive } from "@/lib/types";
 
 const FORMATS = [
-  { id: "json", ext: "json", name: "JSON dataset", desc: "Entries, recordings, process maps, and attribution in one file." },
-  { id: "csv", ext: "csv", name: "CSV table", desc: "One row per occurrence with its source label." },
-  { id: "eaf", ext: "eaf", name: "ELAN .eaf", desc: "Time-aligned tiers for one recording." },
-  { id: "zip", ext: "zip", name: "ZIP", desc: "JSON + CSV + ELAN + clips, crops, and README attribution." },
+  {
+    id: "json",
+    ext: "json",
+    name: "JSON dataset",
+    desc: "Entries, recordings, process maps, and attribution in one file.",
+  },
+  {
+    id: "csv",
+    ext: "csv",
+    name: "CSV table",
+    desc: "One row per occurrence with its source label.",
+  },
+  {
+    id: "eaf",
+    ext: "eaf",
+    name: "ELAN .eaf",
+    desc: "Time-aligned tiers for one recording.",
+  },
+  {
+    id: "zip",
+    ext: "zip",
+    name: "ZIP",
+    desc: "JSON + CSV + ELAN + clips, crops, and README attribution.",
+  },
 ] as const;
 
 function Form() {
@@ -21,7 +41,9 @@ function Form() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    apiGet<Archive[]>("/api/archives").then(setArchives).catch(() => setArchives([]));
+    apiGet<Archive[]>("/api/archives")
+      .then(setArchives)
+      .catch(() => setArchives([]));
   }, []);
 
   const selectedId = archiveId ?? archives[0]?.id ?? null;
@@ -49,45 +71,49 @@ function Form() {
 
   return (
     <form
-      className="mx-auto max-w-2xl space-y-6 p-8"
+      className="mx-auto w-full max-w-[900px] px-5 py-10 lg:px-0 lg:py-12"
       onSubmit={(e) => {
         e.preventDefault();
         download();
       }}
     >
-      <h1 className="text-2xl">Export</h1>
+      <h1 className="m-0 text-[32px] tracking-[-0.02em] lg:text-[42px]">Export</h1>
+      <p className="mt-1 text-[15px] text-[var(--color-neutral-800)]">
+        Take the archive out. Every file keeps its creator attribution and license.
+      </p>
 
-      <div className="space-y-1">
-        <label htmlFor="archive" className="text-sm text-[var(--muted)]">
-          Archive
+      <div className="mt-8 grid grid-cols-[minmax(0,1fr)] items-end gap-3 md:grid-cols-[1fr_auto]">
+        <label className="field">
+          <span className="field-label">Archive</span>
+          <select
+            value={selectedId ?? ""}
+            onChange={(e) => setArchiveId(Number(e.target.value))}
+            className="input h-11"
+            aria-label="Archive"
+          >
+            {archives.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.title}
+              </option>
+            ))}
+          </select>
         </label>
-        <select
-          id="archive"
-          value={selectedId ?? ""}
-          onChange={(e) => setArchiveId(Number(e.target.value))}
-          className="w-full border border-[var(--line)] bg-transparent px-3 py-2"
-        >
-          {archives.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.title}
-            </option>
-          ))}
-        </select>
       </div>
 
-      <fieldset>
-        <legend className="text-sm text-[var(--muted)]">Format</legend>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+      <fieldset className="mt-8 border-0 p-0">
+        <legend className="label mb-2">Format</legend>
+        <div className="grid grid-cols-[minmax(0,1fr)] border-t-2 border-l-2 border-[var(--color-divider)] sm:grid-cols-2">
           {FORMATS.map((f) => {
             const active = format === f.id;
             return (
               <label
                 key={f.id}
-                className={`block cursor-pointer border p-3 ${
+                className="flex cursor-pointer flex-col gap-1 border-r-2 border-b-2 border-[var(--color-divider)] p-4"
+                style={
                   active
-                    ? "border-[var(--accent)] bg-[var(--surface)]"
-                    : "border-[var(--line)] bg-transparent"
-                }`}
+                    ? { background: "var(--color-text)", color: "var(--color-bg)" }
+                    : undefined
+                }
               >
                 <input
                   type="radio"
@@ -97,47 +123,59 @@ function Form() {
                   onChange={() => setFormat(f.id)}
                   className="sr-only"
                 />
-                <span className="block font-medium">{f.name}</span>
-                <span className="mt-1 block text-xs text-[var(--muted)]">{f.desc}</span>
+                <span className="font-heading text-[17px]">{f.name}</span>
+                <span
+                  className="text-[13px]"
+                  style={{ color: active ? undefined : "var(--color-neutral-700)" }}
+                >
+                  {f.desc}
+                </span>
               </label>
             );
           })}
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2">
-        <legend className="text-sm text-[var(--muted)]">Scope</legend>
-        <label className="block text-sm">
-          <input
-            type="radio"
-            name="scope"
-            value="public"
-            checked={scope === "public"}
-            onChange={() => setScope("public")}
-          />{" "}
-          {COPY.export.publicOnly}
-        </label>
-        {getStudioKey() ? (
-          <label className="block text-sm">
+      <fieldset className="mt-8 border-0 p-0">
+        <legend className="label mb-2">Scope</legend>
+        <div className="flex flex-col gap-2 text-[14px]">
+          <label className="flex items-center gap-2">
             <input
               type="radio"
               name="scope"
-              value="all"
-              checked={scope === "all"}
-              onChange={() => setScope("all")}
-            />{" "}
-            {COPY.export.everything}
+              value="public"
+              checked={scope === "public"}
+              onChange={() => setScope("public")}
+              className="accent-[var(--color-accent)]"
+            />
+            {COPY.export.publicOnly}
           </label>
-        ) : null}
+          {getStudioKey() ? (
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="scope"
+                value="all"
+                checked={scope === "all"}
+                onChange={() => setScope("all")}
+                className="accent-[var(--color-accent)]"
+              />
+              {COPY.export.everything}
+            </label>
+          ) : null}
+        </div>
       </fieldset>
 
-      <p className="text-xs text-[var(--muted)]">{COPY.export.note}</p>
+      <p className="mt-6 text-[13px] text-[var(--color-neutral-700)]">{COPY.export.note}</p>
 
       <button
         disabled={busy || selectedId === null}
-        className="bg-[var(--accent)] px-4 py-2 text-[var(--bg)] disabled:opacity-50"
+        className="btn btn-primary mt-2 h-12 min-w-[180px] justify-start px-5"
       >
         {busy ? "Downloading…" : "Download"}
+        <span className="ml-auto" aria-hidden>
+          ↓
+        </span>
       </button>
     </form>
   );

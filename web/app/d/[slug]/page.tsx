@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { EntryCardPublic } from "@/components/EntryCardPublic";
+import { ClearFiltersButton, DictionaryFilters } from "@/components/DictionaryFilters";
 import { EntryRow } from "@/components/EntryRow";
+import { PublicFooter } from "@/components/PublicFooter";
+import { PublicHeader } from "@/components/PublicHeader";
 import { CATEGORY_LABEL, COPY } from "@/lib/copy";
 import type { Archive, EntryListItem } from "@/lib/types";
 
 const API = process.env.EMPU_API_ORIGIN ?? "http://127.0.0.1:8000";
+const ORDER = ["tool", "tool_part", "material", "dye", "stage", "technique", "motif", "other"];
 
 export const dynamic = "force-dynamic";
 
@@ -15,17 +18,15 @@ type Pack = {
   stages: { id: string; label: { id: string; en: string } }[];
 };
 
-const CATEGORIES = ["tool", "tool_part", "material", "dye", "stage", "technique", "motif", "other"];
-
-function groupByLetter(items: EntryListItem[]): [string, EntryListItem[]][] {
+function groupByCategory(items: EntryListItem[]): [string, EntryListItem[]][] {
   const groups = new Map<string, EntryListItem[]>();
   for (const e of items) {
-    const letter = (e.term[0] ?? "#").toUpperCase();
-    const list = groups.get(letter) ?? [];
+    const key = e.category || "other";
+    const list = groups.get(key) ?? [];
     list.push(e);
-    groups.set(letter, list);
+    groups.set(key, list);
   }
-  return [...groups.entries()];
+  return [...groups.entries()].sort((a, b) => ORDER.indexOf(a[0]) - ORDER.indexOf(b[0]));
 }
 
 export default async function DictionaryPage({
@@ -42,11 +43,25 @@ export default async function DictionaryPage({
   const stage = sp.stage ?? "";
   const isNovel = sp.is_novel === "1";
 
-  const archive: Archive = await fetch(`${API}/api/public/archives/${slug}`, {
+  const archive: Archive | null = await fetch(`${API}/api/public/archives/${slug}`, {
     cache: "no-store",
   }).then((r) => (r.ok ? r.json() : null));
+
   if (!archive) {
-    return <p className="p-8">{COPY.empty.entry404}</p>;
+    return (
+      <>
+        <PublicHeader />
+        <main className="mx-auto w-full max-w-[1100px] px-5 py-16 lg:px-0">
+          <div className="empty">
+            <span>{COPY.empty.dictionary}</span>
+            <Link href="/evidence" className="btn btn-secondary">
+              {COPY.home.seeEvidence}
+            </Link>
+          </div>
+        </main>
+        <PublicFooter />
+      </>
+    );
   }
 
   const pack: Pack | null = await fetch(`${API}/api/packs/${archive.craft_pack_id}`, {
@@ -66,131 +81,91 @@ export default async function DictionaryPage({
     { cache: "no-store" },
   ).then((r) => (r.ok ? r.json() : []));
 
-  function chipQuery(overrides: Record<string, string>) {
-    const next = new URLSearchParams(qs);
-    for (const [k, v] of Object.entries(overrides)) {
-      if (v) next.set(k, v);
-      else next.delete(k);
-    }
-    const s = next.toString();
-    return s ? `?${s}` : "";
-  }
-
-  const groups = groupByLetter(entries);
+  const groups = groupByCategory(entries);
+  const stages = (pack?.stages ?? []).map((s) => ({
+    id: s.id,
+    label: s.label?.en ? `${s.id} · ${s.label.en}` : s.id,
+  }));
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-8">
-      <header className="space-y-2 border-b border-[var(--line)] pb-6">
-        <p className="text-sm text-[var(--muted)]">
-          <Link href="/" className="underline">
+    <>
+      <PublicHeader />
+      <main className="mx-auto w-full max-w-[1100px] px-5 pt-7 pb-16 lg:px-0 lg:pt-8">
+        <p className="text-[13px] text-[var(--color-neutral-700)]">
+          <Link href="/" className="text-inherit">
             Home
           </Link>{" "}
-          · Living Archive
+          / Living Archive
         </p>
-        <h1 className="font-display text-3xl">{archive.title}</h1>
-        <p className="text-sm text-[var(--muted)]">
-          {archive.validated_count} validated terms · {archive.recording_count} recordings
-          {pack ? ` · ${pack.name.id} v${pack.version}` : ""}
-        </p>
-        <div className="flex flex-wrap gap-3 text-sm">
-          <Link href={`/api/archives/${archive.id}/export?format=zip&scope=public`} className="underline">
-            Download (ZIP)
-          </Link>
-        </div>
-      </header>
 
-      <form className="mt-6 flex flex-wrap items-center gap-2" method="get">
-        {category ? <input type="hidden" name="category" value={category} /> : null}
-        {stage ? <input type="hidden" name="stage" value={stage} /> : null}
-        {isNovel ? <input type="hidden" name="is_novel" value="1" /> : null}
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="Search terms"
-          className="min-w-0 flex-1 border border-[var(--line)] bg-transparent px-3 py-2"
-        />
-        <button className="border border-[var(--line)] px-4 py-2">Search</button>
-      </form>
-
-      <div className="mt-4 flex flex-wrap gap-2 text-sm">
-        <Link
-          href={chipQuery({ category: "" })}
-          className={`border px-3 py-1 ${category ? "border-[var(--line)]" : "bg-[var(--accent)] text-white"}`}
-        >
-          All
-        </Link>
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c}
-            href={chipQuery({ category: category === c ? "" : c })}
-            className={`border px-3 py-1 ${category === c ? "bg-[var(--accent)] text-white" : "border-[var(--line)]"}`}
-          >
-            {CATEGORY_LABEL[c]}
-          </Link>
-        ))}
-        <Link
-          href={chipQuery({ is_novel: isNovel ? "" : "1" })}
-          className={`border px-3 py-1 ${isNovel ? "bg-[var(--accent)] text-white" : "border-[var(--line)]"}`}
-        >
-          New terms only
-        </Link>
-      </div>
-
-      {pack && pack.stages?.length ? (
-        <form className="mt-4 flex items-center gap-2 text-sm" method="get">
-          {q ? <input type="hidden" name="q" value={q} /> : null}
-          {category ? <input type="hidden" name="category" value={category} /> : null}
-          {isNovel ? <input type="hidden" name="is_novel" value="1" /> : null}
-          <label htmlFor="stage" className="text-[var(--muted)]">
-            Stage
-          </label>
-          <select
-            id="stage"
-            name="stage"
-            defaultValue={stage}
-            className="border border-[var(--line)] bg-transparent px-2 py-1"
-          >
-            <option value="">All stages</option>
-            {pack.stages.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.id}
-              </option>
-            ))}
-          </select>
-          <button className="border border-[var(--line)] px-3 py-1">Apply</button>
-        </form>
-      ) : null}
-
-      {entries.length === 0 ? (
-        <p className="mt-10 text-[var(--muted)]">{COPY.empty.dictionary}</p>
-      ) : (
-        <>
-          {/* Mobile list */}
-          <ul className="mt-6 divide-y divide-[var(--line)] md:hidden">
-            {entries.map((e) => (
-              <li key={e.id}>
-                <EntryRow slug={slug} e={e} />
-              </li>
-            ))}
-          </ul>
-
-          {/* Desktop grid grouped A–Z */}
-          <div className="mt-6 hidden md:block">
-            {groups.map(([letter, items]) => (
-              <section key={letter} className="mb-8">
-                <h2 className="mb-2 border-b border-[var(--line)] font-mono text-sm text-[var(--muted)]">
-                  {letter}
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {items.map((e) => (
-                    <EntryCardPublic key={e.id} slug={slug} e={e} />
-                  ))}
-                </div>
-              </section>
-            ))}
+        <div className="grid grid-cols-[minmax(0,1fr)] items-end gap-4 border-b-2 border-[var(--color-divider)] pt-4 pb-6 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <div>
+            <h1 className="text-[34px] leading-none tracking-[-0.03em] md:text-[44px] lg:text-[56px]">
+              {archive.title}
+            </h1>
+            <p className="mt-2 text-[13px] text-[var(--color-neutral-800)] md:text-[14px]">
+              {archive.validated_count} validated terms · {archive.recording_count} recordings
+              {pack ? ` · ${pack.id} v${pack.version}` : ""}
+            </p>
           </div>
-        </>
-      )}
-    </main>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/map" className="btn btn-secondary h-10">
+              {COPY.ui.processMap}
+            </Link>
+            <a
+              href={`/api/archives/${archive.id}/export?format=zip&scope=public`}
+              className="btn btn-primary h-10 gap-2"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
+                <path d="M12 15V3M7 10l5 5 5-5M21 21H3" />
+              </svg>
+              {COPY.ui.downloadPublic}
+            </a>
+          </div>
+        </div>
+
+        <DictionaryFilters
+          stages={stages}
+          q={q}
+          category={category}
+          stage={stage}
+          isNovel={isNovel}
+        />
+
+        {entries.length === 0 ? (
+          <div className="empty mt-8">
+            <span>{COPY.ui.noTerms}</span>
+            <ClearFiltersButton />
+          </div>
+        ) : (
+          groups.map(([cat, items]) => (
+            <section key={cat} className="pt-8">
+              <div className="flex items-baseline justify-between border-b-2 border-[var(--color-divider)] pb-2">
+                <h3 className="m-0 text-[20px] tracking-[-0.01em] lg:text-[24px]">
+                  {CATEGORY_LABEL[cat] ?? cat}
+                </h3>
+                <span className="text-[13px] text-[var(--color-neutral-700)]">
+                  {items.length} terms
+                </span>
+              </div>
+              <div className="md:grid md:grid-cols-3">
+                {items.map((e) => (
+                  <EntryRow key={e.id} slug={slug} e={e} />
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+      </main>
+      <PublicFooter />
+    </>
   );
 }

@@ -113,6 +113,27 @@ export type Recording = {
   attribution: string | null;
   source_kind: string;
   consent_status: string | null;
+  consent_scope?: string | null;
+  source_creator?: string | null;
+  license?: string | null;
+  contributor?: { name: string; region: string; sanggar: string } | null;
+};
+
+export type RecordingSummary = {
+  id: number;
+  archive_id: number;
+  archive_title: string;
+  title: string;
+  duration_s: number | null;
+  status: JobStatus;
+  consent_status: string;
+  consent_scope: string;
+  source_kind: string;
+  source_creator: string | null;
+  n_entries: number;
+  n_reviewed: number;
+  n_proposed: number;
+  display_url: string | null;
 };
 
 export type Archive = {

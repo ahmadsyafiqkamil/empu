@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 
-const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
-const ui = Inter({ subsets: ["latin"], variable: "--font-ui" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["400", "600", "800"],
+  variable: "--font-archivo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Empu",
@@ -13,11 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${display.variable} ${ui.variable} ${mono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={archivo.variable} suppressHydrationWarning>
       <body className="min-h-screen antialiased">{children}</body>
     </html>
   );

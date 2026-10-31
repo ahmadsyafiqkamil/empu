@@ -8,46 +8,74 @@ export function CropView({
   overlayUrl,
   keyframeUrl,
   samStatus,
+  mode = "full",
 }: {
   cropUrl: string | null;
   overlayUrl: string | null;
   keyframeUrl: string | null;
   samStatus: string;
+  mode?: "full" | "compact";
 }) {
   const [showInFrame, setShowInFrame] = useState(false);
   const cropOk = samStatus === "ok" && Boolean(cropUrl);
-  const src = cropOk
-    ? showInFrame && overlayUrl
-      ? overlayUrl
-      : cropUrl
-    : keyframeUrl;
+  const src = cropOk ? (showInFrame && overlayUrl ? overlayUrl : cropUrl) : keyframeUrl;
   const label = cropOk ? COPY.crop.original : COPY.crop.noCrop;
+
   return (
-    <div className="space-y-2">
-      <div className="aspect-[4/5] overflow-hidden bg-[var(--surface)]">
+    <div className="flex flex-col gap-1.5">
+      <div
+        className={
+          cropOk
+            ? "grid aspect-4/5 place-items-center overflow-hidden bg-[var(--color-surface)]"
+            : "grid aspect-video place-items-center overflow-hidden bg-[var(--color-surface)]"
+        }
+      >
         {src ? (
-          // Frame URLs only — original recording stills, never generated images.
+          // Frame URL only — original recording stills, never generated images.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt={label} className="h-full w-full object-contain" />
+          <img src={src} alt={label} className="size-full object-contain" />
         ) : (
-          <div className="flex h-full items-center justify-center p-3 text-center text-xs text-[var(--muted)]">
+          <span className="p-2 text-center text-[11px] text-[var(--color-neutral-700)]">
             {COPY.crop.noCrop}
-          </div>
+          </span>
         )}
       </div>
-      <div className="flex items-center justify-between gap-2 text-xs text-[var(--muted)]">
-        <span>{label}</span>
-        {cropOk && overlayUrl ? (
-          <label className="inline-flex cursor-pointer items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={showInFrame}
-              onChange={(e) => setShowInFrame(e.target.checked)}
-            />
-            {COPY.crop.showInFrame}
-          </label>
-        ) : null}
-      </div>
+
+      {cropOk && overlayUrl ? (
+        mode === "full" ? (
+          <div className="seg w-full">
+            <label className="seg-opt flex-1 justify-center text-[11px]">
+              <input
+                type="radio"
+                name={`crop-${cropUrl}`}
+                checked={!showInFrame}
+                onChange={() => setShowInFrame(false)}
+              />
+              {COPY.crop.showCrop}
+            </label>
+            <label className="seg-opt flex-1 justify-center text-[11px]">
+              <input
+                type="radio"
+                name={`crop-${cropUrl}`}
+                checked={showInFrame}
+                onChange={() => setShowInFrame(true)}
+              />
+              {COPY.crop.showInFrame}
+            </label>
+          </div>
+        ) : (
+          <button
+            type="button"
+            aria-pressed={showInFrame}
+            className="btn btn-secondary h-7 w-full text-[11px]"
+            onClick={() => setShowInFrame((v) => !v)}
+          >
+            {showInFrame ? COPY.crop.showCrop : COPY.crop.showInFrame}
+          </button>
+        )
+      ) : null}
+
+      <p className="text-[11px] leading-snug text-[var(--color-neutral-700)]">{label}</p>
     </div>
   );
 }

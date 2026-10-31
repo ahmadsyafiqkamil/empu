@@ -3,9 +3,14 @@ export const COPY = {
   home: {
     paragraph:
       "Empu turns a master's narrated work video into a watchable craft dictionary. Every term links to the original speech, a short clip of the movement, and the real tool, cropped from the original frame. AI proposes; a person decides.",
+    fromArchive: "From the archive",
+    archives: "Archives",
     openArchive: "Open the archive",
     tryClip: "Try it with a 3-minute clip",
     seeEvidence: "See the evidence",
+    howItWorks: "How it works",
+    principlesTitle: "Principles",
+    comingSoon: "Coming next",
     steps: [
       "A master works and explains.",
       "Muse Spark 1.3 watches and listens; SAM 3.1 finds the tool.",
@@ -55,7 +60,18 @@ export const COPY = {
   crop: {
     original: "Original frame · cropped with SAM 3.1",
     showInFrame: "Show in frame",
+    showCrop: "Crop",
     noCrop: "No crop found · full frame shown",
+  },
+  ui: {
+    hearIt: "Hear it",
+    playing: "Playing…",
+    clearFilters: "Clear filters",
+    processMap: "Process map",
+    downloadPublic: "Download (public)",
+    noTerms: "No terms match these filters.",
+    seeInProcessMap: "See where it sits in the process map →",
+    browseProcessMaps: "Browse process maps",
   },
   attributionTrimmed: "Trimmed by Empu",
   studio: {
@@ -138,41 +154,8 @@ export function expertValidationLabel(name: string): string {
   return `Validated by the expert · ${name}`;
 }
 
-export function saidAt(time: string): string {
-  return `said at ${time}`;
-}
-
-export function shownOnScreenAt(time: string): string {
-  return `shown on screen at ${time}`;
-}
-
-export function alsoHeardAs(variants: string): string {
-  return `Also heard as: ${variants}`;
-}
-
-export function heardInRecordings(n: number): string {
-  return `Heard in ${n} recordings`;
-}
-
-export function searchEmpty(q: string): string {
-  return `No terms match '${q}'.`;
-}
-
-export function tryQuota(n: number): string {
-  return `Up to 3 minutes. ${n} uploads left today.`;
-}
-
 export function studioReviewProgress(reviewed: number, total: number): string {
   return `${reviewed} of ${total} reviewed`;
-}
-
-export function studioStatusCounts(counts: {
-  proposed: number;
-  accepted: number;
-  edited: number;
-  rejected: number;
-}): string {
-  return `Proposed ${counts.proposed} · Accepted ${counts.accepted} · Edited ${counts.edited} · Rejected ${counts.rejected}`;
 }
 
 export function mergePreview(from: string, into: string): string {
@@ -190,6 +173,8 @@ export function attributionLine(parts: {
 }
 
 export function ensureTrimmedByEmpu(text: string): string {
-  if (text.includes(COPY.attributionTrimmed)) return text;
+  // The API already appends a trim note in some exports ("Trimmed by Empu",
+  // "Trimmed and analyzed by Empu."). Never stack a second one.
+  if (/trimmed/i.test(text)) return text;
   return `${text} · ${COPY.attributionTrimmed}`;
 }

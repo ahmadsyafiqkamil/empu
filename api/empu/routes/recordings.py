@@ -6,7 +6,13 @@ from tempfile import SpooledTemporaryFile
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlmodel import Session, select
 
-from empu.api_schemas import EntryOut, RecordingOut, ReprocessIn, UploadAck
+from empu.api_schemas import (
+    EntryOut,
+    RecordingOut,
+    RecordingSummary,
+    ReprocessIn,
+    UploadAck,
+)
 from empu.auth import AuthContext, optional_studio, require_studio
 from empu.config import Settings, get_settings
 from empu.consent import withdraw_consent
@@ -14,7 +20,7 @@ from empu.db import get_session
 from empu.enums import AccessLevel, SourceKind
 from empu.intake import IntakeError, RecordingMeta, create_recording, enqueue_job
 from empu.models import Archive, Contributor, Entry, Job, Occurrence, Recording
-from empu.serialize import entry_out, process_map_out, recording_out
+from empu.serialize import entry_out, process_map_out, recording_out, recording_summary
 
 router = APIRouter()
 
@@ -120,6 +126,36 @@ def _authorize_recording(session: Session, recording_id: int, auth: AuthContext)
         if not (arch and arch.is_sandbox):
             raise HTTPException(401, "studio key required")
     return rec
+
+
+@router.get("/api/archives/{archive_id}/recordings", response_model=list[RecordingSummary])
+def archive_recordings(
+    archive_id: int,
+    _auth: AuthContext = Depends(require_studio),
+    session: Session = Depends(get_session),
+) -> list[RecordingSummary]:
+    arch = session.get(Archive, archive_id)
+    if arch is None:
+        raise HTTPException(404, "archive not found")
+    recs = session.exec(
+        select(Recording).where(Recording.archive_id == archive_id).order_by(Recording.id.desc())
+    ).all()
+    return [_summary(session, rec, arch.title) for rec in recs]
+
+
+def _summary(session: Session, rec: Recording, archive_title: str) -> RecordingSummary:
+    occs = session.exec(select(Occurrence).where(Occurrence.recording_id == rec.id)).all()
+    live: list[Entry] = []
+    for entry_id in {o.entry_id for o in occs}:
+        entry = session.get(Entry, entry_id)
+        if entry is not None and entry.status.value != "merged":
+            live.append(entry)
+    reviewed = sum(1 for e in live if e.status.value != "proposed")
+    return recording_summary(
+        rec,
+        archive_title=archive_title,
+        counts={"total": len(live), "reviewed": reviewed, "proposed": len(live) - reviewed},
+    )
 
 
 @router.get("/api/recordings/{recording_id}", response_model=RecordingOut)

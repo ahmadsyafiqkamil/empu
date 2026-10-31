@@ -159,6 +159,25 @@ class RecordingOut(APIModel):
     display_url: str | None = None
 
 
+class RecordingSummary(APIModel):
+    """Row shape for the Studio recordings table and the public process-map index."""
+
+    id: int
+    archive_id: int
+    archive_title: str = ""
+    title: str
+    duration_s: float | None = None
+    status: JobStatus
+    consent_status: ConsentStatus
+    consent_scope: AccessLevel
+    source_kind: SourceKind
+    source_creator: str | None = None
+    n_entries: int = 0
+    n_reviewed: int = 0
+    n_proposed: int = 0
+    display_url: str | None = None
+
+
 class ReviewIn(APIModel):
     action: ReviewAction
     actor: str = "documenter"

@@ -2,11 +2,19 @@
 
 import { Volume2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { COPY } from "@/lib/copy";
 
-export function PronounceButton({ audioUrl }: { audioUrl: string | null }) {
+export function PronounceButton({
+  audioUrl,
+  className = "",
+}: {
+  audioUrl: string | null;
+  className?: string;
+}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   if (!audioUrl) return null;
+
   return (
     <>
       <audio
@@ -19,7 +27,8 @@ export function PronounceButton({ audioUrl }: { audioUrl: string | null }) {
       />
       <button
         type="button"
-        className="inline-flex items-center justify-center rounded-[var(--radius)] p-1 text-[var(--accent)] outline-[var(--wax)]"
+        className={`btn btn-primary gap-2.5 justify-start px-4 text-[15px] ${className}`}
+        style={{ height: 48, minWidth: 150 }}
         aria-label={playing ? "Stop pronunciation" : "Play pronunciation"}
         onClick={() => {
           const el = audioRef.current;
@@ -33,7 +42,8 @@ export function PronounceButton({ audioUrl }: { audioUrl: string | null }) {
           void el.play();
         }}
       >
-        <Volume2 className="size-4" aria-hidden />
+        <Volume2 className="size-4.5" aria-hidden />
+        {playing ? COPY.ui.playing : COPY.ui.hearIt}
       </button>
     </>
   );

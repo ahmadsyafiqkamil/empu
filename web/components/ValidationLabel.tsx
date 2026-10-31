@@ -5,7 +5,7 @@ export function ValidationLabel({
   variant,
   expertName,
 }: {
-  variant: "documenter" | "expert" | "proposed";
+  variant: "documenter" | "expert" | "proposed" | "rejected";
   expertName?: string;
 }) {
   const text =
@@ -13,10 +13,18 @@ export function ValidationLabel({
       ? COPY.validation.documenter
       : variant === "proposed"
         ? COPY.validation.proposed
-        : expertValidationLabel(expertName ?? "");
+        : variant === "rejected"
+          ? "Rejected by the documenter"
+          : expertValidationLabel(expertName ?? "");
+
+  const positive = variant === "documenter" || variant === "expert";
+
   return (
-    <span className="inline-flex items-center gap-1 text-sm text-[var(--fg)]">
-      {variant !== "proposed" ? <Check className="size-3.5 text-[var(--ok)]" aria-hidden /> : null}
+    <span
+      className="inline-flex items-center gap-2 text-[14px]"
+      style={{ color: variant === "rejected" ? "var(--color-accent-700)" : undefined }}
+    >
+      {positive ? <Check className="size-4" aria-hidden /> : null}
       {text}
     </span>
   );

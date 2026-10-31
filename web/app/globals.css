@@ -1,47 +1,465 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Empu — "Modernist" design system
+   Flat, architectural, Archivo throughout, zero corner radius, strong 2px
+   rules, one red accent on a light ground. Alignment and dividers organise
+   the page; nothing floats and nothing is decorated.
+   ========================================================================== */
+
 :root {
-  --bg: #F5F0E6;
-  --surface: #FBF8F2;
-  --fg: #1C1813;
-  --muted: #665D50;
-  --line: #DDD4C4;
-  --accent: #22304F;
-  --wax: #9E7330;
-  --src-speech: #22304F;
-  --src-onscreen: #8A4B22;
-  --src-visual: #5E5A52;
-  --ok: #3F6B45;
-  --danger: #9B3B2E;
-  --font-display: "Fraunces", serif;
-  --font-ui: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --radius: 2px;
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-accent-2: #e15b47;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
+
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
+
+  --color-accent-100: #fff2ef;
+  --color-accent-200: #ffe0d9;
+  --color-accent-300: #ffc4b8;
+  --color-accent-400: #ff9783;
+  --color-accent-500: #ff563c;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
+  --color-accent-800: #7c1405;
+  --color-accent-900: #4d170e;
+
+  /* Filled action. The bright accent is ~3:1 on the ground — enough for
+     display type and chrome, not for a 14px label. This step is ~6.5:1. */
+  --color-action: #ae1800;
+  --color-action-hover: #7c1405;
+
+  --font-heading: var(--font-archivo, "Archivo"), system-ui, sans-serif;
+  --font-body: var(--font-archivo, "Archivo"), system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-heading-weight: 800;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
 }
-[data-theme="malam"] {
-  --bg: #12110F;
-  --surface: #1B1916;
-  --fg: #ECE8DF;
-  --muted: #A39C8E;
-  --line: #2E2B26;
-  --accent: #C9A15B;
-  --wax: #C9A15B;
-  --src-speech: #9DB0E3;
-  --src-onscreen: #DDA272;
-  --src-visual: #B3AC9F;
-  --ok: #7FB384;
-  --danger: #E57373;
+
+@layer base {
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+  }
+
+  body {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-2);
+    font-size: inherit;
+  }
+  h1 {
+    font-size: 42px;
+  }
+  h2 {
+    font-size: 32px;
+  }
+  h3 {
+    font-size: 25px;
+  }
+  h4 {
+    font-size: 20px;
+  }
+  h5 {
+    font-size: 16px;
+  }
+  h6 {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0 0 var(--space-3);
+  }
+
+  a {
+    color: var(--color-accent-700);
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--color-accent-600);
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  figure {
+    margin: 0;
+  }
+  figcaption {
+    font-size: 11px;
+    margin-top: var(--space-1);
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 1px 5px;
+    border: 1px solid currentColor;
+    line-height: 1.4;
+  }
 }
-html,
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-ui);
-}
-.font-display {
-  font-family: var(--font-display);
-}
-.font-mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+
+@layer components {
+  /* — type helpers — */
+  .font-heading {
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+  }
+  .font-mono,
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-neutral-700);
+  }
+  .muted {
+    color: var(--color-neutral-700);
+  }
+  .muted-soft {
+    color: var(--color-neutral-800);
+  }
+
+  /* — rules — */
+  .rule {
+    height: 2px;
+    border: 0;
+    margin: 0;
+    background: var(--color-divider);
+  }
+  .rule-hair {
+    height: 1px;
+    border: 0;
+    margin: 0;
+    background: var(--color-divider);
+  }
+
+  /* — imagery — photographs stay in their original colour: the frames are
+       evidence, and batik is a colour craft. — */
+
+  /* — buttons — flush left when wider than the label — */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+    font-size: 14px;
+    line-height: 1.2;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    padding: var(--space-2) calc(var(--space-3) * 1.2);
+  }
+  .btn svg {
+    display: block;
+    flex: none;
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-action);
+    color: var(--color-bg);
+  }
+  .btn-primary:hover {
+    background: var(--color-action-hover);
+    color: var(--color-bg);
+  }
+  .btn-secondary {
+    border-color: var(--color-divider);
+    color: var(--color-text);
+  }
+  .btn-secondary:hover {
+    background: color-mix(in srgb, var(--color-text) 7%, transparent);
+    color: var(--color-text);
+  }
+  .btn-secondary.is-danger {
+    border-color: var(--color-accent-700);
+    color: var(--color-accent-700);
+  }
+  .btn-secondary.is-danger:hover {
+    background: var(--color-accent-100);
+  }
+  .btn-ghost {
+    color: var(--color-accent-700);
+    padding-inline: var(--space-1);
+  }
+  .btn-ghost:hover {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* — forms — */
+  .field > label,
+  .field > .field-label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  .input {
+    width: 100%;
+    min-height: 36px;
+    padding: 6px 10px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--color-text);
+    caret-color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-md);
+  }
+  .input:hover {
+    border-color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  }
+  .input:focus-visible {
+    border-color: var(--color-accent);
+    outline-offset: 0;
+  }
+  textarea.input {
+    min-height: 90px;
+    resize: vertical;
+  }
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .radio input,
+  .seg-opt input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .radio .dot {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-divider);
+  }
+  .radio:hover .dot {
+    border-color: var(--color-accent);
+  }
+  .radio input:checked + .dot {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow: inset 0 0 0 4px var(--color-bg);
+  }
+  .radio input:focus-visible + .dot {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .seg {
+    display: inline-flex;
+    overflow: hidden;
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-md);
+  }
+  .seg-opt {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .seg-opt + .seg-opt {
+    border-left: 1px solid var(--color-divider);
+  }
+  .seg-opt:has(input:checked) {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+  .seg-opt:not(:has(input:checked)):hover {
+    background: color-mix(in srgb, var(--color-text) 7%, transparent);
+  }
+  .seg-opt:has(input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  /* — tags — */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    padding: 3px 10px;
+    border-radius: calc(var(--radius-md) * 0.75);
+    border: 1px solid transparent;
+  }
+  .tag-accent {
+    background: var(--color-accent-100);
+    color: var(--color-accent-800);
+  }
+  .tag-neutral {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-800);
+  }
+  .tag-outline {
+    border-color: currentColor;
+    color: var(--color-text);
+  }
+
+  /* — tables — */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .table th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    padding: var(--space-2);
+    border-bottom: 2px solid var(--color-divider);
+    font-weight: 400;
+  }
+  .table td {
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--color-divider);
+    vertical-align: middle;
+  }
+  .table tbody tr:hover {
+    background: color-mix(in srgb, var(--color-text) 4%, transparent);
+  }
+
+  /* — dialog — */
+  .dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-4);
+    background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
+    z-index: 50;
+  }
+  .dialog {
+    width: min(480px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: 2px solid var(--color-text);
+    background: var(--color-bg);
+    box-shadow: var(--shadow-lg);
+  }
+  .dialog-title {
+    font-family: var(--font-heading);
+    font-weight: var(--font-heading-weight);
+    font-size: 22px;
+  }
+  .dialog-body {
+    font-size: 14px;
+    color: var(--color-neutral-800);
+  }
+  .dialog-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .empty {
+    border: 2px dashed var(--color-divider);
+    padding: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+  }
+
+  .frame-media {
+    position: relative;
+    background: var(--color-text);
+    overflow: hidden;
+  }
+
+  .skeleton {
+    display: grid;
+    place-items: center;
+    min-height: 40vh;
+    font-size: 13px;
+    color: var(--color-neutral-700);
+  }
 }

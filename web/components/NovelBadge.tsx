@@ -1,15 +1,12 @@
 import { COPY } from "@/lib/copy";
 
-export function NovelBadge() {
+export function NovelBadge({ compact = false }: { compact?: boolean }) {
   return (
     <span
       title={COPY.novel.tooltip}
-      className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]"
+      className="tag tag-accent font-semibold"
+      style={compact ? { padding: "2px 6px" } : { padding: "3px 8px" }}
     >
-      <span
-        className="size-1.5 shrink-0 rounded-full bg-[var(--wax)]"
-        aria-hidden
-      />
       {COPY.novel.label}
     </span>
   );

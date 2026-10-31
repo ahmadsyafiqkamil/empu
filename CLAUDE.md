@@ -65,3 +65,4 @@ pnpm test && pnpm lint
 - H4 (Min 1 Nov): kamus publik + ekspor JSON/CSV/ELAN. Berikutnya: H5 evaluasi + halaman Bukti.
 - H5 (Sen 2 Nov): evaluasi (runner/CLI `empu eval`) + halaman Bukti selesai di kode; anotasi gold + `latest.json` (Gate 2) masih pending. Berikutnya: anotasi gold → run eval.
 - H6 (Sel 3 Nov): withdraw consent, sandbox tanpa key, Docker/Caddy/README siap. URL publik belum (deploy VPS belum). Berikutnya: deploy + H7.
+- Redesign (Sab 31 Okt): seluruh UI diganti ke sistem **Modernist** (Archivo, radius 0, garis 2px, aksen merah, satu tema terang; Studio dibedakan oleh header bar gelap). Sumber visual: `Empu web aplikasi redesign/`. Kontrak UI diperbarui di `docs/superpowers/plans/2026-10-28-empu/desain.md`; kondisi lama didokumentasikan di `docs/design/konteks-design-saat-ini.md`. Endpoint baru: `GET /api/archives/{id}/recordings` (studio) dan `GET /api/public/archives/{slug}/recordings` untuk indeks peta.

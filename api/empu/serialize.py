@@ -11,6 +11,7 @@ from empu.api_schemas import (
     JobStageOut,
     OccurrenceOut,
     RecordingOut,
+    RecordingSummary,
 )
 from empu.enums import JobStatus
 from empu.models import Archive, Contributor, Entry, Job, Occurrence, ProcessStep, Recording
@@ -172,6 +173,28 @@ def recording_out(
         attribution=rec.attribution,
         contributor=contributor_out(contributor),
         job=job_out(job) if job else None,
+        display_url=media_url(rec.display_path),
+    )
+
+
+def recording_summary(
+    rec: Recording, *, archive_title: str = "", counts: dict[str, int] | None = None
+) -> RecordingSummary:
+    c = counts or {}
+    return RecordingSummary(
+        id=rec.id,
+        archive_id=rec.archive_id,
+        archive_title=archive_title,
+        title=rec.title,
+        duration_s=rec.duration_s,
+        status=rec.status,
+        consent_status=rec.consent_status,
+        consent_scope=rec.consent_scope,
+        source_kind=rec.source_kind,
+        source_creator=rec.source_creator,
+        n_entries=c.get("total", 0),
+        n_reviewed=c.get("reviewed", 0),
+        n_proposed=c.get("proposed", 0),
         display_url=media_url(rec.display_path),
     )
 

@@ -1,27 +1,16 @@
-import { AudioLines, Eye } from "lucide-react";
-import { cn } from "@/lib/cn";
-import { sourceColorVar, sourceLabel, sourceTooltip } from "@/lib/source";
+import { AudioLines, Eye, Type } from "lucide-react";
+import { sourceLabel, sourceTooltip } from "@/lib/source";
 import type { Source } from "@/lib/types";
 
-function sourceIcon(source: Source, size: "sm" | "md") {
-  const iconClass = size === "sm" ? "size-3" : "size-3.5";
+function SourceIcon({ source, size }: { source: Source; size: "sm" | "md" }) {
+  const cls = size === "sm" ? "size-3" : "size-3.5";
   switch (source) {
     case "speech":
-      return <AudioLines className={iconClass} aria-hidden />;
+      return <AudioLines className={cls} aria-hidden />;
     case "on_screen_text":
-      return (
-        <span
-          className={cn(
-            "font-semibold leading-none",
-            size === "sm" ? "text-xs" : "text-sm",
-          )}
-          aria-hidden
-        >
-          T
-        </span>
-      );
+      return <Type className={cls} aria-hidden />;
     case "visual_only":
-      return <Eye className={iconClass} aria-hidden />;
+      return <Eye className={cls} aria-hidden />;
     default: {
       const _exhaustive: never = source;
       return _exhaustive;
@@ -29,27 +18,29 @@ function sourceIcon(source: Source, size: "sm" | "md") {
   }
 }
 
+/** Icon plus label, never colour alone. Outlined so it reads on any ground. */
 export function SourceBadge({
   source,
   size = "md",
+  bordered = true,
 }: {
   source: Source | null;
   size?: "sm" | "md";
+  bordered?: boolean;
 }) {
   if (!source) return null;
-  const color = sourceColorVar(source);
-  const label = sourceLabel(source);
   return (
     <span
       title={sourceTooltip(source)}
-      className={cn(
-        "inline-flex items-center gap-1 font-medium",
-        size === "sm" ? "text-xs" : "text-sm",
-      )}
-      style={{ color }}
+      className={
+        bordered
+          ? "inline-flex items-center gap-1.5 border border-current px-1.5 py-0.5 font-semibold whitespace-nowrap"
+          : "inline-flex items-center gap-1.5 font-semibold whitespace-nowrap"
+      }
+      style={{ fontSize: size === "sm" ? 11 : 12 }}
     >
-      {sourceIcon(source, size)}
-      {label}
+      <SourceIcon source={source} size={size} />
+      {sourceLabel(source)}
     </span>
   );
 }

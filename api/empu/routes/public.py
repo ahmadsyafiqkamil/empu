@@ -1,14 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
-from empu.api_schemas import ArchiveOut, EntryListItem, EntryOut
+from empu.api_schemas import ArchiveOut, EntryListItem, EntryOut, RecordingSummary
 from empu.db import get_session
 from empu.models import Archive, Contributor, Entry, Recording
-from empu.serialize import archive_out, entry_list_item, entry_out, process_map_out
+from empu.serialize import (
+    archive_out,
+    entry_list_item,
+    entry_out,
+    process_map_out,
+    recording_summary,
+)
 from empu.visibility import (
     entry_is_public,
     public_entries,
     public_occurrences,
+    recording_is_public,
     validation_label_for,
 )
 
@@ -87,6 +94,35 @@ def get_public_entry(entry_id: int, session: Session = Depends(get_session)) -> 
         attribution=rec.attribution if rec else None,
         validation_label=validation_label_for(session, e.id),
     )
+
+
+@router.get(
+    "/api/public/archives/{slug}/recordings", response_model=list[RecordingSummary]
+)
+def public_archive_recordings(
+    slug: str, session: Session = Depends(get_session)
+) -> list[RecordingSummary]:
+    a = _archive_by_slug(session, slug)
+    recs = session.exec(
+        select(Recording).where(Recording.archive_id == a.id).order_by(Recording.id)
+    ).all()
+
+    # Count only entries the public may see, grouped by their first public recording.
+    per_recording: dict[int, set[int]] = {rec.id: set() for rec in recs}
+    for e, occs in public_entries(session, a.id):
+        for o in occs:
+            if o.recording_id in per_recording:
+                per_recording[o.recording_id].add(e.id)
+
+    out: list[RecordingSummary] = []
+    for rec in recs:
+        if not recording_is_public(rec):
+            continue
+        n = len(per_recording.get(rec.id, ()))
+        out.append(
+            recording_summary(rec, archive_title=a.title, counts={"total": n, "reviewed": n})
+        )
+    return out
 
 
 @router.get("/api/public/recordings/{recording_id}/process-map")

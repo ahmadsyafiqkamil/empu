@@ -28,7 +28,7 @@ terms:
     verified: false
 `;
 
-type ValidateResult = PackDetail & { ok: true } | { ok: false; error: string };
+type ValidateResult = (PackDetail & { ok: true }) | { ok: false; error: string };
 
 function Form() {
   const [packs, setPacks] = useState<Pack[]>([]);
@@ -75,8 +75,7 @@ function Form() {
       });
       setResult({ ...r, ok: true });
     } catch (e) {
-      const msg = String(e);
-      setResult({ ok: false, error: msg.replace(/^400\s*/, "") });
+      setResult({ ok: false, error: String(e).replace(/^400\s*/, "") });
     } finally {
       setBusy(null);
     }
@@ -86,16 +85,14 @@ function Form() {
     setBusy("create");
     setError(null);
     try {
-      const r = await apiSend<{ id: string }>("/api/packs", {
+      await apiSend<{ id: string }>("/api/packs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ yaml }),
       });
       setYaml("");
       setResult(null);
-      setError(null);
       await refresh();
-      void r;
     } catch (e) {
       setError(String(e));
     } finally {
@@ -104,62 +101,73 @@ function Form() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8 p-8">
-      <div>
-        <h1 className="text-2xl">Craft packs</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">
-          A craft pack holds a skill&apos;s vocabulary, stages, and SAM prompts. Create one from YAML.
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-[1000px] px-5 py-10 lg:px-0 lg:py-12">
+      <h1 className="m-0 text-[32px] tracking-[-0.02em] lg:text-[42px]">Craft packs</h1>
+      <p className="mt-1 max-w-[640px] text-[15px] text-[var(--color-neutral-800)]">
+        A craft pack holds a skill&apos;s vocabulary, stages, and SAM prompts. Add a craft by
+        writing one YAML file.
+      </p>
 
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Existing packs</h2>
-        <ul className="divide-y divide-[var(--line)] border border-[var(--line)]">
-          {packs.length === 0 ? (
-            <li className="p-3 text-sm text-[var(--muted)]">No packs yet.</li>
-          ) : (
-            packs.map((p) => (
-              <li key={p.id} className="flex items-center justify-between gap-3 p-3 text-sm">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-medium">{p.name.id}</span>
-                  <span className="font-mono text-xs text-[var(--muted)]">
-                    {p.id} · v{p.version}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void loadSource(p.id)}
-                  disabled={busy !== null}
-                  className="text-xs text-[var(--accent)] underline disabled:opacity-40"
-                >
-                  {busy === "load" && sourceId === p.id ? "Loading…" : "Load as example"}
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
+      <section className="mt-8">
+        <h2 className="label mb-2">Existing packs</h2>
+        {packs.length === 0 ? (
+          <div className="empty">
+            <span>No packs yet.</span>
+          </div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Pack</th>
+                <th>Id</th>
+                <th>Version</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {packs.map((p) => (
+                <tr key={p.id}>
+                  <td className="font-semibold">{p.name.id}</td>
+                  <td className="mono text-[13px]">{p.id}</td>
+                  <td className="mono text-[13px]">v{p.version}</td>
+                  <td className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => void loadSource(p.id)}
+                      disabled={busy !== null}
+                      className="btn btn-secondary text-[13px]"
+                    >
+                      {busy === "load" && sourceId === p.id ? "Loading…" : "Load as example"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         {sourceId ? (
-          <p className="text-xs text-[var(--muted)]">
+          <p className="mt-2 text-[12px] text-[var(--color-neutral-700)]">
             Loaded {sourceId}. Edit the id field before creating a new pack.
           </p>
         ) : null}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium">New pack</h2>
+      <section className="mt-8 flex flex-col gap-3">
+        <h2 className="label mb-0">New pack</h2>
         <textarea
           value={yaml}
           onChange={(e) => setYaml(e.target.value)}
           spellCheck={false}
           placeholder={PLACEHOLDER}
-          className="h-96 w-full resize-y border border-[var(--line)] bg-[var(--surface)] p-3 font-mono text-xs leading-relaxed focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--wax)]"
+          aria-label="Craft pack YAML"
+          className="input h-96 resize-y font-mono text-[12px] leading-relaxed"
         />
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => void validate()}
             disabled={busy !== null || !yaml.trim()}
-            className="border border-[var(--line)] px-4 py-2 disabled:opacity-40"
+            className="btn btn-secondary h-10"
           >
             {busy === "validate" ? "Validating…" : "Validate"}
           </button>
@@ -167,29 +175,30 @@ function Form() {
             type="button"
             onClick={() => void create()}
             disabled={busy !== null || !yaml.trim()}
-            className="bg-[var(--accent)] px-4 py-2 text-black disabled:opacity-40"
+            className="btn btn-primary h-10"
           >
             {busy === "create" ? "Creating…" : "Create pack"}
           </button>
         </div>
 
-        {error ? <p className="text-sm text-[var(--danger)]">{error}</p> : null}
+        {error ? <p className="m-0 text-[13px] text-[var(--color-accent-700)]">{error}</p> : null}
 
         {result ? (
           result.ok ? (
-            <div className="border border-[var(--line)] bg-[var(--surface)] p-3 text-sm">
-              <p className="font-medium text-[var(--ok)]">✓ Valid</p>
-              <p className="mt-1">
-                <span className="font-medium">{result.name.id}</span> · {result.id} · v{result.version}
+            <div className="border-2 border-[var(--color-divider)] p-4 text-[14px]">
+              <p className="m-0 font-semibold">✓ Valid</p>
+              <p className="mt-1 mb-0">
+                {result.name.id} · <span className="mono">{result.id}</span> · v
+                {result.version}
               </p>
-              <p className="text-[var(--muted)]">
+              <p className="mt-0.5 mb-0 text-[var(--color-neutral-700)]">
                 {result.languages?.join(", ")} · {result.n_stages} stages · {result.n_terms} terms
               </p>
             </div>
           ) : (
-            <div className="border border-[var(--danger)] bg-[var(--surface)] p-3 text-sm">
-              <p className="font-medium text-[var(--danger)]">✗ Invalid</p>
-              <pre className="mt-1 whitespace-pre-wrap font-mono text-xs text-[var(--muted)]">
+            <div className="border-2 border-[var(--color-accent-700)] p-4 text-[14px]">
+              <p className="m-0 font-semibold text-[var(--color-accent-700)]">✗ Invalid</p>
+              <pre className="mono mt-1 mb-0 whitespace-pre-wrap text-[12px] text-[var(--color-neutral-800)]">
                 {result.error}
               </pre>
             </div>

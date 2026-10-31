@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { COPY } from "@/lib/copy";
-import { sourceLabel, timeSourceLabel } from "@/lib/source";
+import { TimeSourceTag } from "./TimeSourceTag";
 import { formatTimeRange } from "@/lib/time";
+import { SourceBadge } from "./SourceBadge";
 import type { Source } from "@/lib/types";
 
 export function EvidenceClip({
@@ -20,27 +21,32 @@ export function EvidenceClip({
   timeSource: "asr" | "muse";
 }) {
   const [error, setError] = useState(false);
-  const caption = `${formatTimeRange(tStart, tEnd)} · ${sourceLabel(source)} · ${timeSourceLabel(timeSource)}`;
-  if (!clipUrl || error) {
-    return (
-      <figure className="space-y-1">
-        <div className="flex aspect-video items-center justify-center bg-[var(--surface)] text-sm text-[var(--muted)]">
-          {COPY.empty.clip}
-        </div>
-        <figcaption className="font-mono text-xs text-[var(--muted)]">{caption}</figcaption>
-      </figure>
-    );
-  }
+
   return (
-    <figure className="space-y-1">
-      <video
-        className="aspect-video w-full bg-[var(--surface)] object-contain"
-        controls
-        preload="metadata"
-        src={clipUrl}
-        onError={() => setError(true)}
-      />
-      <figcaption className="font-mono text-xs text-[var(--muted)]">{caption}</figcaption>
+    <figure className="flex flex-col gap-2">
+      <div className="frame-media aspect-video">
+        {clipUrl && !error ? (
+          <video
+            className="size-full object-contain"
+            controls
+            playsInline
+            preload="metadata"
+            src={clipUrl}
+            onError={() => setError(true)}
+          />
+        ) : (
+          <div className="grid size-full place-items-center bg-[var(--color-surface)] text-[13px] text-[var(--color-neutral-700)]">
+            {COPY.empty.clip}
+          </div>
+        )}
+      </div>
+      <figcaption className="flex flex-wrap items-center gap-2.5 text-[12px] text-[var(--color-neutral-800)]">
+        <span className="mono">{formatTimeRange(tStart, tEnd)}</span>
+        <span aria-hidden>·</span>
+        <SourceBadge source={source} />
+        <span aria-hidden>·</span>
+        <TimeSourceTag timeSource={timeSource} />
+      </figcaption>
     </figure>
   );
 }
