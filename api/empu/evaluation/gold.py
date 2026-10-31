@@ -20,6 +20,11 @@ class GoldRow:
     annotator: str
 
 
+def has_draft_rows(rows: list[GoldRow]) -> bool:
+    """True when any row still carries the machine-drafted marker."""
+    return any(row.annotator.strip().upper() == "DRAFT" for row in rows)
+
+
 def load_gold(path: Path) -> list[GoldRow]:
     rows: list[GoldRow] = []
     with Path(path).open(newline="", encoding="utf-8") as f:
@@ -30,11 +35,19 @@ def load_gold(path: Path) -> list[GoldRow]:
                 continue
             cat = raw.get("category") or "other"
             category = Category(cat) if cat in {c.value for c in Category} else Category.other
-            rows.append(GoldRow(
-                clip_id=raw["clip_id"], t_start=float(raw["t_start"]), t_end=float(raw["t_end"]),
-                spoken=raw.get("spoken") or raw["term"], term=raw["term"],
-                category=category, source=Source(raw["source"]),
-                stage=raw.get("stage") or "", visible_object=raw.get("visible_object") or "",
-                note=raw.get("note") or "", annotator=raw.get("annotator") or "",
-            ))
+            rows.append(
+                GoldRow(
+                    clip_id=raw["clip_id"],
+                    t_start=float(raw["t_start"]),
+                    t_end=float(raw["t_end"]),
+                    spoken=raw.get("spoken") or raw["term"],
+                    term=raw["term"],
+                    category=category,
+                    source=Source(raw["source"]),
+                    stage=raw.get("stage") or "",
+                    visible_object=raw.get("visible_object") or "",
+                    note=raw.get("note") or "",
+                    annotator=raw.get("annotator") or "",
+                )
+            )
     return rows

@@ -22,7 +22,7 @@ from empu.config import REPO_ROOT, Settings, get_settings
 from empu.db import init_db, make_engine
 from empu.enums import AccessLevel, ContributorRole, PipelineMode, Source, SourceKind
 from empu.evaluation.baseline import baseline_against_pack, parse_vtt
-from empu.evaluation.gold import load_gold
+from empu.evaluation.gold import has_draft_rows, load_gold
 from empu.evaluation.retrieval import evaluate_retrieval, load_questions
 from empu.evaluation.runner import pred_from_db, run_clip, write_results
 from empu.intake import (
@@ -387,14 +387,32 @@ def eval_run(
     set_path: Path = typer.Option(..., "--set", exists=True, dir_okay=False),
     gold_dir: Path = typer.Option(..., "--gold", exists=True, file_okay=False),
     out: Path = typer.Option(..., "--out"),
+    allow_draft: bool = typer.Option(
+        False, "--allow-draft", help="Score gold that a human has not checked yet."
+    ),
+    only: list[str] = typer.Option([], "--only", help="Score only this clip id (repeatable)."),
 ) -> None:
     """Score every clip in a test-set against gold and write an aggregate JSON."""
     settings = get_settings()
     pack = load_pack(_default_pack_id(settings), settings.packs_dir)
+    items = _clips_from_set(set_path)
+    if only:
+        known = {item["id"] for item in items}
+        unknown = [cid for cid in only if cid not in known]
+        if unknown:
+            typer.echo(f"error: unknown clip ids: {unknown}", err=True)
+            raise typer.Exit(2)
+        items = [item for item in items if item["id"] in only]
+    if not allow_draft:
+        for item in items:
+            gold_path = _gold_path(item, gold_dir)
+            if gold_path is not None and has_draft_rows(load_gold(gold_path)):
+                typer.echo(f"error: gold still marked DRAFT: {gold_path}", err=True)
+                raise typer.Exit(2)
     clips: dict = {}
     notes: list[str] = []
     with Session(_engine(settings)) as session:
-        for item in _clips_from_set(set_path):
+        for item in items:
             cid = item["id"]
             rec = _find_recording_by_youtube(session, item.get("youtube_id"))
             pred = pred_from_db(session, rec.id) if rec else []
