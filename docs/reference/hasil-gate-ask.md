@@ -50,3 +50,24 @@ Dua perubahan:
 2. `MAX_CITATIONS = 4` (prompt `ask-v2`). Sebelumnya pertanyaan luas menyitir 24 istilah — jawaban 50 kata dengan 24 kartu bukti bukan jawaban, melainkan membuang seluruh kamus ke layar.
 
 Hasil sesudahnya, pertanyaan yang sama lima kali berturut-turut: 5/5 `200`, 4 kartu bukti, tanpa galat di log. Pertanyaan Jawa tetap dijawab dalam Jawa (`lang: jv`), pertanyaan di luar arsip tetap `refused` tanpa bukti.
+
+## Retrieval
+
+Diukur pada 31 Okt dengan `empu eval retrieval` (perintah baru, lihat plan `2026-10-31-empu-retrieval-eval.md`). Angka ini mengukur **tahap retrieve saja**: berapa sering istilah yang dibutuhkan sebuah jawaban benar-benar masuk daftar yang dikirim ke model. Tidak ada panggilan model di jalur ini.
+
+```text
+cd api && uv run empu eval retrieval --archive batik-tulis \
+  --questions ../docs/eval/pertanyaan-retrieval.csv --k 4
+rows=29 k=4 questions=20 question_recall=1.00 term_recall=1.00
+```
+
+- **rows=29** (28 istilah unik; `fiksasi` punya dua entri publik), **k=4**, **questions=20**, **misses=0**.
+- Komposisi daftar (`docs/eval/pertanyaan-retrieval.csv`): 5 definisi bahasa Indonesia, 5 proses/tahapan, 3 bahasa Jawa, 4 bahasa Inggris yang memakai kata lain ("wax pen", "remove the wax"), 3 perbandingan dua istilah.
+- Pertanyaan pertama memakai `nembok` dan `paruh` sebagai jawaban yang diharapkan. Keduanya **tidak publik** (tidak punya occurrence publik; bersama `cucuk`), sehingga pertanyaan itu mustahil dijawab pintu publik dan hanya mengukur data yang tidak terlihat. Empat pertanyaan diganti dengan istilah publik, lalu diukur ulang.
+
+**Keputusan (ambang di plan): `question_recall` @4 = 1,00 ≥ 0,90 → berhenti.** Retrieval leksikal cukup untuk arsip sekecil ini; jangan tambah embedding.
+
+**Batas angka ini, harus disebut bersama hasilnya:**
+
+- `limit` prefilter = 60 dan baris hanya 29, jadi pemotongan tidak pernah terjadi. Yang diukur adalah urutan peringkat, bukan ketahanan terhadap pemotongan. Kalau arsip tumbuh melewati 60 baris, ukur ulang sebelum menyimpulkan hal yang sama.
+- 20 pertanyaan ditulis dari istilah yang sudah ada di arsip, jadi ini bukan uji buta terhadap pertanyaan pengunjung sungguhan.
