@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from empu.enums import (
     AccessLevel,
@@ -188,6 +188,33 @@ class ReviewIn(APIModel):
 
 class ReprocessIn(APIModel):
     mode: PipelineMode | None = None
+
+
+class AskIn(APIModel):
+    question: str = Field(min_length=3, max_length=500)
+
+    @field_validator("question")
+    @classmethod
+    def _squeeze(cls, v: str) -> str:
+        squeezed = " ".join(v.split())
+        if len(squeezed) < 3:
+            raise ValueError("question is too short")
+        return squeezed
+
+
+class AskEvidenceOut(APIModel):
+    entry: EntryListItem
+    occurrence: OccurrenceOut
+
+
+class AskAnswerOut(APIModel):
+    answer: str
+    lang: str
+    refused: bool
+    evidence: list[AskEvidenceOut] = []
+    model: str
+    prompt_version: str
+    cached: bool
 
 
 class UploadAck(APIModel):

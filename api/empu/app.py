@@ -3,6 +3,7 @@ from fastapi import Depends, FastAPI
 from empu.auth import require_studio
 from empu.routes import (
     archives,
+    ask,
     entries,
     eval,
     exports,
@@ -21,6 +22,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(packs.router)
     app.include_router(public.router)
+    app.include_router(ask.router)
     app.include_router(exports.router)
     app.include_router(eval.router)
     app.include_router(sandbox.router)

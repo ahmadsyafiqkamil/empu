@@ -1,0 +1,167 @@
+"""Ask Empu routes.
+
+The public route is keyless and rate-limited per client address; the studio route
+needs the studio key and sees entries that are still under review.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlmodel import Session, select
+
+from empu.api_schemas import AskAnswerOut, AskEvidenceOut, AskIn
+from empu.ask import AskError, AskResult, answer_question
+from empu.ask.prompts import ASK_PROMPT_VERSION, RESPONSE_SCHEMA
+from empu.ask.ratelimit import RateLimiter
+from empu.cache import ResponseCache
+from empu.config import Settings, get_settings
+from empu.db import get_session
+from empu.meta_client import AnalyzeResult, MetaClient
+from empu.models import Archive, Recording
+from empu.packs import PackError, load_pack
+from empu.serialize import entry_list_item, occurrence_out
+
+router = APIRouter()
+studio_router = APIRouter()
+
+_MODELS: dict[str, Callable[[str], AnalyzeResult]] = {}
+
+
+def get_ask_model(
+    settings: Settings = Depends(get_settings),  # noqa: B008
+) -> Callable[[str], AnalyzeResult]:
+    """One Meta client per base URL; the route only needs a prompt → answer call."""
+    model = _MODELS.get(settings.meta_base_url)
+    if model is None:
+        client = MetaClient.from_settings(settings)
+        model_name = settings.muse_model
+
+        def ask(prompt: str) -> AnalyzeResult:
+            return client.respond_text(prompt, model=model_name, schema=RESPONSE_SCHEMA)
+
+        _MODELS[settings.meta_base_url] = model = ask
+    return model
+
+
+def get_ask_cache(
+    settings: Settings = Depends(get_settings),  # noqa: B008
+) -> ResponseCache:
+    return ResponseCache(settings.data_dir / "cache" / "ask")
+
+
+_LIMITERS: dict[tuple[int, float], RateLimiter] = {}
+
+
+def get_limiter(
+    settings: Settings = Depends(get_settings),  # noqa: B008
+) -> RateLimiter:
+    """One limiter per process: a fresh instance per request would never block."""
+    key = (settings.ask_per_hour, 3600.0)
+    limiter = _LIMITERS.get(key)
+    if limiter is None:
+        _LIMITERS[key] = limiter = RateLimiter(*key)
+    return limiter
+
+
+def _client_key(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
+
+
+def _pack_name(archive: Archive, settings: Settings) -> str:
+    try:
+        return load_pack(archive.craft_pack_id, settings.packs_dir).name.en
+    except (PackError, AttributeError, KeyError):
+        return archive.craft_pack_id
+
+
+def _to_out(session: Session, result: AskResult) -> AskAnswerOut:
+    evidence: list[AskEvidenceOut] = []
+    for cited in result.evidence:
+        rec = session.get(Recording, cited.occurrence.recording_id)
+        evidence.append(
+            AskEvidenceOut(
+                entry=entry_list_item(cited.entry, cited.occurrences),
+                occurrence=occurrence_out(
+                    cited.occurrence, recording_title=rec.title if rec else ""
+                ),
+            )
+        )
+    return AskAnswerOut(
+        answer=result.answer,
+        lang=result.lang,
+        refused=result.refused,
+        evidence=evidence,
+        model=result.model,
+        prompt_version=result.prompt_version,
+        cached=result.cached,
+    )
+
+
+def _run(
+    session: Session,
+    archive: Archive,
+    body: AskIn,
+    *,
+    scope: str,
+    settings: Settings,
+    ask_model: Callable[[str], AnalyzeResult],
+    cache: ResponseCache,
+) -> AskAnswerOut:
+    try:
+        result = answer_question(
+            session,
+            archive_id=archive.id,
+            question=body.question,
+            scope=scope,
+            ask_model=ask_model,
+            cache=cache,
+            model=settings.muse_model,
+            pack_name=_pack_name(archive, settings),
+            max_entries=settings.ask_max_entries,
+        )
+    except AskError as exc:
+        raise HTTPException(502, f"answer unavailable: {exc}") from exc
+    return _to_out(session, result)
+
+
+@router.post("/api/public/archives/{slug}/ask", response_model=AskAnswerOut)
+def public_ask(
+    slug: str,
+    body: AskIn,
+    request: Request,
+    session: Session = Depends(get_session),  # noqa: B008
+    settings: Settings = Depends(get_settings),  # noqa: B008
+    ask_model: Callable[[str], AnalyzeResult] = Depends(get_ask_model),  # noqa: B008
+    cache: ResponseCache = Depends(get_ask_cache),  # noqa: B008
+    limiter: RateLimiter = Depends(get_limiter),  # noqa: B008
+) -> AskAnswerOut:
+    archive = session.exec(select(Archive).where(Archive.slug == slug)).first()
+    if archive is None or archive.is_sandbox:
+        raise HTTPException(404, "archive not found")
+    if not limiter.allow(_client_key(request)):
+        raise HTTPException(429, "too many questions, try again later")
+    return _run(
+        session, archive, body, scope="public", settings=settings, ask_model=ask_model, cache=cache
+    )
+
+
+@studio_router.post("/api/archives/{archive_id}/ask", response_model=AskAnswerOut)
+def studio_ask(
+    archive_id: int,
+    body: AskIn,
+    session: Session = Depends(get_session),  # noqa: B008
+    settings: Settings = Depends(get_settings),  # noqa: B008
+    ask_model: Callable[[str], AnalyzeResult] = Depends(get_ask_model),  # noqa: B008
+    cache: ResponseCache = Depends(get_ask_cache),  # noqa: B008
+) -> AskAnswerOut:
+    archive = session.get(Archive, archive_id)
+    if archive is None:
+        raise HTTPException(404, "archive not found")
+    return _run(
+        session, archive, body, scope="studio", settings=settings, ask_model=ask_model, cache=cache
+    )
+
+
+__all__ = ["ASK_PROMPT_VERSION", "router", "studio_router"]
