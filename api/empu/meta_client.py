@@ -178,6 +178,36 @@ class MetaClient:
             raise MetaAPIError(200, f"response status {status}: {raw.get('incomplete_details')}")
         return raw
 
+    @staticmethod
+    def _finish(raw: dict, started: float) -> AnalyzeResult:
+        latency = time.monotonic() - started
+        text = output_text(raw)
+        try:
+            parsed, err = extract_json(text), None
+        except ValueError as e:
+            parsed, err = None, str(e)
+        return AnalyzeResult(raw=raw, text=text, parsed=parsed, parse_error=err,
+                             usage=raw.get("usage") or {}, latency_s=latency)
+
+    def respond_text(self, prompt: str, *, model: str, schema: dict | None = None,
+                     schema_name: str = "empu_answer", max_output_tokens: int = 2000,
+                     timeout: float = 120) -> AnalyzeResult:
+        """Text-only response. No file upload, no video.
+
+        Muse Spark spends reasoning tokens out of max_output_tokens: with 400 the whole
+        budget went to reasoning and the answer was empty (docs/reference/hasil-gate-ask.md).
+        """
+        body: dict[str, Any] = {
+            "model": model,
+            "max_output_tokens": max_output_tokens,
+            "input": [{"role": "user", "content": [{"type": "input_text", "text": prompt}]}],
+        }
+        if schema is not None:
+            body["text"] = {"format": {"type": "json_schema", "name": schema_name,
+                                       "schema": schema, "strict": True}}
+        t0 = time.monotonic()
+        return self._finish(self.create_response(body, timeout=timeout), t0)
+
     def analyze_video(self, file_id: str, prompt: str, *, model: str, schema: dict | None = None,
                       max_output_tokens: int = 16000) -> AnalyzeResult:
         body: dict[str, Any] = {
@@ -192,15 +222,7 @@ class MetaClient:
             body["text"] = {"format": {"type": "json_schema", "name": "empu_terms",
                                        "schema": schema, "strict": True}}
         t0 = time.monotonic()
-        raw = self.create_response(body)
-        latency = time.monotonic() - t0
-        text = output_text(raw)
-        try:
-            parsed, err = extract_json(text), None
-        except ValueError as e:
-            parsed, err = None, str(e)
-        return AnalyzeResult(raw=raw, text=text, parsed=parsed, parse_error=err,
-                             usage=raw.get("usage") or {}, latency_s=latency)
+        return self._finish(self.create_response(body), t0)
 
     def segment_image_raw(self, image_path: Path, prompt: str, *, model: str) -> dict:
         path = Path(image_path)

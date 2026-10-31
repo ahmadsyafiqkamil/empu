@@ -148,3 +148,29 @@ def test_output_text_and_extract_json():
 def test_gate0_v3_output_validates_without_upgrade():
     raw = load_fixture("muse/gate0/recall-seg0.raw.json")
     MuseSegmentOutput.model_validate(extract_json(output_text(raw)))
+
+
+@respx.mock
+def test_respond_text_sends_text_only_and_parses():
+    raw = load_fixture("ask/probe.raw.json")
+    route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
+    res = client().respond_text("PROMPT", model="muse-spark-1.3", schema={"type": "object"})
+    body = json.loads(route.calls.last.request.content)
+    assert body["input"] == [{"role": "user", "content": [{"type": "input_text", "text": "PROMPT"}]}]
+    assert body["text"]["format"] == {
+        "type": "json_schema",
+        "name": "empu_answer",
+        "schema": {"type": "object"},
+        "strict": True,
+    }
+    assert res.parse_error is None
+    assert set(res.parsed) == {"answer", "lang", "entry_ids", "insufficient"}
+    assert res.usage
+
+
+@respx.mock
+def test_respond_text_without_schema_omits_text_format():
+    raw = load_fixture("ask/probe.raw.json")
+    route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
+    client().respond_text("P", model="m")
+    assert "text" not in json.loads(route.calls.last.request.content)
