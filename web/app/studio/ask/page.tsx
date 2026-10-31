@@ -36,7 +36,7 @@ function StudioAsk() {
         {COPY.ask.title}
       </h1>
       <p className="mt-2 max-w-[620px] text-[14px] text-[var(--color-neutral-800)]">
-        {COPY.ask.intro} {COPY.ask.studioNote}
+        {COPY.ask.studioIntro}
       </p>
 
       {failed ? (

@@ -148,6 +148,8 @@ export const COPY = {
     evidence: "What this answer stands on",
     openEntry: "Open entry",
     studioNote: "Includes entries that are still under review.",
+    studioIntro:
+      "Ask about any term in this archive, including entries that are still under review. Every answer cites the entry it came from, so you can check it before it goes public.",
     launcher: "Ask",
     close: "Close",
     shortcut: "⌘K",

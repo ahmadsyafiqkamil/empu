@@ -72,6 +72,9 @@ export function AskPanel({
   const send = (raw: string) => {
     const question = normalizeQuestion(raw);
     if (!isAskable(question) || !endpoint) return;
+    // One question at a time: the button is disabled while pending, and Enter must
+    // match it. Aborting here would strand the previous turn on "thinking".
+    if (pending) return;
 
     abortRef.current?.abort();
     const controller = new AbortController();
