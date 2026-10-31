@@ -33,3 +33,26 @@ export function askErrorCopy(status: number): string {
   if (status === 502 || status === 503) return COPY.ask.unavailable;
   return COPY.ask.failed;
 }
+
+export class AskHttpError extends Error {
+  constructor(public readonly status: number) {
+    super(`ask failed with ${status}`);
+    this.name = "AskHttpError";
+  }
+}
+
+/** POST one question. Kept out of the component so it can be called from callbacks. */
+export async function postQuestion(
+  endpoint: string,
+  question: string,
+  signal?: AbortSignal,
+): Promise<import("./types").AskAnswer> {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+    signal,
+  });
+  if (!response.ok) throw new AskHttpError(response.status);
+  return (await response.json()) as import("./types").AskAnswer;
+}

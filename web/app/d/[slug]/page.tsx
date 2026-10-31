@@ -109,6 +109,9 @@ export default async function DictionaryPage({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link href={`/d/${slug}/ask`} className="btn btn-secondary h-10">
+              {COPY.ask.askArchive}
+            </Link>
             <Link href="/map" className="btn btn-secondary h-10">
               {COPY.ui.processMap}
             </Link>

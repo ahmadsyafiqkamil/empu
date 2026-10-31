@@ -2,22 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { archiveSlugFromPathname } from "@/lib/askUi";
 
 const NAV = [
   { href: "/d/batik-tulis", label: "Dictionary", match: "/d" },
+  { href: "/d/batik-tulis/ask", label: "Ask", match: "/ask" },
   { href: "/map", label: "Process map", match: "/map" },
   { href: "/evidence", label: "Evidence", match: "/evidence" },
   { href: "/try", label: "Try it", match: "/try" },
 ];
 
 function isActive(pathname: string, match: string): boolean {
-  if (match === "/d") return pathname.startsWith("/d");
+  // /d/<slug>/ask is its own screen: "Ask" lights up there, "Dictionary" does not.
+  if (match === "/ask") return pathname.endsWith("/ask");
+  if (match === "/d") return pathname.startsWith("/d") && !pathname.endsWith("/ask");
   if (match === "/map") return pathname.startsWith("/map");
   return pathname.startsWith(match);
 }
 
 export function PublicHeader() {
   const pathname = usePathname() ?? "/";
+  const askHref = `/d/${archiveSlugFromPathname(pathname) ?? "batik-tulis"}/ask`;
 
   return (
     <header className="border-b-2 border-[var(--color-divider)] bg-[var(--color-bg)]">
@@ -35,7 +40,7 @@ export function PublicHeader() {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={item.match === "/ask" ? askHref : item.href}
                 aria-current={on ? "page" : undefined}
                 className={
                   on
@@ -59,7 +64,7 @@ export function PublicHeader() {
             {NAV.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={item.match === "/ask" ? askHref : item.href}
                 className="block px-4 py-2.5 text-sm text-[var(--color-text)] no-underline hover:bg-[var(--color-surface)]"
               >
                 {item.label}
