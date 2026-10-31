@@ -54,6 +54,9 @@ class Settings(BaseSettings):
     )
     sandbox_daily_quota: int = Field(default=30, validation_alias="EMPU_SANDBOX_DAILY_QUOTA")
 
+    ask_per_hour: int = Field(default=40, validation_alias="EMPU_ASK_PER_HOUR")
+    ask_max_entries: int = Field(default=60, validation_alias="EMPU_ASK_MAX_ENTRIES")
+
     @model_validator(mode="after")
     def _derive(self) -> Settings:
         if not self.db_url:
