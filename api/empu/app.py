@@ -27,6 +27,7 @@ def create_app() -> FastAPI:
     app.include_router(eval.router)
     app.include_router(sandbox.router)
     app.include_router(archives.router, dependencies=[Depends(require_studio)])
+    app.include_router(ask.studio_router, dependencies=[Depends(require_studio)])
     app.include_router(recordings.router)
     app.include_router(jobs.router)
     app.include_router(entries.router)

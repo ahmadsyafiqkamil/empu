@@ -241,3 +241,32 @@ def test_public_ask_works_without_a_studio_key(api, session):
     r = api.post("/api/public/archives/hidup-batik/ask", json={"question": "Apa itu canting?"})
 
     assert r.status_code == 200
+
+
+def test_studio_ask_requires_the_studio_key(api, session):
+    a, entry, _ = setup_public(session)
+    use_model(api, _payload(entry_ids=[entry.id]))
+
+    r = api.post(
+        f"/api/archives/{a.id}/ask",
+        json={"question": "Apa itu canting?"},
+        headers={"X-Studio-Key": ""},
+    )
+
+    assert r.status_code == 401
+
+
+def test_studio_ask_includes_proposed_entries(api, session):
+    a, entry, proposed = setup_public(session)
+    use_model(api, _payload(entry_ids=[proposed.id]))
+
+    body = api.post(f"/api/archives/{a.id}/ask", json={"question": "Apa itu nglorod?"}).json()
+
+    assert body["refused"] is False
+    assert [e["entry"]["term"] for e in body["evidence"]] == ["nglorod"]
+    assert body["evidence"][0]["entry"]["status"] == "proposed"
+
+
+def test_studio_ask_404_for_unknown_archive(api, session):
+    r = api.post("/api/archives/9999/ask", json={"question": "Apa itu canting?"})
+    assert r.status_code == 404
