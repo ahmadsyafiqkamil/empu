@@ -63,8 +63,7 @@ def test_build_index_falls_back_to_visible_when_quote_is_empty(session):
     a = make_archive(session)
     rec = make_recording(session, a)
     e = _entry(session, a, "nglorod")
-    _occ(session, e, rec, source=Source.visual_only, visible="kain diaduk",
-         evidence_quote="")
+    _occ(session, e, rec, source=Source.visual_only, visible="kain diaduk", evidence_quote="")
 
     occ = session.exec(select(Occurrence).where(Occurrence.entry_id == e.id)).one()
     rows = build_index([(e, [occ])])

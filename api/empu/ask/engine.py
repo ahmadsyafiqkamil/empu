@@ -6,7 +6,10 @@ Invariants this module enforces, independent of the model:
 - A cited id that was not in the rows that were sent is dropped.
 - Evidence is always re-read from the database, so a consent withdrawal or a
   rejected occurrence takes effect even when the text answer came from cache.
-- No valid citation means `refused`: the answer is shown, the evidence is empty.
+- A refusal says why: `insufficient` keeps the model's own sentence, `uncited` replaces
+  it, because a claim with no visible evidence must never reach the reader.
+- If any cited entry can no longer be shown, the whole answer is refused: the
+  sentence is atomic and cannot be trimmed to match the surviving evidence.
 """
 
 from __future__ import annotations
@@ -23,9 +26,11 @@ from empu.cache import ResponseCache
 from empu.enums import ConsentStatus, EntryStatus, OccurrenceStatus
 from empu.meta_client import AnalyzeResult
 from empu.models import Archive, Entry, Occurrence, Recording
-from empu.visibility import public_entries
+from empu.visibility import entry_is_public, public_entries, public_occurrences
 
 REFUSAL_NO_ENTRIES = "This archive has no published terms yet, so there is nothing to answer from."
+
+REFUSAL_UNCITED = "I couldn't tie that answer to a term the archive can show, so I won't give one."
 
 STUDIO_SKIP_STATUSES = (EntryStatus.rejected, EntryStatus.merged)
 
@@ -52,6 +57,7 @@ class AskResult:
     prompt_version: str
     cached: bool
     usage: dict
+    reason: str | None = None
 
 
 def _studio_occurrences(session: Session, entry_id: int) -> list[Occurrence]:
@@ -98,15 +104,40 @@ def collect_entries(
     return out
 
 
-def _cache_key(scope: str, archive_id: int, question: str, model: str) -> str:
-    digest = hashlib.sha256(f"{scope}|{archive_id}|{question.casefold()}".encode()).hexdigest()
+def _revision(entries: list[tuple[Entry, list[Occurrence]]]) -> str:
+    """Fingerprint of everything that can change what the model is allowed to say.
+
+    Acceptance changes which entries are in the list; an edit changes `updated_at`.
+    Without this, a refusal cached while a term was `proposed` outlives the review
+    that accepted it — which is exactly the sequence a demo runs through.
+    """
+    parts = sorted(
+        f"{entry.id}:{entry.updated_at.isoformat() if entry.updated_at else ''}"
+        for entry, _ in entries
+    )
+    return "|".join(parts)
+
+
+def _cache_key(scope: str, archive_id: int, question: str, model: str, revision: str) -> str:
+    digest = hashlib.sha256(
+        f"{scope}|{archive_id}|{revision}|{question.casefold()}".encode()
+    ).hexdigest()
     return ResponseCache.key(digest, model, ASK_PROMPT_VERSION, scope)
 
 
 def _hydrate(
-    session: Session, rows_by_id: dict[int, IndexEntry], cited_ids: list[int]
+    session: Session,
+    rows_by_id: dict[int, IndexEntry],
+    cited_ids: list[int],
+    *,
+    scope: str,
 ) -> list[Cited]:
-    """Re-read cited entries from the database so visibility is never stale."""
+    """Re-read cited entries from the database so visibility is never stale.
+
+    The occurrence set must be built with the same rules as the entry set: an entry
+    can be public through one recording and private through another, and the public
+    card must never show the private one.
+    """
     out: list[Cited] = []
     for entry_id in cited_ids:
         row = rows_by_id.get(entry_id)
@@ -117,7 +148,12 @@ def _hydrate(
             continue
         if entry.status in STUDIO_SKIP_STATUSES:
             continue
-        occs = _studio_occurrences(session, entry_id)
+        if scope == "public":
+            occs = public_occurrences(session, entry_id)
+            if not entry_is_public(entry, occs):
+                continue
+        else:
+            occs = _studio_occurrences(session, entry_id)
         if not occs:
             continue
         best = next((o for o in occs if o.id == entry.best_occurrence_id), occs[0])
@@ -155,7 +191,7 @@ def answer_question(
 
     rows = prefilter(question, build_index(entries), limit=max_entries)
     rows_by_id = {row.id: row for row in rows}
-    key = _cache_key(scope, archive_id, question, model)
+    key = _cache_key(scope, archive_id, question, model, _revision(entries))
 
     cached = cache.get(key)
     if cached is not None:
@@ -184,12 +220,18 @@ def answer_question(
         if entry_id in rows_by_id and entry_id not in cited_ids:
             cited_ids.append(entry_id)
 
-    evidence = _hydrate(session, rows_by_id, cited_ids)
-    refused = bool(payload.get("insufficient")) or not evidence
+    evidence = _hydrate(session, rows_by_id, cited_ids, scope=scope)
 
-    if refused:
+    if payload.get("insufficient"):
+        reason: str | None = "insufficient"
+    elif not evidence or len(evidence) < len(cited_ids):
+        reason = "uncited"
+    else:
+        reason = None
+
+    if reason is not None:
         return AskResult(
-            answer=answer,
+            answer=answer if reason == "insufficient" else REFUSAL_UNCITED,
             lang=lang,
             refused=True,
             entry_ids=[],
@@ -198,6 +240,7 @@ def answer_question(
             prompt_version=ASK_PROMPT_VERSION,
             cached=from_cache,
             usage=usage,
+            reason=reason,
         )
 
     return AskResult(

@@ -270,3 +270,99 @@ def test_studio_ask_includes_proposed_entries(api, session):
 def test_studio_ask_404_for_unknown_archive(api, session):
     r = api.post("/api/archives/9999/ask", json={"question": "Apa itu canting?"})
     assert r.status_code == 404
+
+
+def test_client_key_prefers_the_first_forwarded_hop():
+    from starlette.requests import Request
+
+    from empu.routes.ask import _client_key
+
+    def req(headers: dict[str, str], client=("172.18.0.4", 5000)):
+        return Request(
+            {
+                "type": "http",
+                "headers": [(k.lower().encode(), v.encode()) for k, v in headers.items()],
+                "client": client,
+            }
+        )
+
+    assert _client_key(req({"X-Forwarded-For": "203.0.113.9, 172.18.0.4"})) == "203.0.113.9"
+    assert _client_key(req({"x-forwarded-for": "203.0.113.9"})) == "203.0.113.9"
+    assert _client_key(req({})) == "172.18.0.4"
+
+
+def test_forwarded_visitors_get_separate_budgets(api, session):
+    a, entry, _ = setup_public(session)
+    use_model(api, _payload(entry_ids=[entry.id]))
+    from empu.routes.ask import get_limiter
+
+    api.app.dependency_overrides[get_limiter] = lambda: RateLimiter(1, 3600)
+
+    first = api.post(
+        "/api/public/archives/hidup-batik/ask",
+        json={"question": "Apa itu canting?"},
+        headers={"X-Forwarded-For": "203.0.113.9"},
+    )
+    second = api.post(
+        "/api/public/archives/hidup-batik/ask",
+        json={"question": "Apa itu canting?"},
+        headers={"X-Forwarded-For": "203.0.113.10"},
+    )
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+
+
+def test_public_ask_502_when_the_meta_api_fails(api, session):
+    a, entry, _ = setup_public(session)
+    from empu.meta_client import MetaAPIError
+
+    def boom(prompt: str):
+        raise MetaAPIError(500, "upstream down")
+
+    api.app.dependency_overrides[get_ask_model] = lambda: boom
+
+    r = api.post("/api/public/archives/hidup-batik/ask", json={"question": "Apa itu canting?"})
+
+    assert r.status_code == 502
+
+
+def test_public_ask_502_when_the_model_answer_is_incomplete(api, session):
+    a, entry, _ = setup_public(session)
+    from empu.meta_client import MetaAPIError
+
+    def boom(prompt: str):
+        raise MetaAPIError(200, "response status incomplete: max_output_tokens")
+
+    api.app.dependency_overrides[get_ask_model] = lambda: boom
+
+    r = api.post("/api/public/archives/hidup-batik/ask", json={"question": "Apa itu canting?"})
+
+    assert r.status_code == 502
+
+
+def test_public_ask_502_when_the_transport_fails(api, session):
+    a, entry, _ = setup_public(session)
+    import httpx
+
+    def boom(prompt: str):
+        raise httpx.ConnectError("no route")
+
+    api.app.dependency_overrides[get_ask_model] = lambda: boom
+
+    r = api.post("/api/public/archives/hidup-batik/ask", json={"question": "Apa itu canting?"})
+
+    assert r.status_code == 502
+
+
+def test_public_ask_502_when_the_api_key_is_missing(api, session):
+    a, entry, _ = setup_public(session)
+
+    def boom(prompt: str):
+        raise RuntimeError("META_MODEL_API_KEY is not set (see .env.example)")
+
+    api.app.dependency_overrides[get_ask_model] = lambda: boom
+
+    r = api.post("/api/public/archives/hidup-batik/ask", json={"question": "Apa itu canting?"})
+
+    assert r.status_code == 502

@@ -100,6 +100,7 @@ export function AskPanel({
         <textarea
           id="ask-question"
           className="input"
+          autoFocus
           value={draft}
           maxLength={500}
           placeholder={COPY.ask.placeholder}

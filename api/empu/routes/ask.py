@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select
 
@@ -18,7 +19,7 @@ from empu.ask.ratelimit import RateLimiter
 from empu.cache import ResponseCache
 from empu.config import Settings, get_settings
 from empu.db import get_session
-from empu.meta_client import AnalyzeResult, MetaClient
+from empu.meta_client import AnalyzeResult, MetaAPIError, MetaClient
 from empu.models import Archive, Recording
 from empu.packs import PackError, load_pack
 from empu.serialize import entry_list_item, occurrence_out
@@ -66,6 +67,19 @@ def get_limiter(
 
 
 def _client_key(request: Request) -> str:
+    """Who to charge this question to.
+
+    In the compose deployment the browser never reaches uvicorn directly: Caddy does,
+    from a bridge address. Keying on `request.client` there would put every visitor in
+    one bucket and turn a per-visitor limit into a site-wide cap. The API port is not
+    published outside the compose network, so the first X-Forwarded-For hop is the real
+    client; without a proxy in front (local dev, tests) fall back to the socket peer.
+    """
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        first = forwarded.split(",", 1)[0].strip()
+        if first:
+            return first
     return request.client.host if request.client else "unknown"
 
 
@@ -121,8 +135,10 @@ def _run(
             pack_name=_pack_name(archive, settings),
             max_entries=settings.ask_max_entries,
         )
-    except AskError as exc:
-        raise HTTPException(502, f"answer unavailable: {exc}") from exc
+    except (AskError, MetaAPIError, httpx.HTTPError, RuntimeError) as exc:
+        # RuntimeError covers an unset Meta API key on a keyless deploy: a judge
+        # should read a calm message, not a traceback.
+        raise HTTPException(502, "answer unavailable") from exc
     return _to_out(session, result)
 
 

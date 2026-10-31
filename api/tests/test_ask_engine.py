@@ -257,7 +257,7 @@ def test_cache_hit_skips_the_second_model_call(session, tmp_path):
     assert second.answer == first.answer
 
 
-def test_withdrawn_consent_after_cache_drops_evidence_and_refuses(session, tmp_path):
+def test_withdrawal_invalidates_the_cache_and_drops_the_term(session, tmp_path):
     a = make_archive(session, slug="cache-withdraw")
     keep_rec = make_recording(session, a, title="Tetap")
     drop_rec = make_recording(session, a, title="Dicabut")
@@ -287,11 +287,11 @@ def test_withdrawn_consent_after_cache_drops_evidence_and_refuses(session, tmp_p
 
     second = ask(session, tmp_path, a, model)
 
-    assert len(calls) == 1
-    assert second.cached is True
-    assert second.refused is False
+    # Withdrawal changes the visible set, so the cached answer is not reused and the
+    # withdrawn term never reaches the reader as evidence.
+    assert len(calls) == 2
+    assert second.cached is False
     assert [c.entry.term for c in second.evidence] == ["canting"]
-    assert second.entry_ids == [kept.id]
 
 
 def test_cached_answer_with_all_citations_withdrawn_refuses(session, tmp_path):
@@ -371,3 +371,217 @@ def test_rejected_occurrences_are_not_used_as_evidence(session, tmp_path):
 
     quotes = [o.evidence_quote for o in result.evidence[0].occurrences]
     assert "ditolak" not in quotes
+
+
+def test_public_hydration_ignores_private_scope_occurrences(session, tmp_path):
+    """An entry reachable publicly must never show a clip from a non-public recording."""
+    a = make_archive(session, slug="campur")
+    public_rec = make_recording(session, a, title="Publik")
+    private_rec = make_recording(session, a, title="Pribadi", consent_scope=AccessLevel.private)
+    entry = _entry(session, a, "canting")
+    public_occ = _occ(session, entry, public_rec, t_start=10.0, evidence_quote="boleh")
+    private_occ = _occ(session, entry, private_rec, t_start=900.0, evidence_quote="JANGAN TAMPIL")
+    entry.best_occurrence_id = private_occ.id
+    session.add(entry)
+    session.commit()
+
+    result = ask(
+        session,
+        tmp_path,
+        a,
+        fake_model(
+            {"answer": "Canting.", "lang": "id", "entry_ids": [entry.id], "insufficient": False}
+        ),
+    )
+
+    assert result.refused is False
+    assert result.evidence[0].occurrence.id == public_occ.id
+    assert [o.id for o in result.evidence[0].occurrences] == [public_occ.id]
+    assert all(o.evidence_quote != "JANGAN TAMPIL" for o in result.evidence[0].occurrences)
+
+
+def test_cached_refusal_is_not_served_after_the_entry_is_accepted(session, tmp_path):
+    a = make_archive(session, slug="cache-review")
+    rec = make_recording(session, a)
+    # One already-public entry keeps the archive non-empty, so the model is asked.
+    _occ(session, _entry(session, a, "canting"), rec)
+    entry = _entry(session, a, "nglorod", status=EntryStatus.proposed)
+    _occ(session, entry, rec)
+
+    calls: list[str] = []
+    model = fake_model(
+        {"answer": "Arsip belum memuatnya.", "lang": "id", "entry_ids": [], "insufficient": True},
+        calls,
+    )
+
+    first = ask(session, tmp_path, a, model, question="apa itu nglorod?")
+    assert first.refused is True
+    assert len(calls) == 1
+
+    entry.status = EntryStatus.accepted
+    session.add(entry)
+    session.commit()
+
+    model_after = fake_model(
+        {
+            "answer": "Nglorod adalah meluruhkan malam.",
+            "lang": "id",
+            "entry_ids": [entry.id],
+            "insufficient": False,
+        },
+        calls,
+    )
+    second = ask(session, tmp_path, a, model_after, question="apa itu nglorod?")
+
+    assert len(calls) == 2, "the cached refusal must not survive an accepted entry"
+    assert second.refused is False
+
+
+def test_cached_answer_is_not_served_after_a_gloss_edit(session, tmp_path):
+    a = make_archive(session, slug="cache-edit")
+    rec = make_recording(session, a)
+    entry = _entry(session, a, "canting")
+    _occ(session, entry, rec)
+
+    calls: list[str] = []
+    model = fake_model(
+        {
+            "answer": "Canting versi lama.",
+            "lang": "id",
+            "entry_ids": [entry.id],
+            "insufficient": False,
+        },
+        calls,
+    )
+
+    ask(session, tmp_path, a, model)
+
+    entry.gloss_id = "arti baru"
+    entry.updated_at = entry.updated_at.replace(year=2030)
+    session.add(entry)
+    session.commit()
+
+    ask(session, tmp_path, a, model)
+
+    assert len(calls) == 2
+
+
+def test_merged_entry_is_dropped_from_evidence(session, tmp_path):
+    """Defensive: hydration re-checks status, so a merged entry never shows a card."""
+    a = make_archive(session, slug="partial")
+    rec = make_recording(session, a)
+    kept = _entry(session, a, "canting")
+    dropped = _entry(session, a, "mori")
+    _occ(session, kept, rec)
+    _occ(session, dropped, rec)
+
+    # Hydration skips merged entries; force one id into that state after collect.
+    dropped.status = EntryStatus.merged
+    session.add(dropped)
+    session.commit()
+
+    result = ask(
+        session,
+        tmp_path,
+        a,
+        fake_model(
+            {
+                "answer": "Canting dan mori dipakai bersama.",
+                "lang": "id",
+                "entry_ids": [kept.id, dropped.id],
+                "insufficient": False,
+            }
+        ),
+    )
+
+    assert [c.entry.term for c in result.evidence] == ["canting"]
+    assert result.refused is False
+
+
+def test_uncited_claim_is_replaced_with_a_refusal_sentence(session, tmp_path):
+    a, ids = seed(session)
+
+    result = ask(
+        session,
+        tmp_path,
+        a,
+        fake_model(
+            {
+                "answer": "Canting adalah alat pena tembaga.",
+                "lang": "id",
+                "entry_ids": [9999],
+                "insufficient": False,
+            }
+        ),
+        question="apa itu canting?",
+    )
+
+    assert result.refused is True
+    assert result.evidence == []
+    assert result.answer != "Canting adalah alat pena tembaga."
+    assert result.reason == "uncited"
+
+
+def test_insufficient_keeps_the_model_sentence(session, tmp_path):
+    a, ids = seed(session)
+
+    result = ask(
+        session,
+        tmp_path,
+        a,
+        fake_model(
+            {
+                "answer": "Arsip belum memuatnya.",
+                "lang": "id",
+                "entry_ids": [],
+                "insufficient": True,
+            }
+        ),
+        question="bagaimana mengelas besi?",
+    )
+
+    assert result.refused is True
+    assert result.reason == "insufficient"
+    assert result.answer == "Arsip belum memuatnya."
+
+
+def test_unaccepting_an_entry_hides_a_previously_cached_answer(session, tmp_path):
+    a = make_archive(session, slug="unaccept")
+    rec = make_recording(session, a)
+    entry = _entry(session, a, "canting")
+    _occ(session, entry, rec)
+    payload = {
+        "answer": "Canting adalah alat.",
+        "lang": "id",
+        "entry_ids": [entry.id],
+        "insufficient": False,
+    }
+
+    assert ask(session, tmp_path, a, fake_model(payload)).refused is False
+
+    entry.status = EntryStatus.proposed
+    session.add(entry)
+    session.commit()
+
+    assert ask(session, tmp_path, a, fake_model(payload)).refused is True
+
+
+def test_making_an_entry_private_hides_a_previously_cached_answer(session, tmp_path):
+    a = make_archive(session, slug="private-later")
+    rec = make_recording(session, a)
+    entry = _entry(session, a, "canting")
+    _occ(session, entry, rec)
+    payload = {
+        "answer": "Canting adalah alat.",
+        "lang": "id",
+        "entry_ids": [entry.id],
+        "insufficient": False,
+    }
+
+    assert ask(session, tmp_path, a, fake_model(payload)).refused is False
+
+    entry.access_level = AccessLevel.private
+    session.add(entry)
+    session.commit()
+
+    assert ask(session, tmp_path, a, fake_model(payload)).refused is True

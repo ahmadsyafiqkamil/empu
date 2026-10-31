@@ -2,8 +2,15 @@ from empu.ask.index import Evidence, IndexEntry
 from empu.ask.prompts import ASK_PROMPT_VERSION, RESPONSE_SCHEMA, build_prompt, format_rows
 
 
-def _row(id: int, term: str, *, source: str = "speech", status: str = "accepted",
-         variants: tuple[str, ...] = (), quote: str = "contoh kalimat") -> IndexEntry:
+def _row(
+    id: int,
+    term: str,
+    *,
+    source: str = "speech",
+    status: str = "accepted",
+    variants: tuple[str, ...] = (),
+    quote: str = "contoh kalimat",
+) -> IndexEntry:
     return IndexEntry(
         id=id,
         term=term,
@@ -29,8 +36,9 @@ def test_prompt_lists_every_row_id_and_source_label():
 
 
 def test_prompt_forbids_outside_knowledge_and_requires_ids():
-    prompt = build_prompt([_row(1, "canting")], "apa itu canting?", pack_name="batik",
-                          scope="public")
+    prompt = build_prompt(
+        [_row(1, "canting")], "apa itu canting?", pack_name="batik", scope="public"
+    )
     assert "HANYA dari daftar istilah" in prompt
     assert "Jangan menambah pengetahuan dari luar daftar" in prompt
     assert "entry_ids" in prompt
