@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/modernist-0c87f0f6-5282-4710-9d3b-b03593b10cc8/styles.css">
+<script src="_ds/modernist-0c87f0f6-5282-4710-9d3b-b03593b10cc8/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-neutral-300)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-600)}</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;gap:72px;padding:72px;align-items:flex-start">
+
+<!-- ============ S5b ENTRY DETAIL ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S5b · Entry detail · /d/[slug]/[id]</div>
+<div data-screen-label="S5b Entry detail" style="width:1440px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:64px;display:flex;align-items:center;gap:32px;padding:0 40px;border-bottom:2px solid var(--color-divider)">
+    <div style="font-weight:800;font-size:24px;letter-spacing:-.02em;margin-right:auto">empu<span style="color:var(--color-accent)">.</span></div>
+    <nav style="display:flex;gap:28px;font-size:14px">
+      <a href="#" style="color:var(--color-accent);text-decoration:none">Dictionary</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Process map</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Evidence</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Try it</a>
+    </nav>
+    <button class="btn btn-secondary">Documenter studio</button>
+  </div>
+  <div style="max-width:1100px;width:100%;margin:0 auto;padding:32px 0 72px;display:flex;flex-direction:column">
+    <div style="font-size:13px;color:var(--color-neutral-700);display:flex;gap:8px"><a href="#" style="color:inherit">Living Archive · Gamelan</a><span>/</span><span>Instruments</span></div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;padding:24px 0 24px;border-bottom:2px solid var(--color-divider)">
+      <div>
+        <h1 style="margin:0;font-size:76px;line-height:.95;letter-spacing:-.03em">alat musik tiup</h1>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center">
+          <span class="tag tag-neutral" style="font-size:13px;padding:4px 10px">Instruments</span>
+          <span class="tag tag-neutral" style="font-size:13px;padding:4px 10px">tiup · wind section</span>
+          <span class="tag tag-accent" style="font-size:13px;padding:4px 10px;font-weight:600">New term</span>
+          <span style="font-size:13px;color:var(--color-neutral-700);margin-left:8px">Also heard as <i>tiupan</i></span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onClick="{{ hear }}" style="height:48px;min-width:150px;padding:0 18px;font-size:15px;justify-content:flex-start;gap:10px"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"></path></svg>{{ hearLabel }}</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;padding:32px 0;border-bottom:2px solid var(--color-divider)">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="grayscale" style="position:relative;aspect-ratio:16/9;background:var(--color-text)">
+          <img src="frames/suling.png" alt="Evidence clip" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;left:16px;bottom:16px;width:48px;height:48px;background:var(--color-bg);color:var(--color-text);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor"><path d="m6 3 14 9-14 9z"></path></svg></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--color-neutral-800)">
+          <span style="font-family:ui-monospace,Menlo,monospace">2:46–2:47</span><span>·</span>
+          <span style="display:flex;gap:5px;align-items:center;font-weight:600"><svg width="14" height="14" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"></path></svg>Spoken</span><span>·</span>
+          <span>Timed by speech recognition</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="grayscale" style="aspect-ratio:4/5;background:var(--color-surface)"><img src="{{ cropSrc }}" alt="The tool, cropped from the original frame" style="width:100%;height:100%;object-fit:contain"></div>
+          <div class="seg" style="width:100%">
+            <label class="seg-opt" style="flex:1;font-size:12px"><input type="radio" name="cv" checked="{{ showCrop }}" onChange="{{ pickCrop }}">Crop</label>
+            <label class="seg-opt" style="flex:1;font-size:12px"><input type="radio" name="cv" checked="{{ showFrame }}" onChange="{{ pickFrame }}">Show in frame</label>
+          </div>
+          <div style="font-size:11px;color:var(--color-neutral-700)">Original frame · cropped with SAM 3.1</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:32px 0;border-bottom:2px solid var(--color-divider);display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-top:8px">Said at 2:46</div>
+      <div style="font-size:30px;line-height:1.3;letter-spacing:-.01em;text-wrap:pretty">“Suling merupakan alat dari keluarga <span style="color:var(--color-accent-700);font-weight:800">alat musik tiup</span> yang terbuat dari bambu.”</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:200px 1fr 1fr;gap:24px;padding:32px 0;border-bottom:2px solid var(--color-divider)">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-top:6px">Meaning</div>
+      <div><div style="font-size:12px;color:var(--color-neutral-700)">English</div><div style="font-size:24px;font-weight:800;margin-top:2px">Wind instrument family</div></div>
+      <div style="border-left:1px solid var(--color-divider);padding-left:24px"><div style="font-size:12px;color:var(--color-neutral-700)">Bahasa Indonesia</div><div style="font-size:24px;font-weight:800;margin-top:2px">Kelompok instrumen tiup</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:200px repeat(3,1fr);gap:24px;padding:20px 0;border-bottom:2px solid var(--color-divider);font-size:14px;align-items:center">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Confidence</div>
+      <div style="display:flex;gap:8px;align-items:center"><span style="letter-spacing:2px">●●●</span>High confidence</div>
+      <div style="display:flex;gap:8px;align-items:center"><span style="display:flex;gap:5px;align-items:center;font-weight:600;border:1px solid var(--color-text);padding:2px 8px;font-size:12px"><svg width="13" height="13" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"></path></svg>Spoken</span></div>
+      <div style="display:flex;gap:8px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.5"><path d="M20 6 9 17l-5-5"></path></svg>Validated by the documenter</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) 320px;gap:24px;padding:32px 0">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-top:4px">Heard in 2 recordings</div>
+      <div style="display:flex;flex-direction:column;border-top:1px solid var(--color-divider)">
+        <sc-for list="{{ occurrences }}" as="o" hint-placeholder-count="2">
+          <div style="display:grid;grid-template-columns:36px minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+            <button class="btn btn-secondary btn-icon"><svg width="14" height="14" viewBox="0 0 24 24" style="fill:currentColor"><path d="m6 3 14 9-14 9z"></path></svg></button>
+            <span style="font-size:15px;font-weight:600">{{ o.title }}</span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px">{{ o.time }}</span>
+            <span style="font-size:12px;border:1px solid var(--color-text);padding:2px 8px">{{ o.src }}</span>
+          </div>
+        </sc-for>
+        <a href="#" style="font-size:13px;margin-top:12px">See where it sits in the process map →</a>
+      </div>
+      <div style="background:var(--color-surface);padding:16px;font-size:13px;display:flex;flex-direction:column;gap:4px;align-self:start">
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Source</div>
+        <div style="font-weight:600">Gamelan part 2</div>
+        <div style="color:var(--color-neutral-800)">Recorded by Syafiq · own recording · shared publicly with consent</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ S5 DICTIONARY ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S5 · Dictionary · /d/[slug]</div>
+<div data-screen-label="S5 Dictionary" style="width:1440px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:64px;display:flex;align-items:center;gap:32px;padding:0 40px;border-bottom:2px solid var(--color-divider)">
+    <div style="font-weight:800;font-size:24px;letter-spacing:-.02em;margin-right:auto">empu<span style="color:var(--color-accent)">.</span></div>
+    <nav style="display:flex;gap:28px;font-size:14px">
+      <a href="#" style="color:var(--color-accent);text-decoration:none">Dictionary</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Process map</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Evidence</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Try it</a>
+    </nav>
+    <button class="btn btn-secondary">Documenter studio</button>
+  </div>
+  <div style="max-width:1100px;width:100%;margin:0 auto;padding:32px 0 72px;display:flex;flex-direction:column">
+    <div style="font-size:13px;color:var(--color-neutral-700)"><a href="#" style="color:inherit">Home</a> / Living Archive</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;padding:16px 0 24px;border-bottom:2px solid var(--color-divider)">
+      <div>
+        <h1 style="margin:0;font-size:56px;letter-spacing:-.03em">Living Archive · Gamelan</h1>
+        <div style="font-size:14px;color:var(--color-neutral-800);margin-top:4px">53 validated terms · 3 recordings · gamelan-jawa v1 · Recorded by Syafiq and contributors</div>
+      </div>
+      <div style="display:flex;gap:8px"><button class="btn btn-secondary" style="height:40px">Process map</button><button class="btn btn-primary" style="height:40px;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M12 15V3M7 10l5 5 5-5M21 21H3"></path></svg>Download (public)</button></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:280px minmax(0,1fr) 180px auto;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+      <input class="input" style="height:40px" placeholder="Search terms, meanings…">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+          <button onClick="{{ c.pick }}" style="all:unset;cursor:pointer;font-size:13px;padding:7px 12px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <select class="input" style="height:40px"><option>All stages</option><option>buka · opening</option><option>balungan · core melody</option><option>tiup · wind</option></select>
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer;white-space:nowrap"><input type="checkbox" checked="{{ novelOnly }}" onChange="{{ toggleNovel }}" style="accent-color:var(--color-accent);width:16px;height:16px;margin:0">New terms only</label>
+    </div>
+
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;padding-top:32px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--color-divider);padding-bottom:8px">
+          <h3 style="margin:0;font-size:24px">{{ g.name }}</h3><span style="font-size:13px;color:var(--color-neutral-700)">{{ g.count }} terms</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr))">
+          <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+            <a href="#" style="display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:16px 16px 16px 0;border-bottom:1px solid var(--color-divider);text-decoration:none;color:var(--color-text)">
+              <div class="grayscale" style="width:88px;aspect-ratio:4/5;background:var(--color-surface)"><img src="{{ e.img }}" alt="" style="width:100%;height:100%;object-fit:contain"></div>
+              <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                <span style="font-size:22px;font-weight:800;line-height:1.1">{{ e.term }}</span>
+                <span style="font-size:13px;color:var(--color-neutral-800);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ e.gloss }}</span>
+                <span style="display:flex;gap:8px;align-items:center;margin-top:auto;font-size:11px">
+                  <span style="border:1px solid var(--color-text);padding:1px 6px">{{ e.src }}</span>
+                  <sc-if value="{{ e.novel }}"><span class="tag tag-accent" style="padding:2px 6px;font-weight:600">New term</span></sc-if>
+                </span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ empty }}">
+      <div style="margin-top:32px;padding:40px;border:2px dashed var(--color-divider);display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px">No terms match these filters.</span><button class="btn btn-secondary" onClick="{{ clear }}">Clear filters</button></div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+<!-- ============ S1 HOME ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S1 · Home · /</div>
+<div data-screen-label="S1 Home" style="width:1440px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:64px;display:flex;align-items:center;gap:32px;padding:0 40px;border-bottom:2px solid var(--color-divider)">
+    <div style="font-weight:800;font-size:24px;letter-spacing:-.02em;margin-right:auto">empu<span style="color:var(--color-accent)">.</span></div>
+    <nav style="display:flex;gap:28px;font-size:14px">
+      <a href="#" style="color:var(--color-text);text-decoration:none">Dictionary</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Process map</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Evidence</a>
+      <a href="#" style="color:var(--color-text);text-decoration:none">Try it</a>
+    </nav>
+    <button class="btn btn-secondary">Documenter studio</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:7fr 5fr;border-bottom:2px solid var(--color-divider)">
+    <div style="padding:72px 56px 56px 40px;display:flex;flex-direction:column;gap:24px;border-right:2px solid var(--color-divider)">
+      <h1 style="margin:0;font-size:80px;line-height:.95;letter-spacing:-.035em;text-wrap:balance">Capture what masters know, before it's gone.</h1>
+      <p style="font-size:18px;line-height:1.5;max-width:600px;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Empu turns a master's narrated work video into a watchable craft dictionary. Every term links to the original speech, a short clip of the movement, and the real tool, cropped from the original frame. AI proposes; a person decides.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" style="height:52px;min-width:220px;padding:0 20px;font-size:16px;justify-content:flex-start">Open the archive <span style="margin-left:auto">→</span></button>
+        <button class="btn btn-secondary" style="height:52px;padding:0 20px;font-size:16px">Try it with a 3-minute clip</button>
+        <button class="btn btn-ghost" style="height:52px;padding:0 12px;font-size:16px;color:var(--color-text);text-decoration:underline">See the evidence</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div class="grayscale" style="aspect-ratio:16/10;background:var(--color-text)"><img src="frames/batik.png" alt="A canting drawing wax on cloth" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:24px 32px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end">
+        <div><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700);font-weight:800">From the archive</div><div style="font-size:32px;font-weight:800;letter-spacing:-.02em">batik tulis</div><div style="font-size:13px;color:var(--color-neutral-800)">Hand-drawn batik, wax applied with a canting</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;font-size:12px"><span style="border:1px solid var(--color-text);padding:2px 8px;font-weight:600">Spoken</span><span>●●● High confidence</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:200px repeat(3,minmax(0,1fr));border-bottom:2px solid var(--color-divider)">
+    <div style="padding:24px 40px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Archives</div>
+    <sc-for list="{{ archives }}" as="a" hint-placeholder-count="3">
+      <button onClick="{{ a.pick }}" style="all:unset;cursor:{{ a.cursor }};padding:24px;border-left:1px solid var(--color-divider);display:flex;flex-direction:column;gap:6px;background:{{ a.bg }};color:{{ a.fg }}">
+        <span style="font-size:20px;font-weight:800">{{ a.title }}</span>
+        <span style="font-size:13px;opacity:.85">{{ a.meta }}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="padding:56px 40px;display:flex;flex-direction:column;gap:24px;border-bottom:2px solid var(--color-divider)">
+    <h2 style="margin:0;font-size:40px">How it works</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--color-divider)">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <div style="padding:24px 24px 0 0;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:56px;font-weight:800;line-height:1;color:var(--color-accent)">{{ s.n }}</span>
+          <div class="grayscale" style="aspect-ratio:16/9;background:var(--color-text)"><img src="{{ s.img }}" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <span style="font-size:18px;line-height:1.4">{{ s.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:200px repeat(4,minmax(0,1fr));border-bottom:2px solid var(--color-divider)">
+    <div style="padding:24px 40px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Principles</div>
+    <div style="padding:24px;border-left:1px solid var(--color-divider);font-size:18px;font-weight:600">Evidence with every term.</div>
+    <div style="padding:24px;border-left:1px solid var(--color-divider);font-size:18px;font-weight:600">Every source labeled.</div>
+    <div style="padding:24px;border-left:1px solid var(--color-divider);font-size:18px;font-weight:600">Nothing public without a person's approval.</div>
+    <div style="padding:24px;border-left:1px solid var(--color-divider);font-size:18px;font-weight:600">Original frames only.</div>
+  </div>
+
+  <div style="background:var(--color-accent);color:var(--color-bg);padding:72px 40px">
+    <div style="font-size:56px;font-weight:800;line-height:1.02;letter-spacing:-.03em;max-width:1100px">Batik today. Weaving and gamelan next. Every craft that was never written down.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:40px;padding:32px 40px;font-size:12px;color:var(--color-neutral-800)">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span>Frames from "Proses nyanting batik tulis" by TEBAK teras batik kaindra and "Macam Canting dalam Batik Tulis" by Batik Education, both CC BY 3.0 on YouTube. Trimmed by Empu.</span>
+      <span>Built for the Meta Global AI Developer Hackathon 2026 with Muse Spark 1.3 and SAM 3.1. Demo clips are CC BY videos, credited on every entry.</span>
+    </div>
+    <div style="display:flex;gap:24px;justify-content:flex-end;font-size:13px"><a href="#">Evidence</a><a href="#">Documenter studio</a></div>
+  </div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const S = 'frames/suling-crop.png', G = 'frames/gamelan.png', B = 'frames/batik.png';
+const TERMS = [
+  ['Instruments', 'saron', 'Bronze metallophone played with a wooden mallet', 'Spoken', false, G],
+  ['Instruments', 'bonang', 'Row of small kettle gongs', 'Visual only', false, G],
+  ['Instruments', 'kendang', 'Hand drum that sets the tempo', 'Spoken', false, G],
+  ['Instruments', 'slenthem', 'Low-register metallophone with long resonance', 'Spoken', true, G],
+  ['Instruments', 'suling', 'Bamboo end-blown flute', 'On-screen text', false, S],
+  ['Instruments', 'alat musik tiup', 'Wind instrument family', 'Spoken', true, S],
+  ['Parts & materials', 'bilah', 'Single bronze key of a metallophone', 'Spoken', false, G],
+  ['Parts & materials', 'bambu', 'Bamboo, the material of the suling', 'On-screen text', false, S],
+  ['Parts & materials', 'tabuh', 'Mallet', 'On-screen text', true, G],
+  ['Playing', 'buka', 'Opening phrase played by one instrument', 'Spoken', false, G],
+  ['Playing', 'balungan', 'Core melody, the skeleton of the piece', 'Spoken', true, G],
+  ['Playing', 'suwuk', 'Closing of the piece', 'Spoken', false, G],
+];
+class Component extends DCLogic {
+  state = { cat: 'All', novelOnly: false, playing: false, frame: false, arch: 1 };
+  renderVals() {
+    const { cat, novelOnly, playing, frame, arch } = this.state;
+    const cats = ['All', 'Instruments', 'Parts & materials', 'Playing'];
+    const list = TERMS.filter(t => (cat === 'All' || t[0] === cat) && (!novelOnly || t[4]));
+    const groups = cats.slice(1).map(name => {
+      const items = list.filter(t => t[0] === name).map(t => ({ term: t[1], gloss: t[2], src: t[3], novel: t[4], img: t[5] }));
+      return { name, items, count: items.length };
+    }).filter(g => g.count);
+    return {
+      cats: cats.map(c => ({ label: c, pick: () => this.setState({ cat: c }), bg: c === cat ? 'var(--color-text)' : 'transparent', fg: c === cat ? 'var(--color-bg)' : 'var(--color-text)', border: c === cat ? 'var(--color-text)' : 'var(--color-divider)' })),
+      groups, empty: !groups.length, novelOnly,
+      toggleNovel: () => this.setState(s => ({ novelOnly: !s.novelOnly })),
+      clear: () => this.setState({ cat: 'All', novelOnly: false }),
+      hearLabel: playing ? 'Playing…' : 'Hear it',
+      hear: () => { this.setState({ playing: true }); clearTimeout(this.t); this.t = setTimeout(() => this.setState({ playing: false }), 1600); },
+      showCrop: !frame, showFrame: frame, cropSrc: frame ? 'frames/suling.png' : S,
+      pickCrop: () => this.setState({ frame: false }), pickFrame: () => this.setState({ frame: true }),
+      occurrences: [{ title: 'Gamelan part 2', time: '2:46', src: 'Spoken' }, { title: 'Gamelan part 1', time: '1:12', src: 'On-screen text' }],
+      archives: [['Arsip Hidup Batik Tulis', '19 terms · 2 recordings'], ['Living Archive - Gamelan', '53 terms · 3 recordings'], ['Tenun', 'Coming next']].map(([title, meta], i) => {
+        const on = i === arch, soon = i === 2;
+        return { title, meta, bg: on ? 'var(--color-text)' : 'transparent', fg: on ? 'var(--color-bg)' : soon ? 'var(--color-neutral-600)' : 'var(--color-text)', cursor: soon ? 'default' : 'pointer', pick: () => !soon && this.setState({ arch: i }) };
+      }),
+      steps: [['01', 'A master works and explains.', B], ['02', 'Muse Spark 1.3 watches and listens; SAM 3.1 finds the tool.', 'frames/suling.png'], ['03', 'A person accepts, edits, or rejects. Only accepted terms go public.', G]].map(([n, text, img]) => ({ n, text, img })),
+    };
+  }
+}
+</script>
+</body>
+</html>

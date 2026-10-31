@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/modernist-0c87f0f6-5282-4710-9d3b-b03593b10cc8/styles.css">
+<script src="_ds/modernist-0c87f0f6-5282-4710-9d3b-b03593b10cc8/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-neutral-300)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-600)}kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;padding:1px 5px;border:1px solid currentColor;line-height:1.4}@keyframes spin{to{transform:rotate(360deg)}}</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;gap:72px;padding:72px;align-items:flex-start">
+
+<!-- ============ S4 VALIDATION ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S4 · Studio validation · /studio/recordings/[id]</div>
+<div data-screen-label="S4 Studio validation" style="width:1440px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+
+  <div style="height:56px;display:flex;align-items:center;gap:32px;padding:0 24px;background:var(--color-text);color:var(--color-bg)">
+    <div style="font-weight:800;font-size:20px;letter-spacing:-.02em">empu<span style="color:var(--color-accent)">.</span> <span style="font-weight:400;font-size:14px;opacity:.7;margin-left:6px">Studio</span></div>
+    <nav style="display:flex;gap:24px;font-size:14px;margin-right:auto">
+      <a href="#" style="color:var(--color-bg);text-decoration:none;border-bottom:2px solid var(--color-accent);padding-bottom:2px">Recordings</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Upload</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Export</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Craft packs</a>
+    </nav>
+    <a href="#" style="color:var(--color-bg);font-size:14px;text-decoration:none;opacity:.75">Public site ↗</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;border-bottom:2px solid var(--color-divider)">
+    <div style="padding:24px;display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:12px;color:var(--color-neutral-700)">Living Archive · Gamelan</div>
+      <h1 style="margin:0;font-size:32px">Gamelan part 2</h1>
+      <div style="font-size:13px;color:var(--color-neutral-700)">Recorded by Syafiq · Own recording · Consent: Public</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,110px) 240px;border-left:2px solid var(--color-divider)">
+      <div style="padding:24px 16px;border-right:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Proposed</div><div style="font-size:32px;font-weight:800;line-height:1.1">{{ counts.proposed }}</div></div>
+      <div style="padding:24px 16px;border-right:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Accepted</div><div style="font-size:32px;font-weight:800;line-height:1.1">{{ counts.accepted }}</div></div>
+      <div style="padding:24px 16px;border-right:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Edited</div><div style="font-size:32px;font-weight:800;line-height:1.1">{{ counts.edited }}</div></div>
+      <div style="padding:24px 16px;border-right:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Rejected</div><div style="font-size:32px;font-weight:800;line-height:1.1">{{ counts.rejected }}</div></div>
+      <div style="padding:24px 16px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--color-neutral-700)">Reviewed</span><span style="font-weight:800">{{ counts.reviewed }} of {{ counts.total }}</span></div>
+        <div style="height:6px;background:var(--color-neutral-300)"><div style="height:6px;background:var(--color-accent);width:{{ counts.pct }}"></div></div>
+        <div style="display:flex;gap:4px;margin-left:-4px"><button class="btn btn-ghost" style="font-size:12px;color:var(--color-text)">Process map</button><button class="btn btn-ghost" style="font-size:12px;color:var(--color-text)">Export</button><button class="btn btn-ghost" style="font-size:12px">Withdraw consent</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:300px minmax(0,1fr) 500px;min-height:860px">
+
+    <div style="border-right:2px solid var(--color-divider);display:flex;flex-direction:column">
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--color-divider)">
+        <div class="seg" style="width:100%">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+            <label class="seg-opt" style="flex:1;font-size:12px;padding:7px 8px"><input type="radio" name="flt" checked="{{ f.on }}" onChange="{{ f.pick }}">{{ f.label }}</label>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700)"><span>All sources · sorted by time</span><span>{{ queueCount }} entries</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ queue }}" as="q" hint-placeholder-count="10">
+          <button onClick="{{ q.select }}" style="all:unset;cursor:pointer;display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--color-divider);background:{{ q.bg }};box-shadow:{{ q.bar }}">
+            <span style="display:flex;color:var(--color-neutral-800)">
+              <sc-if value="{{ q.isSpoken }}"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"></path></svg></sc-if>
+              <sc-if value="{{ q.isOnscreen }}"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg></sc-if>
+              <sc-if value="{{ q.isVisual }}"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+            </span>
+            <span style="display:flex;flex-direction:column;min-width:0">
+              <span style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.term }}</span>
+              <span style="font-size:11px;color:var(--color-neutral-700)">{{ q.srcLabel }} · <span style="font-family:ui-monospace,Menlo,monospace">{{ q.time }}</span></span>
+            </span>
+            <span style="font-size:11px;padding:2px 6px;border:1px solid {{ q.tagBorder }};background:{{ q.tagBg }};color:{{ q.tagFg }}">{{ q.statusLabel }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px;padding:24px;border-right:2px solid var(--color-divider)">
+      <div style="position:relative;aspect-ratio:16/9;background:var(--color-text)" class="grayscale">
+        <img src="frames/gamelan.png" alt="Recording frame" style="width:100%;height:100%;object-fit:contain">
+        <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:10px 14px;background:color-mix(in srgb,var(--color-text) 80%,transparent);color:var(--color-bg);font-size:12px;font-family:ui-monospace,Menlo,monospace">
+          <svg width="14" height="14" viewBox="0 0 24 24" style="fill:currentColor"><path d="m6 3 14 9-14 9z"></path></svg><span>{{ current.time }} / 3:00</span>
+          <div style="flex:1;height:2px;background:var(--color-neutral-600)"><div style="height:2px;width:{{ current.left }};background:var(--color-bg)"></div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;border-top:2px solid var(--color-divider)">
+        <div style="display:grid;grid-template-columns:120px minmax(0,1fr);border-bottom:1px solid var(--color-divider)">
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding:10px 0">Stage</div>
+          <div style="display:grid;grid-template-columns:22fr 50fr 22fr 6fr;font-size:12px">
+            <div style="padding:10px 8px;border-left:1px solid var(--color-divider)"><b>buka</b> · opening</div>
+            <div style="padding:10px 8px;border-left:1px solid var(--color-divider)"><b>balungan</b> · core melody</div>
+            <div style="padding:10px 8px;border-left:1px solid var(--color-divider);background:var(--color-surface)"><b>tiup</b> · wind</div>
+            <div style="padding:10px 4px;border-left:1px solid var(--color-divider);overflow:hidden">suwuk</div>
+          </div>
+        </div>
+        <sc-for list="{{ lanes }}" as="lane" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:120px minmax(0,1fr);border-bottom:1px solid var(--color-divider);height:36px">
+            <div style="font-size:12px;display:flex;align-items:center;gap:6px">{{ lane.label }}</div>
+            <div style="position:relative;border-left:1px solid var(--color-divider)">
+              <sc-for list="{{ lane.marks }}" as="m" hint-placeholder-count="3">
+                <button onClick="{{ m.select }}" title="{{ m.term }}" style="all:unset;cursor:pointer;position:absolute;top:12px;left:{{ m.left }};width:10px;height:10px;margin-left:-5px;background:{{ m.bg }};outline:{{ m.ring }};outline-offset:2px"></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:grid;grid-template-columns:120px minmax(0,1fr)">
+          <div></div>
+          <div style="display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--color-neutral-700);padding-top:6px"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span><span>2:30</span><span>3:00</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:20px;font-size:12px;color:var(--color-neutral-800);margin-top:auto;padding-top:16px;border-top:1px solid var(--color-divider)">
+        <span style="display:flex;gap:6px;align-items:center"><kbd>A</kbd> Accept</span>
+        <span style="display:flex;gap:6px;align-items:center"><kbd>E</kbd> Edit</span>
+        <span style="display:flex;gap:6px;align-items:center"><kbd>R</kbd> Reject</span>
+        <span style="display:flex;gap:6px;align-items:center"><kbd>K</kbd> Previous</span>
+        <span style="display:flex;gap:6px;align-items:center"><kbd>J</kbd> Next</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:12px;padding:24px 24px 0">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="grayscale" style="aspect-ratio:16/9;background:var(--color-text)"><img src="{{ current.img }}" alt="Evidence clip" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--color-neutral-700)">{{ current.range }} · Timed by speech recognition</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="grayscale" style="aspect-ratio:4/5;background:var(--color-surface);display:flex;align-items:center"><img src="{{ current.crop }}" alt="Tool crop" style="width:100%;height:100%;object-fit:contain"></div>
+          <div style="font-size:11px;color:var(--color-neutral-700);line-height:1.3">Original frame · cropped with SAM 3.1</div>
+        </div>
+      </div>
+
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--color-divider)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div>
+            <h2 style="margin:0;font-size:40px;line-height:1">{{ current.term }}</h2>
+            <div style="font-size:13px;color:var(--color-neutral-700);margin-top:6px">Also heard as <i>{{ current.variant }}</i></div>
+          </div>
+          <span style="font-size:12px;padding:3px 8px;white-space:nowrap;border:1px solid {{ current.tagBorder }};background:{{ current.tagBg }};color:{{ current.tagFg }}">{{ current.statusLabel }}</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px">
+          <span class="tag" style="border:1px solid var(--color-text);gap:6px;padding:3px 8px">{{ current.srcLabel }}</span>
+          <sc-if value="{{ current.novel }}"><span class="tag tag-accent" style="font-weight:600;padding:4px 8px">New term</span></sc-if>
+          <span style="color:var(--color-neutral-800)">{{ current.confDots }} {{ current.confLabel }}</span>
+        </div>
+      </div>
+
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--color-divider)">
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Said at {{ current.time }}</div>
+        <div style="font-size:19px;line-height:1.4;text-wrap:pretty">“{{ current.quote }}”</div>
+      </div>
+
+      <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--color-divider)">
+          <div style="padding:16px 24px;border-right:1px solid var(--color-divider)"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">English</div><div style="font-size:16px;font-weight:600;margin-top:4px">{{ current.en }}</div></div>
+          <div style="padding:16px 24px"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Bahasa Indonesia</div><div style="font-size:16px;font-weight:600;margin-top:4px">{{ current.id }}</div></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ editing }}">
+        <div style="margin:16px 24px;padding:16px;border:2px solid var(--color-accent);display:flex;flex-direction:column;gap:12px">
+          <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700);font-weight:800">Editing</div>
+          <div class="field"><label>Term</label><input class="input" defaultValue="{{ current.term }}"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="field"><label>English</label><input class="input" defaultValue="{{ current.en }}"></div>
+            <div class="field"><label>Bahasa Indonesia</label><input class="input" defaultValue="{{ current.id }}"></div>
+          </div>
+          <div style="display:flex;gap:8px"><button class="btn btn-primary" onClick="{{ saveEdit }}">Save as edited</button><button class="btn btn-secondary" onClick="{{ cancelEdit }}">Cancel</button></div>
+        </div>
+      </sc-if>
+
+      <div style="padding:16px 24px;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--color-neutral-800)">
+        <svg width="14" height="14" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.5"><path d="M20 6 9 17l-5-5"></path></svg>{{ current.validation }}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:8px;padding:0 24px 24px">
+        <button class="btn btn-primary" onClick="{{ accept }}" style="justify-content:flex-start;height:44px;gap:10px"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.5"><path d="M20 6 9 17l-5-5"></path></svg>Accept<kbd style="margin-left:auto">A</kbd></button>
+        <button class="btn btn-secondary" onClick="{{ edit }}" style="justify-content:flex-start;height:44px">Edit<kbd style="margin-left:auto">E</kbd></button>
+        <button class="btn btn-secondary" onClick="{{ reject }}" style="justify-content:flex-start;height:44px;color:var(--color-accent-700);border-color:var(--color-accent-700)">Reject<kbd style="margin-left:auto">R</kbd></button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;height:44px">Merge…</button>
+      </div>
+
+      <div style="margin-top:auto;padding:16px 24px;background:var(--color-surface);font-size:12px;color:var(--color-neutral-800)">
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:2px">Source</div>
+        Gamelan part 2 · recorded by Syafiq · own recording
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ S3 PROCESSING ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S3 · Job progress · /studio/jobs/[id]</div>
+<div data-screen-label="S3 Job progress" style="width:1440px;min-height:900px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:56px;display:flex;align-items:center;gap:32px;padding:0 24px;background:var(--color-text);color:var(--color-bg)">
+    <div style="font-weight:800;font-size:20px;letter-spacing:-.02em">empu<span style="color:var(--color-accent)">.</span> <span style="font-weight:400;font-size:14px;opacity:.7;margin-left:6px">Studio</span></div>
+    <nav style="display:flex;gap:24px;font-size:14px;margin-right:auto">
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Recordings</a>
+      <a href="#" style="color:var(--color-bg);text-decoration:none;border-bottom:2px solid var(--color-accent);padding-bottom:2px">Upload</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Export</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Craft packs</a>
+    </nav>
+    <a href="#" style="color:var(--color-bg);font-size:14px;text-decoration:none;opacity:.75">Public site ↗</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--color-divider);font-size:13px">
+    <div style="padding:14px 24px;border-right:1px solid var(--color-divider);color:var(--color-neutral-700)"><b style="color:var(--color-text)">01</b> Upload <span style="margin-left:6px">✓</span></div>
+    <div style="padding:14px 24px;border-right:1px solid var(--color-divider);background:var(--color-surface);box-shadow:inset 0 -3px 0 var(--color-accent)"><b>02</b> Process</div>
+    <div style="padding:14px 24px;color:var(--color-neutral-700)"><b>03</b> Review in Studio</div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 400px;flex:1">
+    <div style="padding:48px 56px;display:flex;flex-direction:column;gap:24px;border-right:2px solid var(--color-divider)">
+      <div>
+        <h1 style="margin:0;font-size:42px">Processing</h1>
+        <div style="font-size:15px;color:var(--color-neutral-800);margin-top:4px">Mode B · retimed with speech recognition · 1:12 elapsed</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>Step 4 of 6</span><span style="font-weight:800">58%</span></div>
+        <div style="height:8px;background:var(--color-neutral-300)"><div style="height:8px;width:58%;background:var(--color-accent)"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;border-top:2px solid var(--color-divider)">
+        <sc-for list="{{ stages }}" as="s" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:44px 28px minmax(0,1fr) 120px;gap:12px;align-items:start;padding:18px 0;border-bottom:1px solid var(--color-divider);opacity:{{ s.op }};background:{{ s.bg }}">
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-700);padding-top:3px;padding-left:8px">{{ s.n }}</span>
+            <span style="display:flex;padding-top:3px">
+              <sc-if value="{{ s.done }}"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:none;stroke:var(--color-text);stroke-width:2.5"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
+              <sc-if value="{{ s.running }}"><span style="width:14px;height:14px;margin:2px;border:2px solid var(--color-accent);border-right-color:transparent;border-radius:50%;animation:spin 900ms linear infinite"></span></sc-if>
+              <sc-if value="{{ s.pending }}"><span style="width:12px;height:12px;margin:3px;border:2px solid var(--color-neutral-500)"></span></sc-if>
+            </span>
+            <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:600">{{ s.label }}</span><span style="font-size:13px;color:var(--color-neutral-700)">{{ s.desc }}</span></span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;text-align:right;padding-top:3px;padding-right:8px">{{ s.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="btn btn-primary" disabled style="height:44px;min-width:200px;justify-content:flex-start">Open in Studio <svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;margin-left:auto"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></button>
+        <span style="font-size:13px;color:var(--color-neutral-700)">Available when all steps are done. You can leave this page; processing continues.</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div class="grayscale" style="aspect-ratio:16/9;background:var(--color-text)"><img src="frames/gamelan.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:0">
+        <h3 style="margin:0 0 16px;font-size:22px">Gamelan part 2</h3>
+        <div style="display:grid;grid-template-columns:120px 1fr;font-size:13px;border-top:2px solid var(--color-divider)">
+          <span style="padding:10px 0;border-bottom:1px solid var(--color-divider);color:var(--color-neutral-700)">Archive</span><span style="padding:10px 0;border-bottom:1px solid var(--color-divider)">Living Archive · Gamelan</span>
+          <span style="padding:10px 0;border-bottom:1px solid var(--color-divider);color:var(--color-neutral-700)">File</span><span style="padding:10px 0;border-bottom:1px solid var(--color-divider);font-family:ui-monospace,Menlo,monospace">part_02.mp4 · 3:00</span>
+          <span style="padding:10px 0;border-bottom:1px solid var(--color-divider);color:var(--color-neutral-700)">Contributor</span><span style="padding:10px 0;border-bottom:1px solid var(--color-divider)">Syafiq</span>
+          <span style="padding:10px 0;border-bottom:1px solid var(--color-divider);color:var(--color-neutral-700)">Source</span><span style="padding:10px 0;border-bottom:1px solid var(--color-divider)">Own recording</span>
+          <span style="padding:10px 0;border-bottom:1px solid var(--color-divider);color:var(--color-neutral-700)">Consent</span><span style="padding:10px 0;border-bottom:1px solid var(--color-divider)">Public · confirmed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ S2 UPLOAD ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">S2 · Upload · /studio/upload</div>
+<div data-screen-label="S2 Upload" style="width:1440px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:56px;display:flex;align-items:center;gap:32px;padding:0 24px;background:var(--color-text);color:var(--color-bg)">
+    <div style="font-weight:800;font-size:20px;letter-spacing:-.02em">empu<span style="color:var(--color-accent)">.</span> <span style="font-weight:400;font-size:14px;opacity:.7;margin-left:6px">Studio</span></div>
+    <nav style="display:flex;gap:24px;font-size:14px;margin-right:auto">
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Recordings</a>
+      <a href="#" style="color:var(--color-bg);text-decoration:none;border-bottom:2px solid var(--color-accent);padding-bottom:2px">Upload</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Export</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Craft packs</a>
+    </nav>
+    <a href="#" style="color:var(--color-bg);font-size:14px;text-decoration:none;opacity:.75">Public site ↗</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--color-divider);font-size:13px">
+    <div style="padding:14px 24px;border-right:1px solid var(--color-divider);background:var(--color-surface);box-shadow:inset 0 -3px 0 var(--color-accent)"><b>01</b> Upload</div>
+    <div style="padding:14px 24px;border-right:1px solid var(--color-divider);color:var(--color-neutral-700)"><b>02</b> Process</div>
+    <div style="padding:14px 24px;color:var(--color-neutral-700)"><b>03</b> Review in Studio</div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 520px">
+    <div style="padding:48px 56px;display:flex;flex-direction:column;gap:28px;border-right:2px solid var(--color-divider)">
+      <h1 style="margin:0;font-size:42px">Upload recording</h1>
+
+      <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end">
+        <div class="field"><label>Archive</label><select class="input" style="height:44px"><option>Living Archive - Gamelan</option><option>Arsip Hidup Batik Tulis</option></select></div>
+        <button class="btn btn-secondary" style="height:44px">+ Create new archive</button>
+      </div>
+
+      <div class="field">
+        <label>Video</label>
+        <div style="border:2px dashed var(--color-divider);background:var(--color-surface);padding:24px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:16px;align-items:center">
+          <div style="width:44px;height:44px;background:var(--color-text);color:var(--color-bg);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2"><path d="M12 3v12M7 8l5-5 5 5M21 21H3"></path></svg></div>
+          <div><div style="font-size:15px;font-weight:600;font-family:ui-monospace,Menlo,monospace">part_02.mp4</div><div style="font-size:12px;color:var(--color-neutral-700)">3:00 · 48.2 MB · ready to upload</div></div>
+          <button class="btn btn-ghost" style="color:var(--color-text);text-decoration:underline">Replace</button>
+        </div>
+      </div>
+
+      <div class="field"><label>Title</label><input class="input" style="height:44px" defaultValue="Gamelan part 2"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="field"><label>Contributor name</label><input class="input" style="height:44px" defaultValue="Syafiq"></div>
+        <div class="field"><label>Location</label><input class="input" style="height:44px" placeholder="Village, region"></div>
+      </div>
+      <div class="field">
+        <label>Source</label>
+        <div class="seg" style="width:100%">
+          <label class="seg-opt" style="flex:1;height:44px;padding:0 16px;font-size:14px"><input type="radio" name="src" defaultChecked="{{ true }}">Own recording</label>
+          <label class="seg-opt" style="flex:1;height:44px;padding:0 16px;font-size:14px"><input type="radio" name="src">CC BY video</label>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:48px 40px;display:flex;flex-direction:column;gap:20px;background:var(--color-surface)">
+      <div>
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700);font-weight:800">Required</div>
+        <h2 style="margin:4px 0 0;font-size:28px">Consent</h2>
+        <p style="font-size:14px;color:var(--color-neutral-800);margin:6px 0 0">Choose who may see entries from this recording. You can withdraw consent later from the Studio.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;border-top:2px solid var(--color-divider)">
+        <sc-for list="{{ consentOpts }}" as="c" hint-placeholder-count="3">
+          <label class="radio" style="align-items:flex-start;padding:16px 4px;border-bottom:1px solid var(--color-divider);gap:12px">
+            <input type="radio" name="consent" checked="{{ c.on }}" onChange="{{ c.pick }}"><span class="dot" style="margin-top:2px"></span>
+            <span style="display:flex;flex-direction:column"><b style="font-size:15px">{{ c.title }}</b><span style="font-size:13px;color:var(--color-neutral-800)">{{ c.desc }}</span></span>
+          </label>
+        </sc-for>
+      </div>
+      <div class="field"><label>Consent note</label><textarea class="input" style="min-height:72px;background:var(--color-bg)" placeholder="How and when permission was given"></textarea></div>
+      <label style="display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;cursor:pointer;padding:16px;border:2px solid {{ confirmBorder }};background:var(--color-bg)">
+        <input type="checkbox" checked="{{ confirmed }}" onChange="{{ toggleConfirm }}" style="width:18px;height:18px;margin:1px 0 0;accent-color:var(--color-accent)">
+        <span style="font-size:14px;line-height:1.45">I confirm the contributor granted permission to process this recording, and I recorded that consent.</span>
+      </label>
+      <button class="btn btn-primary" disabled="{{ notConfirmed }}" style="height:52px;font-size:16px;justify-content:flex-start;padding:0 20px">Upload and process <svg width="18" height="18" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;margin-left:auto"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></button>
+      <sc-if value="{{ notConfirmed }}"><div style="font-size:12px;color:var(--color-accent-700);margin-top:-8px">Tick the consent box to continue.</div></sc-if>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ STUDIO HOME ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-800)">Studio home · /studio</div>
+<div data-screen-label="Studio home" style="width:1440px;min-height:820px;background:var(--color-bg);display:flex;flex-direction:column;box-shadow:var(--shadow-md)">
+  <div style="height:56px;display:flex;align-items:center;gap:32px;padding:0 24px;background:var(--color-text);color:var(--color-bg)">
+    <div style="font-weight:800;font-size:20px;letter-spacing:-.02em">empu<span style="color:var(--color-accent)">.</span> <span style="font-weight:400;font-size:14px;opacity:.7;margin-left:6px">Studio</span></div>
+    <nav style="display:flex;gap:24px;font-size:14px;margin-right:auto">
+      <a href="#" style="color:var(--color-bg);text-decoration:none;border-bottom:2px solid var(--color-accent);padding-bottom:2px">Recordings</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Upload</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Export</a>
+      <a href="#" style="color:var(--color-bg);opacity:.75;text-decoration:none">Craft packs</a>
+    </nav>
+    <a href="#" style="color:var(--color-bg);font-size:14px;text-decoration:none;opacity:.75">Public site ↗</a>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(3,200px);border-bottom:2px solid var(--color-divider)">
+    <div style="padding:40px 56px 32px"><h1 style="margin:0;font-size:42px">Recordings</h1><div style="font-size:15px;color:var(--color-neutral-800)">AI proposes; a person decides. Review what's waiting.</div></div>
+    <div style="padding:32px 20px;border-left:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Waiting for review</div><div style="font-size:42px;font-weight:800;line-height:1.1;color:var(--color-accent-700)">13</div></div>
+    <div style="padding:32px 20px;border-left:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Validated terms</div><div style="font-size:42px;font-weight:800;line-height:1.1">72</div></div>
+    <div style="padding:32px 20px;border-left:1px solid var(--color-divider)"><div style="font-size:12px;color:var(--color-neutral-700)">Archives</div><div style="font-size:42px;font-weight:800;line-height:1.1">2</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;flex:1">
+    <div style="padding:32px 56px">
+      <table class="table">
+        <thead><tr><th>Recording</th><th>Archive</th><th>Status</th><th style="width:200px">Reviewed</th><th>Consent</th><th></th></tr></thead>
+        <tbody>
+          <sc-for list="{{ recordings }}" as="r" hint-placeholder-count="4">
+            <tr>
+              <td style="padding:14px 8px"><div style="font-weight:600">{{ r.title }}</div><div style="font-size:12px;color:var(--color-neutral-700)">{{ r.meta }}</div></td>
+              <td style="font-size:13px">{{ r.archive }}</td>
+              <td><span style="font-size:11px;padding:2px 6px;border:1px solid {{ r.tagBorder }};background:{{ r.tagBg }};color:{{ r.tagFg }}">{{ r.status }}</span></td>
+              <td><div style="display:flex;gap:8px;align-items:center;font-size:12px;font-family:ui-monospace,Menlo,monospace"><div style="flex:1;height:4px;background:var(--color-neutral-300)"><div style="height:4px;background:var(--color-text);width:{{ r.pct }}"></div></div>{{ r.reviewed }}</div></td>
+              <td style="font-size:13px">{{ r.consent }}</td>
+              <td style="text-align:right"><button class="btn btn-secondary" style="font-size:13px">{{ r.action }} →</button></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+    <div style="border-left:2px solid var(--color-divider);display:flex;flex-direction:column">
+      <button class="btn" style="all:unset;cursor:pointer;padding:24px;background:var(--color-accent);color:var(--color-bg);display:flex;flex-direction:column;gap:4px"><b style="font-size:20px">Upload recording →</b><span style="font-size:13px">A narrated work video, up to 75 minutes.</span></button>
+      <button style="all:unset;cursor:pointer;padding:24px;border-bottom:1px solid var(--color-divider);display:flex;flex-direction:column;gap:4px"><b style="font-size:18px">Export</b><span style="font-size:13px;color:var(--color-neutral-700)">JSON, CSV, ELAN or a ZIP of the archive.</span></button>
+      <button style="all:unset;cursor:pointer;padding:24px;border-bottom:1px solid var(--color-divider);display:flex;flex-direction:column;gap:4px"><b style="font-size:18px">Craft packs</b><span style="font-size:13px;color:var(--color-neutral-700)">Stages and terms each craft is matched against.</span></button>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SRC = { spoken: 'Spoken', onscreen: 'On-screen text', visual: 'Visual only' };
+const STATUS = {
+  proposed: { label: 'Proposed', bg: 'transparent', fg: 'var(--color-text)', border: 'var(--color-text)' },
+  accepted: { label: 'Accepted', bg: 'var(--color-text)', fg: 'var(--color-bg)', border: 'var(--color-text)' },
+  edited: { label: 'Edited', bg: 'var(--color-neutral-300)', fg: 'var(--color-neutral-900)', border: 'var(--color-neutral-300)' },
+  rejected: { label: 'Rejected', bg: 'var(--color-accent-100)', fg: 'var(--color-accent-800)', border: 'var(--color-accent-300)' },
+};
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const G = 'frames/gamelan.png';
+const ENTRIES = [
+  { term: 'buka', variant: 'bukaan', source: 'spoken', t: 8, conf: 3, novel: false, status: 'accepted', quote: 'Gending selalu dimulai dengan buka, dimainkan oleh satu instrumen.', en: 'Opening phrase', id: 'Frasa pembuka gending' },
+  { term: 'gamelan', variant: 'gamelan', source: 'onscreen', t: 14, conf: 3, novel: false, status: 'accepted', quote: 'Gamelan', en: 'Javanese percussion ensemble', id: 'Ansambel musik tradisional Jawa' },
+  { term: 'saron', variant: 'saron barung', source: 'spoken', t: 41, conf: 3, novel: false, status: 'accepted', quote: 'Saron ini bilahnya dari perunggu, dipukul dengan tabuh kayu.', en: 'Bronze metallophone', id: 'Metalofon bilah perunggu' },
+  { term: 'balungan', variant: 'balungan', source: 'spoken', t: 52, conf: 2, novel: true, status: 'accepted', quote: 'Yang dimainkan saron disebut balungan, kerangka lagunya.', en: 'Core melody', id: 'Kerangka melodi' },
+  { term: 'bonang', variant: 'bonang barung', source: 'visual', t: 67, conf: 2, novel: false, status: 'proposed', quote: '(shown, not named) row of small kettle gongs', en: 'Kettle-gong chime', id: 'Deretan gong kecil' },
+  { term: 'kendang', variant: 'kendhang', source: 'spoken', t: 88, conf: 3, novel: false, status: 'edited', quote: 'Kendang yang mengatur tempo semua pemain.', en: 'Hand drum, sets tempo', id: 'Gendang pengatur tempo' },
+  { term: 'tabuh', variant: 'pemukul', source: 'onscreen', t: 104, conf: 2, novel: true, status: 'proposed', quote: 'tabuh', en: 'Mallet', id: 'Alat pemukul' },
+  { term: 'slenthem', variant: 'slentem', source: 'spoken', t: 121, conf: 1, novel: true, status: 'proposed', quote: 'Slenthem suaranya lebih rendah dan panjang.', en: 'Low-register metallophone', id: 'Metalofon nada rendah' },
+  { term: 'gambang', variant: 'gambang kayu', source: 'visual', t: 139, conf: 1, novel: false, status: 'rejected', quote: '(shown, not named) wooden xylophone', en: 'Wooden xylophone', id: 'Gambang kayu' },
+  { term: 'alat musik tiup', variant: 'alat musik tiup', source: 'spoken', t: 166, conf: 3, novel: true, status: 'proposed', quote: 'Suling merupakan alat dari keluarga alat musik tiup yang terbuat dari bambu.', en: 'Wind instrument family', id: 'Kelompok instrumen tiup', img: 'frames/suling.png', crop: 'frames/suling-crop.png' },
+  { term: 'bambu', variant: 'pring', source: 'onscreen', t: 168, conf: 3, novel: false, status: 'proposed', quote: 'yang terbuat dari bambu.', en: 'Bamboo', id: 'Bambu', img: 'frames/suling.png', crop: 'frames/suling-crop.png' },
+  { term: 'gong', variant: 'gong ageng', source: 'spoken', t: 174, conf: 3, novel: false, status: 'accepted', quote: 'Gong menandai akhir satu putaran.', en: 'Large hanging gong', id: 'Gong besar' },
+];
+const STAGES = [
+  ['Preparing video', 'Converting to a standard format and reading the audio track.', 'done', '41.1s'],
+  ['Cutting 75-second segments', 'Splitting the video so each part can be watched in full.', 'done', '9.0s'],
+  ['Muse Spark watches and listens', 'Proposing terms from speech, on-screen text and what is shown.', 'done', '18.4s'],
+  ['Matching terms to the craft pack', 'Linking each term to a known stage and flagging new terms.', 'running', '0:04'],
+  ['SAM 3.1 finds the tools', 'Cropping the named tool from the original frame.', 'pending', '—'],
+  ['Cutting evidence clips', 'Saving the exact moment each term was said or shown.', 'pending', '—'],
+];
+
+class Component extends DCLogic {
+  state = { entries: ENTRIES.map((e, i) => ({ ...e, i })), sel: 9, filter: 'all', editing: false, consent: 'public', confirmed: false };
+
+  componentDidMount() {
+    this.onKey = e => {
+      if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+      const k = e.key.toLowerCase();
+      if (k === 'a') this.setStatus('accepted');
+      else if (k === 'r') this.setStatus('rejected');
+      else if (k === 'e') this.setState({ editing: true });
+      else if (k === 'j') this.move(1);
+      else if (k === 'k') this.move(-1);
+    };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+
+  visible() {
+    const f = this.state.filter;
+    return this.state.entries.filter(e => f === 'all' || (f === 'novel' ? e.novel : e.status === f));
+  }
+  move(d) {
+    const v = this.visible(); const idx = v.findIndex(e => e.i === this.state.sel);
+    const n = v[Math.max(0, Math.min(v.length - 1, idx + d))]; if (n) this.setState({ sel: n.i, editing: false });
+  }
+  setStatus(st) {
+    this.setState(s => ({ editing: false, entries: s.entries.map(e => e.i === s.sel ? { ...e, status: st } : e) }), () => {
+      const next = this.state.entries.find(e => e.i > this.state.sel && e.status === 'proposed') || this.state.entries.find(e => e.status === 'proposed');
+      if (next) this.setState({ sel: next.i });
+    });
+  }
+
+  renderVals() {
+    const { entries, sel, filter, editing } = this.state;
+    const c = { proposed: 0, accepted: 0, edited: 0, rejected: 0 };
+    entries.forEach(e => c[e.status]++);
+    const total = entries.length, reviewed = total - c.proposed;
+    const deco = e => {
+      const st = STATUS[e.status];
+      return { ...e, srcLabel: SRC[e.source], time: fmt(e.t), statusLabel: st.label, tagBg: st.bg, tagFg: st.fg, tagBorder: st.border,
+        isSpoken: e.source === 'spoken', isOnscreen: e.source === 'onscreen', isVisual: e.source === 'visual',
+        left: (e.t / 180 * 100).toFixed(2) + '%', select: () => this.setState({ sel: e.i, editing: false }) };
+    };
+    const cur = deco(entries[sel]);
+    const lanes = ['spoken', 'onscreen', 'visual'].map(src => ({
+      label: SRC[src],
+      marks: entries.filter(e => e.source === src).map(e => {
+        const d = deco(e); const on = e.i === sel;
+        return { ...d, bg: on ? 'var(--color-accent)' : e.status === 'rejected' ? 'var(--color-neutral-400)' : 'var(--color-text)', ring: on ? '2px solid var(--color-accent)' : 'none' };
+      }),
+    }));
+    const flt = [['all', 'All'], ['proposed', 'Proposed'], ['accepted', 'Accepted'], ['novel', 'New']];
+    return {
+      counts: { ...c, total, reviewed, pct: (reviewed / total * 100) + '%' },
+      filters: flt.map(([k, label]) => ({ label, on: filter === k, pick: () => this.setState({ filter: k }) })),
+      queue: this.visible().map(e => { const d = deco(e); const on = e.i === sel; return { ...d, bg: on ? 'var(--color-surface)' : 'transparent', bar: on ? 'inset 3px 0 0 var(--color-accent)' : 'none' }; }),
+      queueCount: this.visible().length,
+      current: { ...cur, img: cur.img || G, crop: cur.crop || G, range: `${fmt(cur.t)}–${fmt(cur.t + 1)}`,
+        confDots: '●●●'.slice(0, cur.conf) + '○○○'.slice(cur.conf), confLabel: ['', 'Low confidence', 'Medium confidence', 'High confidence'][cur.conf],
+        validation: cur.status === 'proposed' ? 'Proposed by AI · not yet reviewed' : cur.status === 'rejected' ? 'Rejected by the documenter' : 'Validated by the documenter' },
+      lanes, editing, notEditing: !editing,
+      accept: () => this.setStatus('accepted'), reject: () => this.setStatus('rejected'),
+      edit: () => this.setState({ editing: true }), cancelEdit: () => this.setState({ editing: false }), saveEdit: () => this.setStatus('edited'),
+      stages: STAGES.map(([label, desc, st, time], i) => ({ n: String(i + 1).padStart(2, '0'), label, desc, time, done: st === 'done', running: st === 'running', pending: st === 'pending', op: st === 'pending' ? 0.55 : 1, bg: st === 'running' ? 'var(--color-surface)' : 'transparent' })),
+      consentOpts: [['public', 'Public', 'Accepted entries can appear in the public dictionary.'], ['community', 'Community', 'Kept out of the public dictionary; visible in the studio.'], ['private', 'Private', 'Restricted knowledge; never public.']]
+        .map(([k, title, desc]) => ({ title, desc, on: this.state.consent === k, pick: () => this.setState({ consent: k }) })),
+      confirmed: this.state.confirmed, notConfirmed: !this.state.confirmed,
+      confirmBorder: this.state.confirmed ? 'var(--color-text)' : 'var(--color-accent)',
+      toggleConfirm: () => this.setState(s => ({ confirmed: !s.confirmed })),
+      recordings: [
+        ['Gamelan part 3', 'part_03.mp4 · 3:00 · today', 'Living Archive · Gamelan', 'processing', '0 / —', 0, 'Public', 'View progress'],
+        ['Gamelan part 2', 'part_02.mp4 · 3:00 · today', 'Living Archive · Gamelan', 'review', `${reviewed} / ${total}`, reviewed / total, 'Public', 'Review'],
+        ['Proses nyanting batik tulis', 'CC BY · TEBAK teras batik kaindra', 'Arsip Hidup Batik Tulis', 'review', '13 / 19', 13 / 19, 'Public', 'Review'],
+        ['Macam canting dalam batik tulis', 'CC BY · Batik Education', 'Arsip Hidup Batik Tulis', 'done', '19 / 19', 1, 'Public', 'Open'],
+        ['Gamelan part 1', 'part_01.mp4 · 3:00 · 2 days ago', 'Living Archive · Gamelan', 'done', '41 / 41', 1, 'Community', 'Open'],
+      ].map(([title, meta, archive, st, rv, p, consent, action]) => {
+        const m = { processing: ['Processing', 'transparent', 'var(--color-neutral-800)', 'var(--color-neutral-500)'], review: ['Needs review', 'var(--color-accent-100)', 'var(--color-accent-800)', 'var(--color-accent-300)'], done: ['Reviewed', 'var(--color-text)', 'var(--color-bg)', 'var(--color-text)'] }[st];
+        return { title, meta, archive, status: m[0], tagBg: m[1], tagFg: m[2], tagBorder: m[3], reviewed: rv, pct: (p * 100) + '%', consent, action };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>
