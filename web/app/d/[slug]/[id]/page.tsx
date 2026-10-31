@@ -5,11 +5,13 @@ import { CropView } from "@/components/CropView";
 import { EvidenceClip } from "@/components/EvidenceClip";
 import { NovelBadge } from "@/components/NovelBadge";
 import { OccurrenceList } from "@/components/OccurrenceList";
+import { AskTrigger } from "@/components/AskTrigger";
 import { PronounceButton } from "@/components/PronounceButton";
 import { PublicFooter } from "@/components/PublicFooter";
 import { PublicHeader } from "@/components/PublicHeader";
 import { SourceBadge } from "@/components/SourceBadge";
 import { ValidationLabel } from "@/components/ValidationLabel";
+import { termQuestion } from "@/lib/askUi";
 import { CATEGORY_LABEL, COPY } from "@/lib/copy";
 import { formatTime } from "@/lib/time";
 import type { Archive, Entry, Source } from "@/lib/types";
@@ -126,7 +128,16 @@ export default async function EntryPage({
               ) : null}
             </div>
           </div>
-          <PronounceButton audioUrl={occ?.audio_url ?? null} className="justify-self-start" />
+          <div className="flex flex-wrap items-center gap-2 justify-self-start">
+            <PronounceButton audioUrl={occ?.audio_url ?? null} />
+            <AskTrigger
+              question={termQuestion(e.term)}
+              autoSend
+              className="btn btn-secondary h-11"
+            >
+              {COPY.ask.askTerm}
+            </AskTrigger>
+          </div>
         </div>
 
         {/* Evidence */}

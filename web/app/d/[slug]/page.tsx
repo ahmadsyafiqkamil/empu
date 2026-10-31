@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AskTrigger } from "@/components/AskTrigger";
 import { ClearFiltersButton, DictionaryFilters } from "@/components/DictionaryFilters";
 import { EntryRow } from "@/components/EntryRow";
 import { PublicFooter } from "@/components/PublicFooter";
@@ -109,9 +110,7 @@ export default async function DictionaryPage({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link href={`/d/${slug}/ask`} className="btn btn-secondary h-10">
-              {COPY.ask.askArchive}
-            </Link>
+            <AskTrigger className="btn btn-secondary h-10">{COPY.ask.askArchive}</AskTrigger>
             <Link href="/map" className="btn btn-secondary h-10">
               {COPY.ui.processMap}
             </Link>
