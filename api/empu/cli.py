@@ -13,12 +13,15 @@ import typer
 import yaml
 from sqlmodel import Session, col, func, select
 
+from empu.ask import collect_entries
+from empu.ask.index import build_index
 from empu.cache import ResponseCache
 from empu.config import REPO_ROOT, Settings, get_settings
 from empu.db import init_db, make_engine
 from empu.enums import AccessLevel, ContributorRole, PipelineMode, Source, SourceKind
 from empu.evaluation.baseline import baseline_against_pack, parse_vtt
 from empu.evaluation.gold import load_gold
+from empu.evaluation.retrieval import evaluate_retrieval, load_questions
 from empu.evaluation.runner import pred_from_db, run_clip, write_results
 from empu.intake import (
     IntakeError,
@@ -472,3 +475,36 @@ def draft_gold(
         writer.writeheader()
         writer.writerows(rows)
     typer.echo(f"wrote {out}: {len(rows)} rows (annotator=DRAFT)")
+
+
+@eval_app.command("retrieval")
+def eval_retrieval(
+    archive: str = typer.Option(..., "--archive", help="Archive slug."),
+    questions: Path = typer.Option(..., "--questions", exists=True, dir_okay=False),
+    scope: str = typer.Option("public", "--scope", help="public | studio"),
+    k: int = typer.Option(4, "--k", help="How many ranked rows count as retrieved."),
+) -> None:
+    """Measure how often the entries a question needs survive ranking."""
+    settings = get_settings()
+    with Session(_engine(settings)) as session:
+        arch = session.exec(select(Archive).where(Archive.slug == archive)).first()
+        if arch is None:
+            typer.echo(f"error: no archive with slug {archive!r}", err=True)
+            raise typer.Exit(2)
+        try:
+            pairs = collect_entries(session, arch.id, scope)
+        except ValueError as e:
+            typer.echo(f"error: {e}", err=True)
+            raise typer.Exit(2) from e
+        rows = build_index(pairs)
+    if not rows:
+        typer.echo(f"error: no entries for scope {scope!r} in {archive!r}", err=True)
+        raise typer.Exit(2)
+    report = evaluate_retrieval(load_questions(questions), rows, k=k)
+    typer.echo(
+        f"rows={report.n_rows} k={report.k} questions={report.n_questions} "
+        f"question_recall={report.question_recall:.2f} term_recall={report.term_recall:.2f}"
+    )
+    for miss in report.misses:
+        missing = "|".join(miss["missing"])
+        typer.echo(f"miss: {miss['question']} missing={missing} rank={miss['rank']}")
