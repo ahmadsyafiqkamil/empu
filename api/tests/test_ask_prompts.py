@@ -63,7 +63,7 @@ def test_prompt_is_deterministic():
 
 
 def test_prompt_version_is_pinned():
-    assert ASK_PROMPT_VERSION == "ask-v1"
+    assert ASK_PROMPT_VERSION == "ask-v2"
 
 
 def test_format_rows_is_one_line_per_entry():
@@ -72,6 +72,11 @@ def test_format_rows_is_one_line_per_entry():
     assert len(lines) == 2
     assert lines[0].startswith("- id=1 |")
     assert "varian=kain putih" in lines[1]
+
+
+def test_prompt_caps_citations():
+    prompt = build_prompt([_row(1, "canting")], "q", pack_name="p", scope="public")
+    assert "maksimal 4" in prompt
 
 
 def test_response_schema_is_strict_and_pins_the_four_keys():

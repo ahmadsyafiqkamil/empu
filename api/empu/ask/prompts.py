@@ -9,7 +9,12 @@ from __future__ import annotations
 
 from empu.ask.index import IndexEntry
 
-ASK_PROMPT_VERSION = "ask-v1"
+ASK_PROMPT_VERSION = "ask-v2"
+
+# A broad question ("how do I do batik") used to cite 24 terms: the answer became a
+# dump of the archive with a sentence on top. Four is enough to carry a sentence and
+# still fit on one screen.
+MAX_CITATIONS = 4
 
 RESPONSE_SCHEMA: dict = {
     "type": "object",
@@ -28,7 +33,7 @@ TEMPLATE = """Kamu penjaga kamus keahlian {pack_name}. Kamu menjawab HANYA dari 
 ATURAN
 1. Jawab dalam bahasa yang dipakai penanya.
 2. Pakai hanya istilah di daftar. Jangan menambah pengetahuan dari luar daftar.
-3. Setiap klaim harus ditopang id istilah dari daftar. Tulis id-nya di entry_ids.
+3. Setiap klaim harus ditopang id istilah dari daftar. Tulis id-nya di entry_ids, maksimal 4, pilih yang paling menopang jawaban.
 4. Kalau daftar tidak menjawab pertanyaan, isi insufficient=true dan katakan terus terang bahwa arsip belum memuatnya. Jangan menebak.
 5. Hormati label sumber: speech = diucapkan, on_screen_text = tertulis di layar, visual_only = hanya terlihat. Jangan menulis "dia mengatakan" untuk yang hanya terlihat.
 6. Jangan mengarang waktu atau kutipan.

@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from sqlmodel import Session, select
 
 from empu.ask.index import IndexEntry, build_index, prefilter
-from empu.ask.prompts import ASK_PROMPT_VERSION, build_prompt
+from empu.ask.prompts import ASK_PROMPT_VERSION, MAX_CITATIONS, build_prompt
 from empu.cache import ResponseCache
 from empu.enums import ConsentStatus, EntryStatus, OccurrenceStatus
 from empu.meta_client import AnalyzeResult
@@ -219,6 +219,8 @@ def answer_question(
             continue
         if entry_id in rows_by_id and entry_id not in cited_ids:
             cited_ids.append(entry_id)
+    # Keep the model's own order: the first ids are the ones it leaned on.
+    cited_ids = cited_ids[:MAX_CITATIONS]
 
     evidence = _hydrate(session, rows_by_id, cited_ids, scope=scope)
 

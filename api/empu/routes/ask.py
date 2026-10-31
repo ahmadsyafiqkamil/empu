@@ -6,6 +6,7 @@ needs the studio key and sees entries that are still under review.
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 
 import httpx
@@ -26,6 +27,8 @@ from empu.serialize import entry_list_item, occurrence_out
 
 router = APIRouter()
 studio_router = APIRouter()
+
+log = logging.getLogger("empu.ask")
 
 _MODELS: dict[str, Callable[[str], AnalyzeResult]] = {}
 
@@ -138,6 +141,7 @@ def _run(
     except (AskError, MetaAPIError, httpx.HTTPError, RuntimeError) as exc:
         # RuntimeError covers an unset Meta API key on a keyless deploy: a judge
         # should read a calm message, not a traceback.
+        log.exception("ask failed for archive %s (scope %s)", archive.id, scope)
         raise HTTPException(502, "answer unavailable") from exc
     return _to_out(session, result)
 

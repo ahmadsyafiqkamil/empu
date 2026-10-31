@@ -33,3 +33,20 @@ Akibat untuk implementasi:
 ## Kesimpulan
 
 Rencana berjalan tanpa perubahan desain. Hanya angka default `max_output_tokens` yang dinaikkan, dan `RESPONSE_SCHEMA` di skrip ini sudah identik dengan yang akan dipakai `api/empu/ask/prompts.py`.
+
+## Tindak lanjut 31 Okt: `incomplete` pada pertanyaan luas
+
+Pertanyaan "jelaskan kepada saya bagaimana cara untuk membatik" gagal dengan 502 kira-kira satu dari tiga percobaan. Galat aslinya:
+
+```
+MetaAPIError: Meta API error 200: response status incomplete: {'reason': 'max_output_tokens'}
+```
+
+Sebabnya: Muse menghabiskan 1.327–2.075 token reasoning sebelum menulis jawaban, dan anggaran 2.000 kadang habis lebih dulu. Anggaran 2.000 cukup untuk probe dua baris, tidak untuk prompt arsip sungguhan (29 baris, 10.869 karakter).
+
+Dua perubahan:
+
+1. `respond_text` default 6.000 token, dan bila status `incomplete` dengan alasan `max_output_tokens`, ia mencoba **sekali** lagi dengan 12.000. Alasan `incomplete` lain (mis. `content_filter`) tidak diulang.
+2. `MAX_CITATIONS = 4` (prompt `ask-v2`). Sebelumnya pertanyaan luas menyitir 24 istilah — jawaban 50 kata dengan 24 kartu bukti bukan jawaban, melainkan membuang seluruh kamus ke layar.
+
+Hasil sesudahnya, pertanyaan yang sama lima kali berturut-turut: 5/5 `200`, 4 kartu bukti, tanpa galat di log. Pertanyaan Jawa tetap dijawab dalam Jawa (`lang: jv`), pertanyaan di luar arsip tetap `refused` tanpa bukti.

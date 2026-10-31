@@ -101,7 +101,7 @@ def test_public_ask_returns_answer_and_evidence_with_media_urls(api, session):
     assert body["answer"] == "Canting adalah alat pena tembaga."
     assert body["lang"] == "id"
     assert body["refused"] is False
-    assert body["prompt_version"] == "ask-v1"
+    assert body["prompt_version"] == "ask-v2"
     assert body["cached"] is False
     evidence = body["evidence"]
     assert len(evidence) == 1

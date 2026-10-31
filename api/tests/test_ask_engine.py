@@ -585,3 +585,33 @@ def test_making_an_entry_private_hides_a_previously_cached_answer(session, tmp_p
     session.commit()
 
     assert ask(session, tmp_path, a, fake_model(payload)).refused is True
+
+
+def test_evidence_is_capped_to_the_few_terms_that_carry_the_answer(session, tmp_path):
+    """A broad question must not dump the whole archive: 24 cards is not an answer."""
+    a = make_archive(session, slug="broad")
+    rec = make_recording(session, a)
+    ids = []
+    for name in ("canting", "mori", "malam", "nglorod", "nembok", "cecek"):
+        entry = _entry(session, a, name)
+        _occ(session, entry, rec)
+        ids.append(entry.id)
+
+    result = ask(
+        session,
+        tmp_path,
+        a,
+        fake_model(
+            {
+                "answer": "Begini cara membatik.",
+                "lang": "id",
+                "entry_ids": ids,
+                "insufficient": False,
+            }
+        ),
+        question="bagaimana cara membatik?",
+    )
+
+    assert result.refused is False
+    assert len(result.evidence) == 4
+    assert result.entry_ids == ids[:4]

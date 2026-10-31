@@ -36,8 +36,12 @@ def test_upload_sends_auth_and_purpose(video):
 
 @respx.mock
 def test_retries_429_then_succeeds(video):
-    route = respx.post(f"{BASE}/files").mock(side_effect=[
-        httpx.Response(429, text="slow down"), httpx.Response(200, json={"id": "file_2"})])
+    route = respx.post(f"{BASE}/files").mock(
+        side_effect=[
+            httpx.Response(429, text="slow down"),
+            httpx.Response(200, json={"id": "file_2"}),
+        ]
+    )
     assert client().upload_file(video) == "file_2"
     assert route.call_count == 2
 
@@ -61,8 +65,9 @@ def test_no_retry_on_400(video):
 
 @respx.mock
 def test_retries_transport_error(video):
-    route = respx.post(f"{BASE}/files").mock(side_effect=[
-        httpx.ConnectError("boom"), httpx.Response(200, json={"id": "file_3"})])
+    route = respx.post(f"{BASE}/files").mock(
+        side_effect=[httpx.ConnectError("boom"), httpx.Response(200, json={"id": "file_3"})]
+    )
     assert client().upload_file(video) == "file_3"
     assert route.call_count == 2
 
@@ -98,8 +103,13 @@ def test_analyze_video_with_schema_sets_text_format():
 
 @respx.mock
 def test_analyze_video_unparseable_text_keeps_raw():
-    raw = {"status": "completed", "output": [{"type": "message", "content": [
-        {"type": "output_text", "text": "sorry, no json"}]}], "usage": {}}
+    raw = {
+        "status": "completed",
+        "output": [
+            {"type": "message", "content": [{"type": "output_text", "text": "sorry, no json"}]}
+        ],
+        "usage": {},
+    }
     respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
     res = client().analyze_video("f", "P", model="m")
     assert res.parsed is None and "no JSON" in res.parse_error and res.raw == raw
@@ -107,8 +117,12 @@ def test_analyze_video_unparseable_text_keeps_raw():
 
 @respx.mock
 def test_incomplete_response_raises_without_retry():
-    route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(
-        200, json={"status": "incomplete", "incomplete_details": {"reason": "max_output_tokens"}}))
+    route = respx.post(f"{BASE}/responses").mock(
+        return_value=httpx.Response(
+            200,
+            json={"status": "incomplete", "incomplete_details": {"reason": "max_output_tokens"}},
+        )
+    )
     with pytest.raises(MetaAPIError, match="incomplete"):
         client().analyze_video("f", "P", model="m")
     assert route.call_count == 1
@@ -123,7 +137,7 @@ def test_output_text_and_extract_json():
         "output": [
             {
                 "type": "message",
-                "content": [{"type": "output_text", "text": "```json\n{\"a\": 1}\n```"}],
+                "content": [{"type": "output_text", "text": '```json\n{"a": 1}\n```'}],
             }
         ]
     }
@@ -176,3 +190,58 @@ def test_respond_text_without_schema_omits_text_format():
     route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
     client().respond_text("P", model="m")
     assert "text" not in json.loads(route.calls.last.request.content)
+
+
+@respx.mock
+def test_respond_text_escalates_budget_when_the_answer_is_incomplete():
+    raw_ok = load_fixture("ask/probe.raw.json")
+    incomplete = {
+        "status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "output": [],
+        "usage": {"output_tokens": 2000},
+    }
+    route = respx.post(f"{BASE}/responses").mock(
+        side_effect=[httpx.Response(200, json=incomplete), httpx.Response(200, json=raw_ok)]
+    )
+
+    res = client().respond_text("P", model="m", max_output_tokens=2000)
+
+    assert route.call_count == 2
+    first = json.loads(route.calls[0].request.content)["max_output_tokens"]
+    second = json.loads(route.calls[1].request.content)["max_output_tokens"]
+    assert first == 2000
+    assert second > first
+    assert res.parsed["insufficient"] is False
+
+
+@respx.mock
+def test_respond_text_gives_up_after_one_escalation():
+    incomplete = {
+        "status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "output": [],
+        "usage": {},
+    }
+    route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=incomplete))
+
+    with pytest.raises(MetaAPIError, match="incomplete"):
+        client().respond_text("P", model="m", max_output_tokens=2000)
+
+    assert route.call_count == 2
+
+
+@respx.mock
+def test_respond_text_does_not_escalate_on_other_incomplete_reasons():
+    blocked = {
+        "status": "incomplete",
+        "incomplete_details": {"reason": "content_filter"},
+        "output": [],
+        "usage": {},
+    }
+    route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=blocked))
+
+    with pytest.raises(MetaAPIError, match="incomplete"):
+        client().respond_text("P", model="m", max_output_tokens=2000)
+
+    assert route.call_count == 1

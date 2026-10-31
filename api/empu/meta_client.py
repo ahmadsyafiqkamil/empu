@@ -99,8 +99,7 @@ def extract_json(text: str) -> dict:
     return first
 
 
-_SAM_BOX = re.compile(
-    r"<\|box;x1=([\d.]+);y1=([\d.]+);x2=([\d.]+);y2=([\d.]+);w=(\d+);h=(\d+)\|>")
+_SAM_BOX = re.compile(r"<\|box;x1=([\d.]+);y1=([\d.]+);x2=([\d.]+);y2=([\d.]+);w=(\d+);h=(\d+)\|>")
 _IMAGE_MIME = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png"}
 
 
@@ -122,9 +121,15 @@ def _retryable(exc: BaseException) -> bool:
 
 
 class MetaClient:
-    def __init__(self, api_key: str, base_url: str = "https://api.meta.ai/v1", *,
-                 http: httpx.Client | None = None, max_retries: int = 4,
-                 backoff_s: float = 2.0) -> None:
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str = "https://api.meta.ai/v1",
+        *,
+        http: httpx.Client | None = None,
+        max_retries: int = 4,
+        backoff_s: float = 2.0,
+    ) -> None:
         self._http = http or httpx.Client(timeout=httpx.Timeout(900, connect=30))
         self._base = base_url.rstrip("/")
         self._headers = {"Authorization": f"Bearer {api_key}"}
@@ -145,13 +150,18 @@ class MetaClient:
         wait = (
             wait_exponential(multiplier=self._backoff_s, max=60) if self._backoff_s else wait_none()
         )
-        retrying = Retrying(stop=stop_after_attempt(self._max_retries + 1), wait=wait,
-                            retry=retry_if_exception(_retryable), reraise=True)
+        retrying = Retrying(
+            stop=stop_after_attempt(self._max_retries + 1),
+            wait=wait,
+            retry=retry_if_exception(_retryable),
+            reraise=True,
+        )
         return retrying(fn)
 
     def _send(self, method: str, path: str, *, timeout: float, **kwargs: Any) -> dict:
-        r = self._http.request(method, f"{self._base}{path}", headers=self._headers,
-                               timeout=timeout, **kwargs)
+        r = self._http.request(
+            method, f"{self._base}{path}", headers=self._headers, timeout=timeout, **kwargs
+        )
         if r.status_code >= 400:
             raise MetaAPIError(r.status_code, r.text[:1000])
         return r.json()
@@ -186,41 +196,93 @@ class MetaClient:
             parsed, err = extract_json(text), None
         except ValueError as e:
             parsed, err = None, str(e)
-        return AnalyzeResult(raw=raw, text=text, parsed=parsed, parse_error=err,
-                             usage=raw.get("usage") or {}, latency_s=latency)
+        return AnalyzeResult(
+            raw=raw,
+            text=text,
+            parsed=parsed,
+            parse_error=err,
+            usage=raw.get("usage") or {},
+            latency_s=latency,
+        )
 
-    def respond_text(self, prompt: str, *, model: str, schema: dict | None = None,
-                     schema_name: str = "empu_answer", max_output_tokens: int = 2000,
-                     timeout: float = 120) -> AnalyzeResult:
+    def respond_text(
+        self,
+        prompt: str,
+        *,
+        model: str,
+        schema: dict | None = None,
+        schema_name: str = "empu_answer",
+        max_output_tokens: int = 6000,
+        max_budget: int = 12000,
+        timeout: float = 120,
+    ) -> AnalyzeResult:
         """Text-only response. No file upload, no video.
 
-        Muse Spark spends reasoning tokens out of max_output_tokens: with 400 the whole
-        budget went to reasoning and the answer was empty (docs/reference/hasil-gate-ask.md).
+        Muse Spark spends reasoning tokens out of max_output_tokens, and how many it
+        spends varies by run: 400 was all reasoning and produced an empty answer, and
+        even 2000 ran out on a real archive prompt about one run in three
+        (docs/reference/hasil-gate-ask.md). When the budget is the stated reason for an
+        incomplete answer, ask once more with a bigger one instead of failing the user.
         """
-        body: dict[str, Any] = {
-            "model": model,
-            "max_output_tokens": max_output_tokens,
-            "input": [{"role": "user", "content": [{"type": "input_text", "text": prompt}]}],
-        }
-        if schema is not None:
-            body["text"] = {"format": {"type": "json_schema", "name": schema_name,
-                                       "schema": schema, "strict": True}}
-        t0 = time.monotonic()
-        return self._finish(self.create_response(body, timeout=timeout), t0)
+        budget = min(max_output_tokens, max_budget)
+        escalated = False
+        while True:
+            body: dict[str, Any] = {
+                "model": model,
+                "max_output_tokens": budget,
+                "input": [{"role": "user", "content": [{"type": "input_text", "text": prompt}]}],
+            }
+            if schema is not None:
+                body["text"] = {
+                    "format": {
+                        "type": "json_schema",
+                        "name": schema_name,
+                        "schema": schema,
+                        "strict": True,
+                    }
+                }
+            t0 = time.monotonic()
+            try:
+                return self._finish(self.create_response(body, timeout=timeout), t0)
+            except MetaAPIError as exc:
+                starved = "incomplete" in exc.message and "max_output_tokens" in exc.message
+                if escalated or not starved or budget >= max_budget:
+                    raise
+                # One escalation only: a second failure is a real failure, not a budget one.
+                escalated = True
+                budget = max_budget
 
-    def analyze_video(self, file_id: str, prompt: str, *, model: str, schema: dict | None = None,
-                      max_output_tokens: int = 16000) -> AnalyzeResult:
+    def analyze_video(
+        self,
+        file_id: str,
+        prompt: str,
+        *,
+        model: str,
+        schema: dict | None = None,
+        max_output_tokens: int = 16000,
+    ) -> AnalyzeResult:
         body: dict[str, Any] = {
             "model": model,
             "max_output_tokens": max_output_tokens,
-            "input": [{"role": "user", "content": [
-                {"type": "input_video", "file_id": file_id},
-                {"type": "input_text", "text": prompt},
-            ]}],
+            "input": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_video", "file_id": file_id},
+                        {"type": "input_text", "text": prompt},
+                    ],
+                }
+            ],
         }
         if schema is not None:
-            body["text"] = {"format": {"type": "json_schema", "name": "empu_terms",
-                                       "schema": schema, "strict": True}}
+            body["text"] = {
+                "format": {
+                    "type": "json_schema",
+                    "name": "empu_terms",
+                    "schema": schema,
+                    "strict": True,
+                }
+            }
         t0 = time.monotonic()
         return self._finish(self.create_response(body), t0)
 
@@ -228,10 +290,19 @@ class MetaClient:
         path = Path(image_path)
         mime = _IMAGE_MIME.get(path.suffix.lower(), "image/jpeg")
         data_url = f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
-        body = {"model": model, "stream": False, "input": [{"role": "user", "content": [
-            {"type": "input_text", "text": prompt},
-            {"type": "input_image", "image_url": data_url},
-        ]}]}
+        body = {
+            "model": model,
+            "stream": False,
+            "input": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_text", "text": prompt},
+                        {"type": "input_image", "image_url": data_url},
+                    ],
+                }
+            ],
+        }
         return self.create_response(body, timeout=120)
 
     def segment_image(self, image_path: Path, prompts: list[str], *, model: str) -> list[Detection]:
