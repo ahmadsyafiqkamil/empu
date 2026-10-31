@@ -554,3 +554,45 @@ def ask_warm(
         typer.echo(f"{line} error={r.error}" if r.error else line)
     warmed = sum(1 for r in results if r.error is None)
     typer.echo(f"warmed {warmed} of {len(results)} ({calls} model calls)")
+
+
+recording_app = typer.Typer(no_args_is_help=True)
+app.add_typer(recording_app, name="recording", help="Recording commands.")
+
+
+@recording_app.command("edit")
+def recording_edit(
+    recording_id: int = typer.Argument(...),
+    title: str | None = typer.Option(None, "--title"),
+    source_kind: SourceKind | None = typer.Option(None, "--source-kind"),
+) -> None:
+    """Change a recording's title or source kind; media and consent stay untouched."""
+    settings = get_settings()
+    if title is None and source_kind is None:
+        typer.echo("error: nothing to change", err=True)
+        raise typer.Exit(2)
+    with Session(_engine(settings)) as session:
+        rec = session.get(Recording, recording_id)
+        if rec is None:
+            typer.echo(f"error: recording {recording_id} not found", err=True)
+            raise typer.Exit(2)
+        if source_kind is SourceKind.cc_by_video:
+            missing = [
+                k
+                for k in ("source_url", "source_creator", "license", "attribution")
+                if not getattr(rec, k)
+            ]
+            if missing:
+                typer.echo(
+                    "error: cc_by_video needs source_url, source_creator, license and attribution",
+                    err=True,
+                )
+                raise typer.Exit(2)
+        if title is not None:
+            rec.title = title
+        if source_kind is not None:
+            rec.source_kind = source_kind
+        session.add(rec)
+        session.commit()
+        session.refresh(rec)
+        typer.echo(f"recording {rec.id}: title={rec.title} source_kind={rec.source_kind.value}")
