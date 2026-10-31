@@ -134,6 +134,26 @@ export const COPY = {
     publicOnly: "Public entries only",
     everything: "Everything except rejected (studio)",
   },
+  ask: {
+    title: "Ask the archive",
+    intro:
+      "Ask a question about this craft. Answers come only from terms a person has accepted, and every claim carries its clip, its tool and its timestamp.",
+    placeholder: "Ask what a term means, or how a step is done…",
+    submit: "Ask",
+    thinking: "Looking through the archive…",
+    refused: "This archive doesn't cover that yet. Try another term, or browse the dictionary.",
+    rateLimited: "That's a lot of questions for one hour. Try again a little later.",
+    unavailable: "The archive couldn't answer just now. Try again in a moment.",
+    failed: "Something went wrong on the way to the archive. Try again.",
+    evidence: "What this answer stands on",
+    openEntry: "Open entry",
+    studioNote: "Includes entries that are still under review.",
+    launcher: "Ask",
+    close: "Close",
+    shortcut: "⌘K",
+    askTerm: "Ask about this term",
+    askArchive: "Ask the archive",
+  },
 };
 
 /** Human-readable pipeline stage labels (desain.md). Do not paraphrase. */

@@ -161,3 +161,18 @@ export type PackDetail = {
   n_stages: number;
   n_terms: number;
 };
+
+export type AskEvidence = {
+  entry: EntryListItem;
+  occurrence: Occurrence;
+};
+
+export type AskAnswer = {
+  answer: string;
+  lang: string;
+  refused: boolean;
+  evidence: AskEvidence[];
+  model: string;
+  prompt_version: string;
+  cached: boolean;
+};
