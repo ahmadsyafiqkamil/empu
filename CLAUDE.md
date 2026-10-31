@@ -18,6 +18,7 @@ Plan implementasi disimpan di `docs/superpowers/plans/`.
 - **Ikuti gate di spec bagian 15.** Kalau gate gagal, potong fitur sesuai urutan di sana, jangan memperpanjang jadwal.
 - **Pengetahuan keterampilan hanya di craft pack.** Jangan hardcode istilah batik di kode pipeline.
 - **AI mengusulkan, manusia memutuskan.** Tidak ada yang tampil publik kecuali entri `accepted`/`edited`, `access_level=public`, dan izin rekamannya `granted` + `public`.
+- **Ask Empu wajib menyitir `entry_ids`.** Jawaban tanpa sitasi sah → `refused`, tanpa bukti. Bukti selalu dihidrasi ulang dari DB; id di luar cakupan dibuang.
 - **Label sumber (`speech`/`on_screen_text`/`visual_only`) tidak boleh hilang** di DB, API, UI, maupun ekspor.
 - **Gambar hanya dari frame asli.** Jangan pernah membuat gambar dengan AI.
 - **Semua panggilan Meta API lewat `api/empu/meta_client.py`.** Cache respons mentah (kunci: hash segmen + model + versi prompt + mode). Jangan memanggil API kalau cache sudah ada.
@@ -66,3 +67,4 @@ pnpm test && pnpm lint
 - H5 (Sen 2 Nov): evaluasi (runner/CLI `empu eval`) + halaman Bukti selesai di kode; anotasi gold + `latest.json` (Gate 2) masih pending. Berikutnya: anotasi gold → run eval.
 - H6 (Sel 3 Nov): withdraw consent, sandbox tanpa key, Docker/Caddy/README siap. URL publik belum (deploy VPS belum). Berikutnya: deploy + H7.
 - Redesign (Sab 31 Okt): seluruh UI diganti ke sistem **Modernist** (Archivo, radius 0, garis 2px, aksen merah, satu tema terang; Studio dibedakan oleh header bar gelap). Sumber visual: `Empu web aplikasi redesign/`. Kontrak UI diperbarui di `docs/superpowers/plans/2026-10-28-empu/desain.md`; kondisi lama didokumentasikan di `docs/design/konteks-design-saat-ini.md`. Endpoint baru: `GET /api/archives/{id}/recordings` (studio) dan `GET /api/public/archives/{slug}/recordings` untuk indeks peta.
+- Ask Empu (Sab 31 Okt): agen tanya-jawab dua pintu. Publik `POST /api/public/archives/{slug}/ask` (tanpa kunci, batas laju `EMPU_ASK_PER_HOUR`), Studio `POST /api/archives/{id}/ask` (butuh kunci, cakupan `proposed`). Satu panggilan teks per pertanyaan lewat `MetaClient.respond_text` + structured output; cache `data/cache/ask`. Prompt `api/empu/ask/prompts.py` (`ASK_PROMPT_VERSION=ask-v1`). Probe: `docs/reference/hasil-gate-ask.md`. UI: tombol melayang di root layout (`AskLauncher`), sheet `<dialog>` (`AskSheet`), halaman `/d/[slug]/ask` dan `/studio/ask`. Verifikasi: `uv run pytest -q`, `pnpm lint && pnpm test && pnpm build`.

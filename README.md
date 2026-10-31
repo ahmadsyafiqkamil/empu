@@ -4,8 +4,10 @@ Capture what masters know, before it's gone.
 
 Empu turns a master's narrated work video into a watchable, validated craft dictionary. Each term links to the original speech, a motion clip, and a crop of the real tool. AI proposes; a human decides. Nothing is public until a validator accepts it.
 
+Ask the archive: answers are drawn only from validated entries, and every answer arrives with the clip, the crop and the timestamp it stands on. If the archive does not cover the question, it says so.
+
 **Live:** https://<domain>
-**Dictionary:** /d/hidup-batik · **Evidence:** /evidence · **Try (3 min):** /try
+**Dictionary:** /d/hidup-batik · **Ask:** /d/batik-tulis/ask · **Evidence:** /evidence · **Try (3 min):** /try
 
 ## Attribution
 
