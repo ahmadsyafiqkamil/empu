@@ -58,16 +58,19 @@ Diukur pada 31 Okt dengan `empu eval retrieval` (perintah baru, lihat plan `2026
 ```text
 cd api && uv run empu eval retrieval --archive batik-tulis \
   --questions ../docs/eval/pertanyaan-retrieval.csv --k 4
-rows=29 k=4 questions=20 question_recall=1.00 term_recall=1.00
+rows=18 k=4 questions=20 question_recall=1.00 term_recall=1.00
 ```
 
-- **rows=29** (28 istilah unik; `fiksasi` punya dua entri publik), **k=4**, **questions=20**, **misses=0**.
-- Komposisi daftar (`docs/eval/pertanyaan-retrieval.csv`): 5 definisi bahasa Indonesia, 5 proses/tahapan, 3 bahasa Jawa, 4 bahasa Inggris yang memakai kata lain ("wax pen", "remove the wax"), 3 perbandingan dua istilah.
-- Pertanyaan pertama memakai `nembok` dan `paruh` sebagai jawaban yang diharapkan. Keduanya **tidak publik** (tidak punya occurrence publik; bersama `cucuk`), sehingga pertanyaan itu mustahil dijawab pintu publik dan hanya mengukur data yang tidak terlihat. Empat pertanyaan diganti dengan istilah publik, lalu diukur ulang.
+- **rows=18** (istilah publik setelah rekaman berlisensi standar disembunyikan), **k=4**, **questions=20**, **misses=0**.
+- Komposisi daftar (`docs/eval/pertanyaan-retrieval.csv`): 5 definisi bahasa Indonesia, 5 proses/tahapan, 3 bahasa Jawa, 4 bahasa Inggris yang memakai kata lain ("wax pen", "wooden frame", "fix the dye"), 3 perbandingan dua istilah.
+- Riwayat pengukuran, supaya angkanya bisa diaudit:
+  - Ukuran pertama memakai `nembok` dan `paruh` sebagai jawaban yang diharapkan. Keduanya **tidak publik** (tidak punya occurrence publik), sehingga pertanyaan itu mustahil dijawab pintu publik; empat pertanyaan diganti dengan istilah publik.
+  - Setelah rekaman 6 dan 7 diturunkan ke `internal_eval` (lihat plan `2026-10-31-empu-demo-data.md`), `nglorod`, `colet`, `ngiseni`, dan `finishing` ikut hilang dari kamus publik. Enam pertanyaan yang menyebutnya mustahil dijawab, jadi diganti dengan istilah yang masih publik; daftar diukur ulang dan menghasilkan angka di atas.
+- Karena itu `rows` turun dari 29 ke 18. Angka 1,00 ini diukur pada daftar yang **hanya berisi istilah publik saat ini**; jangan membandingkannya dengan ukuran arsip sebelumnya.
 
 **Keputusan (ambang di plan): `question_recall` @4 = 1,00 ≥ 0,90 → berhenti.** Retrieval leksikal cukup untuk arsip sekecil ini; jangan tambah embedding.
 
 **Batas angka ini, harus disebut bersama hasilnya:**
 
-- `limit` prefilter = 60 dan baris hanya 29, jadi pemotongan tidak pernah terjadi. Yang diukur adalah urutan peringkat, bukan ketahanan terhadap pemotongan. Kalau arsip tumbuh melewati 60 baris, ukur ulang sebelum menyimpulkan hal yang sama.
-- 20 pertanyaan ditulis dari istilah yang sudah ada di arsip, jadi ini bukan uji buta terhadap pertanyaan pengunjung sungguhan.
+- `limit` prefilter = 60 dan baris hanya 18, jadi pemotongan tidak pernah terjadi. Yang diukur adalah urutan peringkat, bukan ketahanan terhadap pemotongan. Kalau arsip tumbuh melewati 60 baris, ukur ulang sebelum menyimpulkan hal yang sama.
+- 20 pertanyaan ditulis dari istilah yang ada di arsip, jadi ini bukan uji buta terhadap pertanyaan pengunjung sungguhan.

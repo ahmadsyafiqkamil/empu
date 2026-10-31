@@ -1,13 +1,19 @@
 """Public eval summary: expose the latest honest numbers to the Evidence page."""
 
 import json
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from empu.config import REPO_ROOT
-
 router = APIRouter()
-LATEST = REPO_ROOT / "api" / "eval" / "results" / "latest.json"
+
+
+def _latest_path(package_file: str | Path) -> Path:
+    """`api/eval/results/latest.json`, whether the API sits in the repo or in the image at /app."""
+    return Path(package_file).resolve().parents[2] / "eval" / "results" / "latest.json"
+
+
+LATEST = _latest_path(__file__)
 
 
 @router.get("/api/eval/summary")

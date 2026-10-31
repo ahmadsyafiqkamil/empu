@@ -18,3 +18,12 @@ def test_eval_summary_missing_404(api, tmp_path, monkeypatch):
     monkeypatch.setattr(eval_route, "LATEST", tmp_path / "nope.json")
     r = api.get("/api/eval/summary")
     assert r.status_code == 404
+
+
+def test_latest_path_follows_the_package_into_the_container():
+    """In the image the API lives at /app, not `/app/api`; REPO_ROOT is `/`."""
+    from pathlib import Path
+
+    assert eval_route._latest_path("/app/empu/routes/eval.py") == Path(
+        "/app/eval/results/latest.json"
+    )
