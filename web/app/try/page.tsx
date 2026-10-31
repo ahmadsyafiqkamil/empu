@@ -6,7 +6,7 @@ export default function TryPage() {
   return (
     <>
       <PublicHeader />
-      <main>
+      <main className="pb-24">
         <UploadForm variant="try" />
       </main>
       <PublicFooter />
