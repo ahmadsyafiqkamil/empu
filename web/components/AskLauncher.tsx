@@ -6,6 +6,7 @@ import { MessageSquare } from "lucide-react";
 import { AskPanel } from "./AskPanel";
 import { AskSheet } from "./AskSheet";
 import { COPY } from "@/lib/copy";
+import { askSuggestions } from "@/lib/ask";
 import { archiveSlugFromPathname, pickArchiveSlug, shouldShowLauncher } from "@/lib/askUi";
 import {
   closeAsk,
@@ -29,7 +30,9 @@ export function AskLauncher() {
   const pathSlug = archiveSlugFromPathname(pathname);
   const [fallbackSlug, setFallbackSlug] = useState<string | null>(null);
   const [lookedUp, setLookedUp] = useState(false);
+  const [terms, setTerms] = useState<{ slug: string; values: { term: string }[] } | null>(null);
   const state = useSyncExternalStore(subscribeAsk, getAskSnapshot, getAskServerSnapshot);
+  const slug = pathSlug ?? fallbackSlug;
 
   useEffect(() => {
     if (!visible || pathSlug) return;
@@ -49,6 +52,20 @@ export function AskLauncher() {
   }, [visible, pathSlug]);
 
   useEffect(() => {
+    if (!state.open || !slug || terms?.slug === slug) return;
+    let cancelled = false;
+    fetch(`/api/public/archives/${slug}/entries`, { cache: "no-store" })
+      .then((response) => (response.ok ? (response.json() as Promise<{ term: string }[]>) : []))
+      .then((rows) => {
+        if (!cancelled) setTerms({ slug, values: rows });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [state.open, slug, terms?.slug]);
+
+  useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -61,7 +78,6 @@ export function AskLauncher() {
 
   if (!visible) return null;
 
-  const slug = pathSlug ?? fallbackSlug;
   const ready = Boolean(pathSlug) || lookedUp;
   const token = state.request?.token ?? 0;
 
@@ -88,6 +104,7 @@ export function AskLauncher() {
             <AskPanel
               key={token}
               endpoint={`/api/public/archives/${slug}/ask`}
+              suggestions={askSuggestions(terms?.slug === slug ? terms.values : [])}
               slug={slug}
               initialQuestion={state.request?.question ?? ""}
               autoSend={state.request?.autoSend ?? false}
