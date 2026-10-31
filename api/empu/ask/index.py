@@ -92,9 +92,14 @@ def _score(question: str, row: IndexEntry) -> float:
     return score
 
 
+def rank_rows(question: str, rows: list[IndexEntry]) -> list[IndexEntry]:
+    """Every row, best first. Ranking only — callers decide how many to keep."""
+    return sorted(rows, key=lambda r: (-_score(question, r), r.id))
+
+
 def prefilter(question: str, rows: list[IndexEntry], limit: int = 60) -> list[IndexEntry]:
     """Keep the most likely rows, always in id order so the prompt is deterministic."""
     if len(rows) <= limit:
         return sorted(rows, key=lambda r: r.id)
-    ranked = sorted(rows, key=lambda r: (-_score(question, r), r.id))[:limit]
+    ranked = rank_rows(question, rows)[:limit]
     return sorted(ranked, key=lambda r: r.id)

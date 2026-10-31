@@ -1,7 +1,7 @@
 from factories import make_archive, make_recording
 from sqlmodel import select
 
-from empu.ask.index import build_index, prefilter
+from empu.ask.index import build_index, prefilter, rank_rows
 from empu.enums import AccessLevel, Category, EntryStatus, Source
 from empu.models import Entry, Occurrence
 
@@ -123,3 +123,23 @@ def test_prefilter_respects_limit_and_returns_id_order(session):
 
     assert len(picked) == 3
     assert [r.id for r in picked] == sorted(r.id for r in picked)
+
+
+def test_rank_rows_orders_by_score_then_id(session):
+    a = make_archive(session)
+    rows = [
+        build_index([(_entry(session, a, "mori"), [])])[0],
+        build_index([(_entry(session, a, "canting"), [])])[0],
+        build_index([(_entry(session, a, "nembok"), [])])[0],
+    ]
+
+    ranked = rank_rows("apa itu canting?", rows)
+
+    assert [r.term for r in ranked] == ["canting", "mori", "nembok"]
+
+
+def test_rank_rows_keeps_every_row(session):
+    a = make_archive(session)
+    rows = [build_index([(_entry(session, a, f"t{i}"), [])])[0] for i in range(10)]
+
+    assert len(rank_rows("t3", rows)) == 10
