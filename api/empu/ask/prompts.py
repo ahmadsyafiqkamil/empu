@@ -43,8 +43,11 @@ DAFTAR ISTILAH ({count} baris)
 Jawab hanya dengan JSON: answer, lang (id/en/jv/other), entry_ids (array id), insufficient (boolean).
 """
 
-SOURCE_NOTE = {"speech": "diucapkan", "on_screen_text": "tertulis di layar",
-               "visual_only": "hanya terlihat"}
+SOURCE_NOTE = {
+    "speech": "diucapkan",
+    "on_screen_text": "tertulis di layar",
+    "visual_only": "hanya terlihat",
+}
 
 
 def _variants(values: tuple[str, ...], term: str) -> str:

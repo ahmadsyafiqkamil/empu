@@ -12,8 +12,9 @@ from collections.abc import Callable
 
 
 class RateLimiter:
-    def __init__(self, max_events: int, window_s: float,
-                 clock: Callable[[], float] = time.monotonic) -> None:
+    def __init__(
+        self, max_events: int, window_s: float, clock: Callable[[], float] = time.monotonic
+    ) -> None:
         self.max_events = max_events
         self.window_s = window_s
         self._clock = clock

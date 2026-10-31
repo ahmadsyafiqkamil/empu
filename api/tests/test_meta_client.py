@@ -156,7 +156,9 @@ def test_respond_text_sends_text_only_and_parses():
     route = respx.post(f"{BASE}/responses").mock(return_value=httpx.Response(200, json=raw))
     res = client().respond_text("PROMPT", model="muse-spark-1.3", schema={"type": "object"})
     body = json.loads(route.calls.last.request.content)
-    assert body["input"] == [{"role": "user", "content": [{"type": "input_text", "text": "PROMPT"}]}]
+    assert body["input"] == [
+        {"role": "user", "content": [{"type": "input_text", "text": "PROMPT"}]}
+    ]
     assert body["text"]["format"] == {
         "type": "json_schema",
         "name": "empu_answer",

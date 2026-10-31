@@ -104,7 +104,7 @@ def test_is_valid_pack_id():
 def test_write_pack_roundtrip(tmp_path):
     data = raw_pack()
     pack = CraftPack.model_validate(data)
-    path = write_pack(pack, tmp_path)
+    write_pack(pack, tmp_path)
     assert (tmp_path / "batik_tulis.yaml").exists()
     reloaded = load_pack("batik_tulis", tmp_path)
     assert reloaded.id == pack.id
