@@ -7,7 +7,12 @@ import { AskPanel } from "./AskPanel";
 import { AskSheet } from "./AskSheet";
 import { COPY } from "@/lib/copy";
 import { askSuggestions } from "@/lib/ask";
-import { archiveSlugFromPathname, pickArchiveSlug, shouldShowLauncher } from "@/lib/askUi";
+import {
+  archiveSlugFromPathname,
+  pickArchiveSlug,
+  shouldCloseOnHide,
+  shouldShowLauncher,
+} from "@/lib/askUi";
 import {
   closeAsk,
   getAskServerSnapshot,
@@ -64,6 +69,10 @@ export function AskLauncher() {
       cancelled = true;
     };
   }, [state.open, slug, terms?.slug]);
+
+  useEffect(() => {
+    if (shouldCloseOnHide(visible, state.open)) closeAsk();
+  }, [visible, state.open]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {

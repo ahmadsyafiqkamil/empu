@@ -32,3 +32,8 @@ export function pickArchiveSlug(archives: ArchiveLike[]): string | null {
 export function termQuestion(term: string): string {
   return `What is ${normalizeQuestion(term)}?`;
 }
+
+/** The sheet must not stay (or reopen) once the launcher is no longer on screen. */
+export function shouldCloseOnHide(visible: boolean, open: boolean): boolean {
+  return !visible && open;
+}
