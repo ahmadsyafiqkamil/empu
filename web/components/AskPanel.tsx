@@ -153,6 +153,14 @@ export function AskPanel({
             {turn.error ? (
               <div className="empty">
                 <span>{turn.error}</span>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  disabled={pending}
+                  onClick={() => send(turn.question)}
+                >
+                  {COPY.ask.retry}
+                </button>
               </div>
             ) : null}
 

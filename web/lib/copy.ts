@@ -145,6 +145,7 @@ export const COPY = {
     rateLimited: "That's a lot of questions for one hour. Try again a little later.",
     unavailable: "The archive couldn't answer just now. Try again in a moment.",
     failed: "Something went wrong on the way to the archive. Try again.",
+    retry: "Try again",
     evidence: "What this answer stands on",
     openEntry: "Open entry",
     studioNote: "Includes entries that are still under review.",
