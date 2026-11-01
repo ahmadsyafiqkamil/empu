@@ -174,6 +174,47 @@ def test_ask_warm_reports_per_question(session, settings, tmp_path, monkeypatch)
     assert "model calls" in r.output
 
 
+def test_ask_warm_without_archive_covers_every_archive(session, settings, tmp_path, monkeypatch):
+    from typer.testing import CliRunner
+
+    import empu.cli as cli
+
+    seed_two_public_entries(session)
+    b = make_archive(session, slug="gamelan")
+    rec = make_recording(session, b)
+    _occ(session, _entry(session, b, "saron"), rec)
+
+    qfile = tmp_path / "q.txt"
+    qfile.write_text("apa itu saron\n", encoding="utf-8")
+    seen: list[str] = []
+
+    class Client:
+        def respond_text(self, prompt: str, *, model: str, schema=None, **kw) -> AnalyzeResult:
+            seen.append(prompt)
+            return AnalyzeResult(
+                raw={},
+                text="",
+                parsed={
+                    "answer": "ok",
+                    "lang": "id",
+                    "entry_ids": [],
+                    "insufficient": True,
+                },
+                parse_error=None,
+                usage={},
+                latency_s=0.0,
+            )
+
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    monkeypatch.setattr(cli, "make_client", lambda s: Client())
+
+    r = CliRunner().invoke(cli.app, ["ask", "warm", "--questions", str(qfile)])
+
+    assert r.exit_code == 0, r.output
+    assert "canting" in seen[0]
+    assert "saron" in seen[0]
+
+
 def test_ask_warm_unknown_archive(tmp_path, settings, monkeypatch):
     from typer.testing import CliRunner
 

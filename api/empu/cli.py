@@ -62,6 +62,12 @@ def _default_pack_id(settings: Settings) -> str:
     return ids[0]
 
 
+def _public_archives(session: Session) -> list[Archive]:
+    """Every archive a visitor could reach, in id order."""
+    rows = session.exec(select(Archive).order_by(Archive.id)).all()
+    return [a for a in rows if not a.is_sandbox]
+
+
 def _chunk_row(r: ChunkAnalysis) -> dict:
     by_source = Counter(t.source.value for t in (r.output.terms if r.output else []))
     return {
@@ -499,7 +505,9 @@ def draft_gold(
 
 @eval_app.command("retrieval")
 def eval_retrieval(
-    archive: str = typer.Option(..., "--archive", help="Archive slug."),
+    archive: str | None = typer.Option(
+        None, "--archive", help="Archive slug; omit for every archive."
+    ),
     questions: Path = typer.Option(..., "--questions", exists=True, dir_okay=False),
     scope: str = typer.Option("public", "--scope", help="public | studio"),
     k: int = typer.Option(4, "--k", help="How many ranked rows count as retrieved."),
@@ -507,18 +515,24 @@ def eval_retrieval(
     """Measure how often the entries a question needs survive ranking."""
     settings = get_settings()
     with Session(_engine(settings)) as session:
-        arch = session.exec(select(Archive).where(Archive.slug == archive)).first()
-        if arch is None:
-            typer.echo(f"error: no archive with slug {archive!r}", err=True)
-            raise typer.Exit(2)
+        if archive is None:
+            archive_ids = [a.id for a in _public_archives(session)]
+            where = "every archive"
+        else:
+            found = session.exec(select(Archive).where(Archive.slug == archive)).first()
+            if found is None:
+                typer.echo(f"error: no archive with slug {archive!r}", err=True)
+                raise typer.Exit(2)
+            archive_ids = [found.id]
+            where = repr(archive)
         try:
-            pairs = collect_entries(session, [arch.id], scope)
+            pairs = collect_entries(session, archive_ids, scope)
         except ValueError as e:
             typer.echo(f"error: {e}", err=True)
             raise typer.Exit(2) from e
         rows = build_index(pairs)
     if not rows:
-        typer.echo(f"error: no entries for scope {scope!r} in {archive!r}", err=True)
+        typer.echo(f"error: no entries for scope {scope!r} in {where}", err=True)
         raise typer.Exit(2)
     report = evaluate_retrieval(load_questions(questions), rows, k=k)
     typer.echo(
@@ -536,7 +550,9 @@ app.add_typer(ask_app, name="ask", help="Ask Empu commands.")
 
 @ask_app.command("warm")
 def ask_warm(
-    archive: str = typer.Option(..., "--archive", help="Archive slug."),
+    archive: str | None = typer.Option(
+        None, "--archive", help="Archive slug; omit for every archive."
+    ),
     questions: Path = typer.Option(..., "--questions", exists=True, dir_okay=False),
     scope: str = typer.Option("public", "--scope", help="public | studio"),
 ) -> None:
@@ -545,9 +561,16 @@ def ask_warm(
     items = read_questions(questions)
     calls = 0
     with Session(_engine(settings)) as session:
-        arch = session.exec(select(Archive).where(Archive.slug == archive)).first()
-        if arch is None:
-            typer.echo(f"error: archive not found: {archive}", err=True)
+        if archive is None:
+            archives = _public_archives(session)
+        else:
+            found = session.exec(select(Archive).where(Archive.slug == archive)).first()
+            if found is None:
+                typer.echo(f"error: archive not found: {archive}", err=True)
+                raise typer.Exit(2)
+            archives = [found]
+        if not archives:
+            typer.echo("error: no archive to warm", err=True)
             raise typer.Exit(2)
         client = make_client(settings)
         model_name = settings.muse_model
@@ -559,12 +582,12 @@ def ask_warm(
 
         results = warm_questions(
             session,
-            archive_ids=[arch.id],
+            archive_ids=[a.id for a in archives],
             questions=items,
             ask_model=ask,
             cache=ResponseCache(settings.data_dir / "cache" / "ask"),
             model=model_name,
-            pack_names=[pack_display_name(arch, settings)],
+            pack_names=[pack_display_name(a, settings) for a in archives],
             scope=scope,
         )
     for r in results:
