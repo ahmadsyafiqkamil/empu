@@ -23,11 +23,9 @@ function quoteText(evidence: AskEvidence): string | null {
  */
 export function AskEvidenceCard({
   evidence,
-  slug = "",
   studio = false,
 }: {
   evidence: AskEvidence;
-  slug?: string;
   studio?: boolean;
 }) {
   const { entry, occurrence } = evidence;
@@ -36,7 +34,7 @@ export function AskEvidenceCard({
   const quote = quoteText(evidence);
   const href = studio
     ? `/studio/recordings/${occurrence.recording_id}`
-    : `/d/${slug}/${entry.id}`;
+    : `/d/${evidence.archive_slug}/${entry.id}`;
 
   return (
     <article className="flex flex-col gap-3 border-2 border-[var(--color-divider)] p-4">
@@ -45,6 +43,11 @@ export function AskEvidenceCard({
           {entry.term}
         </h3>
         <span className="text-[12px] text-[var(--color-neutral-700)]">{entry.category}</span>
+        {evidence.archive_title ? (
+          <span className="text-[12px] text-[var(--color-neutral-700)]">
+            · {evidence.archive_title}
+          </span>
+        ) : null}
         {studio ? <StatusChip status={entry.status} /> : null}
       </header>
 

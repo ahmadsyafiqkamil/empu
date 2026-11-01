@@ -165,6 +165,8 @@ export type PackDetail = {
 export type AskEvidence = {
   entry: EntryListItem;
   occurrence: Occurrence;
+  archive_slug: string;
+  archive_title: string;
 };
 
 export type AskAnswer = {

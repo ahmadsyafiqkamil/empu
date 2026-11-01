@@ -28,6 +28,30 @@ export function askSuggestions(
   return out;
 }
 
+export type ArchiveTerms = { title: string; terms: string[] };
+
+/**
+ * One suggestion per archive, round-robin, so a large archive does not hide a
+ * small one. Ask answers from every archive, and the chips should say so.
+ */
+export function askSuggestionsAcross(archives: ArchiveTerms[], n = 3): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  const longest = Math.max(0, ...archives.map((archive) => archive.terms.length));
+  for (let i = 0; i < longest; i += 1) {
+    for (const archive of archives) {
+      const term = (archive.terms[i] ?? "").trim();
+      if (!term) continue;
+      const question = `What is ${term}?`;
+      if (seen.has(question)) continue;
+      seen.add(question);
+      out.push(question);
+      if (out.length >= n) return out;
+    }
+  }
+  return out;
+}
+
 export function askErrorCopy(status: number): string {
   if (status === 429) return COPY.ask.rateLimited;
   if (status === 502 || status === 503) return COPY.ask.unavailable;

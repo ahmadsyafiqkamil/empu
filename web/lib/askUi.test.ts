@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  archiveSlugFromPathname,
   isTypingTarget,
-  pickArchiveSlug,
   shouldCloseOnHide,
   shouldShowLauncher,
   termQuestion,
@@ -14,6 +12,7 @@ describe("shouldShowLauncher", () => {
     expect(shouldShowLauncher("/studio/upload")).toBe(false);
     expect(shouldShowLauncher("/studio/recordings/7")).toBe(false);
     expect(shouldShowLauncher("/studio/ask")).toBe(false);
+    expect(shouldShowLauncher("/ask")).toBe(false);
     expect(shouldShowLauncher("/d/batik-tulis/ask")).toBe(false);
   });
 
@@ -24,47 +23,6 @@ describe("shouldShowLauncher", () => {
     expect(shouldShowLauncher("/map")).toBe(true);
     expect(shouldShowLauncher("/evidence")).toBe(true);
     expect(shouldShowLauncher("/try")).toBe(true);
-  });
-});
-
-describe("archiveSlugFromPathname", () => {
-  it("reads the archive slug from a nested path", () => {
-    expect(archiveSlugFromPathname("/d/batik-tulis")).toBe("batik-tulis");
-    expect(archiveSlugFromPathname("/d/batik-tulis/12")).toBe("batik-tulis");
-    expect(archiveSlugFromPathname("/d/batik-tulis/12/map/3")).toBe("batik-tulis");
-  });
-
-  it("ignores paths that are not dictionaries", () => {
-    expect(archiveSlugFromPathname("/")).toBeNull();
-    expect(archiveSlugFromPathname("/map")).toBeNull();
-    expect(archiveSlugFromPathname("/studio")).toBeNull();
-    expect(archiveSlugFromPathname("/dx/batik-tulis")).toBeNull();
-  });
-});
-
-describe("pickArchiveSlug", () => {
-  it("prefers the demo archive and skips sandboxes", () => {
-    expect(
-      pickArchiveSlug([
-        { slug: "sandbox", is_sandbox: true },
-        { slug: "gamelan", is_demo: false },
-        { slug: "batik-tulis", is_demo: true },
-      ]),
-    ).toBe("batik-tulis");
-  });
-
-  it("falls back to the first non-sandbox archive", () => {
-    expect(
-      pickArchiveSlug([
-        { slug: "sandbox", is_sandbox: true },
-        { slug: "gamelan", is_demo: false },
-      ]),
-    ).toBe("gamelan");
-  });
-
-  it("returns null when there is nothing to ask", () => {
-    expect(pickArchiveSlug([])).toBeNull();
-    expect(pickArchiveSlug([{ slug: "sandbox", is_sandbox: true }])).toBeNull();
   });
 });
 

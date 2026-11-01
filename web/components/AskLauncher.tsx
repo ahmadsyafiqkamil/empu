@@ -6,14 +6,8 @@ import { MessageSquare } from "lucide-react";
 import { AskPanel } from "./AskPanel";
 import { AskSheet } from "./AskSheet";
 import { COPY } from "@/lib/copy";
-import { askSuggestions } from "@/lib/ask";
-import {
-  archiveSlugFromPathname,
-  isTypingTarget,
-  pickArchiveSlug,
-  shouldCloseOnHide,
-  shouldShowLauncher,
-} from "@/lib/askUi";
+import { askSuggestionsAcross, type ArchiveTerms } from "@/lib/ask";
+import { isTypingTarget, shouldCloseOnHide, shouldShowLauncher } from "@/lib/askUi";
 import {
   closeAsk,
   getAskServerSnapshot,
@@ -22,54 +16,47 @@ import {
   subscribeAsk,
   toggleAsk,
 } from "@/lib/askStore";
-import type { Archive } from "@/lib/types";
+import type { Archive, EntryListItem } from "@/lib/types";
 
 /**
  * One floating entry point for every public screen, mounted in the root layout.
  *
- * The page behind the sheet keeps its scroll position and its reading context; the
- * panel is mounted only while open, so opening it always starts a fresh turn.
+ * Ask answers from every archive, so the sheet has one endpoint and no archive to
+ * pick. The page behind the sheet keeps its scroll position; the panel is mounted
+ * only while open, so opening it always starts a fresh turn.
  */
 export function AskLauncher() {
   const pathname = usePathname() ?? "/";
   const visible = shouldShowLauncher(pathname);
-  const pathSlug = archiveSlugFromPathname(pathname);
-  const [fallbackSlug, setFallbackSlug] = useState<string | null>(null);
-  const [lookedUp, setLookedUp] = useState(false);
-  const [terms, setTerms] = useState<{ slug: string; values: { term: string }[] } | null>(null);
+  const [groups, setGroups] = useState<ArchiveTerms[] | null>(null);
   const state = useSyncExternalStore(subscribeAsk, getAskSnapshot, getAskServerSnapshot);
-  const slug = pathSlug ?? fallbackSlug;
 
   useEffect(() => {
-    if (!visible || pathSlug) return;
+    if (!visible || !state.open || groups !== null) return;
     let cancelled = false;
     fetch("/api/public/archives", { cache: "no-store" })
       .then((response) => (response.ok ? (response.json() as Promise<Archive[]>) : []))
-      .then((archives) => {
-        if (!cancelled) setFallbackSlug(pickArchiveSlug(archives));
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLookedUp(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [visible, pathSlug]);
-
-  useEffect(() => {
-    if (!state.open || !slug || terms?.slug === slug) return;
-    let cancelled = false;
-    fetch(`/api/public/archives/${slug}/entries`, { cache: "no-store" })
-      .then((response) => (response.ok ? (response.json() as Promise<{ term: string }[]>) : []))
-      .then((rows) => {
-        if (!cancelled) setTerms({ slug, values: rows });
+      .then(async (archives) => {
+        const built = await Promise.all(
+          archives.map(async (archive) => ({
+            title: archive.title,
+            terms: await fetch(`/api/public/archives/${archive.slug}/entries`, {
+              cache: "no-store",
+            })
+              .then((response) =>
+                response.ok ? (response.json() as Promise<EntryListItem[]>) : [],
+              )
+              .then((rows) => rows.map((row) => row.term))
+              .catch(() => [] as string[]),
+          })),
+        );
+        if (!cancelled) setGroups(built);
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [state.open, slug, terms?.slug]);
+  }, [visible, state.open, groups]);
 
   useEffect(() => {
     if (shouldCloseOnHide(visible, state.open)) closeAsk();
@@ -90,7 +77,6 @@ export function AskLauncher() {
 
   if (!visible) return null;
 
-  const ready = Boolean(pathSlug) || lookedUp;
   const token = state.request?.token ?? 0;
 
   return (
@@ -112,20 +98,13 @@ export function AskLauncher() {
 
       <AskSheet open={state.open} onClose={closeAsk} title={COPY.ask.title}>
         {state.open ? (
-          slug ? (
-            <AskPanel
-              key={token}
-              endpoint={`/api/public/archives/${slug}/ask`}
-              suggestions={askSuggestions(terms?.slug === slug ? terms.values : [])}
-              slug={slug}
-              initialQuestion={state.request?.question ?? ""}
-              autoSend={state.request?.autoSend ?? false}
-            />
-          ) : (
-            <div className="empty">
-              <span>{ready ? COPY.ask.unavailable : COPY.ask.thinking}</span>
-            </div>
-          )
+          <AskPanel
+            key={token}
+            endpoint="/api/public/ask"
+            suggestions={askSuggestionsAcross(groups ?? [])}
+            initialQuestion={state.request?.question ?? ""}
+            autoSend={state.request?.autoSend ?? false}
+          />
         ) : null}
       </AskSheet>
     </>

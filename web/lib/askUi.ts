@@ -13,22 +13,6 @@ export function shouldShowLauncher(pathname: string): boolean {
   return true;
 }
 
-/** `/d/<slug>`, `/d/<slug>/<id>`, `/d/<slug>/<id>/map/<recording>` → `<slug>`. */
-export function archiveSlugFromPathname(pathname: string): string | null {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts.length < 2 || parts[0] !== "d") return null;
-  return parts[1] || null;
-}
-
-type ArchiveLike = { slug: string; is_demo?: boolean; is_sandbox?: boolean };
-
-/** Prefer the demo archive, never ask a sandbox, and give up quietly otherwise. */
-export function pickArchiveSlug(archives: ArchiveLike[]): string | null {
-  const usable = archives.filter((a) => !a.is_sandbox);
-  const demo = usable.find((a) => a.is_demo);
-  return (demo ?? usable[0])?.slug ?? null;
-}
-
 export function termQuestion(term: string): string {
   return `What is ${normalizeQuestion(term)}?`;
 }

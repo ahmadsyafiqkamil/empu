@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { askErrorCopy, askSuggestions, isAskable, normalizeQuestion } from "./ask";
+import { askErrorCopy, askSuggestions, askSuggestionsAcross, isAskable, normalizeQuestion } from "./ask";
 import type { AskEvidence, AskAnswer } from "./types";
 import { COPY } from "./copy";
 
@@ -36,6 +36,25 @@ describe("askSuggestions", () => {
   });
 });
 
+describe("askSuggestionsAcross", () => {
+  it("takes one suggestion per archive before repeating one", () => {
+    expect(
+      askSuggestionsAcross(
+        [
+          { title: "Batik", terms: ["canting", "mori"] },
+          { title: "Gamelan", terms: ["saron"] },
+        ],
+        3,
+      ),
+    ).toEqual(["What is canting?", "What is saron?", "What is mori?"]);
+  });
+
+  it("skips blank terms and returns nothing when every archive is empty", () => {
+    expect(askSuggestionsAcross([{ title: "A", terms: ["  "] }])).toEqual([]);
+    expect(askSuggestionsAcross([])).toEqual([]);
+  });
+});
+
 describe("askErrorCopy", () => {
   it("maps 429 and 502 to their own copy", () => {
     expect(askErrorCopy(429)).toBe(COPY.ask.rateLimited);
@@ -47,6 +66,8 @@ describe("askErrorCopy", () => {
 describe("ask answer shape", () => {
   it("keeps the source label on every piece of evidence", () => {
     const evidence: AskEvidence = {
+      archive_slug: "hidup-batik",
+      archive_title: "Arsip Hidup",
       entry: {
         id: 1,
         term: "canting",

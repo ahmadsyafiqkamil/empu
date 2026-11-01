@@ -19,14 +19,12 @@ function openingTurn(question: string): Turn {
 export function AskPanel({
   endpoint,
   suggestions = [],
-  slug = "",
   studio = false,
   initialQuestion = "",
   autoSend = false,
 }: {
   endpoint: string;
   suggestions?: string[];
-  slug?: string;
   studio?: boolean;
   initialQuestion?: string;
   autoSend?: boolean;
@@ -186,7 +184,6 @@ export function AskPanel({
                       <AskEvidenceCard
                         key={`${evidence.entry.id}-${evidence.occurrence.id}`}
                         evidence={evidence}
-                        slug={slug}
                         studio={studio}
                       />
                     ))}
