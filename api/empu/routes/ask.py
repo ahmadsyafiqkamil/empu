@@ -122,13 +122,13 @@ def _run(
     try:
         result = answer_question(
             session,
-            archive_id=archive.id,
+            archive_ids=[archive.id],
             question=body.question,
             scope=scope,
             ask_model=ask_model,
             cache=cache,
             model=settings.muse_model,
-            pack_name=pack_display_name(archive, settings),
+            pack_names=[pack_display_name(archive, settings)],
             max_entries=settings.ask_max_entries,
         )
     except (AskError, MetaAPIError, httpx.HTTPError, RuntimeError) as exc:

@@ -49,7 +49,6 @@ class IndexEntry:
     archive_title: str = ""
 
 
-
 def _quote(occ: Occurrence) -> str:
     text = (occ.evidence_quote or "").strip() or (occ.visible or "").strip()
     return text[:QUOTE_LIMIT]

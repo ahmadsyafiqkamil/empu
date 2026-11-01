@@ -15,12 +15,12 @@ Invariants this module enforces, independent of the model:
 from __future__ import annotations
 
 import hashlib
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 from sqlmodel import Session, select
 
-from empu.ask.index import IndexEntry, build_index, prefilter
+from empu.ask.index import ArchiveLabel, IndexEntry, build_index, prefilter
 from empu.ask.prompts import ASK_PROMPT_VERSION, MAX_CITATIONS, build_prompt
 from empu.cache import ResponseCache
 from empu.config import Settings
@@ -30,7 +30,7 @@ from empu.models import Archive, Entry, Occurrence, Recording
 from empu.packs import PackError, load_pack
 from empu.visibility import entry_is_public, public_entries, public_occurrences
 
-REFUSAL_NO_ENTRIES = "This archive has no published terms yet, so there is nothing to answer from."
+REFUSAL_NO_ENTRIES = "No archive has published terms yet, so there is nothing to answer from."
 
 REFUSAL_UNCITED = "I couldn't tie that answer to a term the archive can show, so I won't give one."
 
@@ -87,29 +87,31 @@ def _studio_occurrences(session: Session, entry_id: int) -> list[Occurrence]:
 
 
 def collect_entries(
-    session: Session, archive_id: int, scope: str
+    session: Session, archive_ids: Sequence[int], scope: str
 ) -> list[tuple[Entry, list[Occurrence]]]:
-    """Entries this scope may answer from, with their usable occurrences.
+    """Entries this scope may answer from, across every archive given.
 
     `public` delegates to empu.visibility — never re-implement those rules here.
     `studio` is the review surface: includes proposed and private entries, still
     hides consent-withdrawn recordings, rejected entries and sandboxes.
     """
-    if scope == "public":
-        return public_entries(session, archive_id)
-
-    if scope != "studio":
-        raise ValueError(f"unknown scope {scope!r}")
-
-    entries = session.exec(select(Entry).where(Entry.archive_id == archive_id)).all()
     out: list[tuple[Entry, list[Occurrence]]] = []
-    for entry in entries:
-        if entry.status in STUDIO_SKIP_STATUSES:
+    for archive_id in archive_ids:
+        if scope == "public":
+            out.extend(public_entries(session, archive_id))
             continue
-        occs = _studio_occurrences(session, entry.id)
-        if not occs:
-            continue
-        out.append((entry, occs))
+
+        if scope != "studio":
+            raise ValueError(f"unknown scope {scope!r}")
+
+        entries = session.exec(select(Entry).where(Entry.archive_id == archive_id)).all()
+        for entry in entries:
+            if entry.status in STUDIO_SKIP_STATUSES:
+                continue
+            occs = _studio_occurrences(session, entry.id)
+            if not occs:
+                continue
+            out.append((entry, occs))
     out.sort(key=lambda pair: pair[0].term.casefold())
     return out
 
@@ -128,11 +130,22 @@ def _revision(entries: list[tuple[Entry, list[Occurrence]]]) -> str:
     return "|".join(parts)
 
 
-def _cache_key(scope: str, archive_id: int, question: str, model: str, revision: str) -> str:
-    digest = hashlib.sha256(
-        f"{scope}|{archive_id}|{revision}|{question.casefold()}".encode()
-    ).hexdigest()
+def _cache_key(
+    scope: str, archive_ids: Sequence[int], question: str, model: str, revision: str
+) -> str:
+    key = ",".join(str(i) for i in sorted(set(archive_ids)))
+    digest = hashlib.sha256(f"{scope}|{key}|{revision}|{question.casefold()}".encode()).hexdigest()
     return ResponseCache.key(digest, model, ASK_PROMPT_VERSION, scope)
+
+
+def _archive_labels(session: Session, archive_ids: Sequence[int]) -> dict[int, ArchiveLabel]:
+    """What each row needs to say which archive it came from."""
+    labels: dict[int, ArchiveLabel] = {}
+    for archive_id in archive_ids:
+        archive = session.get(Archive, archive_id)
+        if archive is not None:
+            labels[archive_id] = ArchiveLabel(archive.slug, archive.title)
+    return labels
 
 
 def _hydrate(
@@ -174,17 +187,17 @@ def _hydrate(
 def answer_question(
     session: Session,
     *,
-    archive_id: int,
+    archive_ids: Sequence[int],
     question: str,
     scope: str,
     ask_model: Callable[[str], AnalyzeResult],
     cache: ResponseCache,
     model: str,
-    pack_name: str,
+    pack_names: Sequence[str],
     max_entries: int = 60,
 ) -> AskResult:
     question = " ".join(question.split())
-    entries = collect_entries(session, archive_id, scope)
+    entries = collect_entries(session, archive_ids, scope)
 
     if not entries:
         return AskResult(
@@ -199,9 +212,10 @@ def answer_question(
             usage={},
         )
 
-    rows = prefilter(question, build_index(entries), limit=max_entries)
+    index = build_index(entries, _archive_labels(session, archive_ids))
+    rows = prefilter(question, index, limit=max_entries)
     rows_by_id = {row.id: row for row in rows}
-    key = _cache_key(scope, archive_id, question, model, _revision(entries))
+    key = _cache_key(scope, archive_ids, question, model, _revision(entries))
 
     cached = cache.get(key)
     if cached is not None:
@@ -209,7 +223,7 @@ def answer_question(
         usage = cached.get("usage") or {}
         from_cache = True
     else:
-        prompt = build_prompt(rows, question, pack_names=[pack_name], scope=scope)
+        prompt = build_prompt(rows, question, pack_names=pack_names, scope=scope)
         result = ask_model(prompt)
         if result.parsed is None:
             raise AskError(result.parse_error or "model returned no JSON")

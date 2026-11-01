@@ -6,7 +6,7 @@ Nothing here writes a cache payload by hand: every entry is produced by
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -45,12 +45,12 @@ def read_questions(path: Path) -> list[str]:
 def warm_questions(
     session: Session,
     *,
-    archive_id: int,
+    archive_ids: Sequence[int],
     questions: list[str],
     ask_model: Callable[[str], AnalyzeResult],
     cache: ResponseCache,
     model: str,
-    pack_name: str,
+    pack_names: Sequence[str],
     scope: str = "public",
 ) -> list[WarmResult]:
     """Answer each question in turn; one failure never stops the rest."""
@@ -59,13 +59,13 @@ def warm_questions(
         try:
             result = answer_question(
                 session,
-                archive_id=archive_id,
+                archive_ids=archive_ids,
                 question=question,
                 scope=scope,
                 ask_model=ask_model,
                 cache=cache,
                 model=model,
-                pack_name=pack_name,
+                pack_names=pack_names,
             )
         except (AskError, MetaAPIError, httpx.HTTPError) as exc:
             out.append(

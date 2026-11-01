@@ -85,21 +85,21 @@ def test_warm_fills_the_cache_and_reports_it(session, tmp_path):
 
     first = warm_questions(
         session,
-        archive_id=a.id,
+        archive_ids=[a.id],
         questions=["apa itu canting"],
         ask_model=model,
         cache=cache,
         model="muse-test",
-        pack_name="batik tulis",
+        pack_names=["batik tulis"],
     )
     second = warm_questions(
         session,
-        archive_id=a.id,
+        archive_ids=[a.id],
         questions=["apa itu canting"],
         ask_model=model,
         cache=cache,
         model="muse-test",
-        pack_name="batik tulis",
+        pack_names=["batik tulis"],
     )
 
     assert len(calls) == 1
@@ -124,12 +124,12 @@ def test_one_failure_does_not_stop_the_rest(session, tmp_path):
 
     out = warm_questions(
         session,
-        archive_id=a.id,
+        archive_ids=[a.id],
         questions=["apa itu GAGAL", "apa itu canting"],
         ask_model=model,
         cache=ResponseCache(tmp_path / "c"),
         model="muse-test",
-        pack_name="batik tulis",
+        pack_names=["batik tulis"],
     )
 
     assert out[0].error is not None

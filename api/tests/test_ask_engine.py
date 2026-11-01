@@ -94,20 +94,20 @@ def fake_model(payload: dict, calls: list[str] | None = None):
 def ask(session, tmp_path, archive, model, question="apa itu canting?", scope="public"):
     return answer_question(
         session,
-        archive_id=archive.id,
+        archive_ids=[archive.id],
         question=question,
         scope=scope,
         ask_model=model,
         cache=ResponseCache(tmp_path / "cache"),
         model="muse-test",
-        pack_name="batik tulis",
+        pack_names=["batik tulis"],
     )
 
 
 def test_public_scope_hides_proposed_and_withdrawn(session):
     a, ids = seed(session)
 
-    terms = {e.term for e, _ in collect_entries(session, a.id, "public")}
+    terms = {e.term for e, _ in collect_entries(session, [a.id], "public")}
 
     assert terms == {"canting"}
 
@@ -115,9 +115,110 @@ def test_public_scope_hides_proposed_and_withdrawn(session):
 def test_studio_scope_includes_proposed_but_hides_withdrawn(session):
     a, ids = seed(session)
 
-    terms = {e.term for e, _ in collect_entries(session, a.id, "studio")}
+    terms = {e.term for e, _ in collect_entries(session, [a.id], "studio")}
 
     assert terms == {"canting", "nglorod"}
+
+
+def _second_archive(session):
+    b = make_archive(session, slug="hidup-gamelan", title="Arsip Gamelan")
+    rec = make_recording(session, b)
+    saron = _entry(session, b, "saron")
+    _occ(session, saron, rec)
+    return b, saron
+
+
+def test_collect_entries_spans_every_archive_given(session):
+    a, _ = seed(session)
+    b, _ = _second_archive(session)
+
+    terms = {e.term for e, _ in collect_entries(session, [a.id, b.id], "public")}
+
+    assert terms == {"canting", "saron"}
+
+
+def test_answer_cites_entries_from_two_archives(session, tmp_path):
+    a, ids = seed(session)
+    b, saron = _second_archive(session)
+    model = fake_model(
+        {
+            "answer": "Dua alat.",
+            "lang": "id",
+            "entry_ids": [ids["accepted"].id, saron.id],
+            "insufficient": False,
+        }
+    )
+
+    result = answer_question(
+        session,
+        archive_ids=[a.id, b.id],
+        question="apa itu canting dan saron?",
+        scope="public",
+        ask_model=model,
+        cache=ResponseCache(tmp_path / "cache"),
+        model="muse-test",
+        pack_names=["Batik Tulis", "Gamelan"],
+    )
+
+    assert result.refused is False
+    assert [c.entry.term for c in result.evidence] == ["canting", "saron"]
+
+
+def test_cache_key_separates_different_archive_sets(session, tmp_path):
+    a, ids = seed(session)
+    b, _ = _second_archive(session)
+    calls: list[str] = []
+    model = fake_model(
+        {
+            "answer": "ok",
+            "lang": "id",
+            "entry_ids": [ids["accepted"].id],
+            "insufficient": False,
+        },
+        calls,
+    )
+    cache = ResponseCache(tmp_path / "cache")
+
+    for archive_ids in ([a.id], [a.id, b.id], [b.id, a.id]):
+        answer_question(
+            session,
+            archive_ids=archive_ids,
+            question="apa itu canting?",
+            scope="public",
+            ask_model=model,
+            cache=cache,
+            model="muse-test",
+            pack_names=["P"],
+        )
+
+    assert len(calls) == 2
+
+
+def test_an_empty_archive_does_not_silence_another(session, tmp_path):
+    a, ids = seed(session)
+    empty = make_archive(session, slug="hidup-kosong")
+    model = fake_model(
+        {
+            "answer": "Canting alat.",
+            "lang": "id",
+            "entry_ids": [ids["accepted"].id],
+            "insufficient": False,
+        }
+    )
+
+    result = answer_question(
+        session,
+        archive_ids=[empty.id, a.id],
+        question="apa itu canting?",
+        scope="public",
+        ask_model=model,
+        cache=ResponseCache(tmp_path / "cache"),
+        model="muse-test",
+        pack_names=["P"],
+    )
+
+    assert result.refused is False
+    assert result.entry_ids == [ids["accepted"].id]
 
 
 def test_answer_hydrates_cited_entries_with_the_best_occurrence(session, tmp_path):

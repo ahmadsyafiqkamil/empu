@@ -512,7 +512,7 @@ def eval_retrieval(
             typer.echo(f"error: no archive with slug {archive!r}", err=True)
             raise typer.Exit(2)
         try:
-            pairs = collect_entries(session, arch.id, scope)
+            pairs = collect_entries(session, [arch.id], scope)
         except ValueError as e:
             typer.echo(f"error: {e}", err=True)
             raise typer.Exit(2) from e
@@ -559,12 +559,12 @@ def ask_warm(
 
         results = warm_questions(
             session,
-            archive_id=arch.id,
+            archive_ids=[arch.id],
             questions=items,
             ask_model=ask,
             cache=ResponseCache(settings.data_dir / "cache" / "ask"),
             model=model_name,
-            pack_name=pack_display_name(arch, settings),
+            pack_names=[pack_display_name(arch, settings)],
             scope=scope,
         )
     for r in results:
