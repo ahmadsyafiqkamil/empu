@@ -88,7 +88,18 @@ cd api && uv run empu eval retrieval --questions ../docs/eval/pertanyaan-retriev
 rows=90 k=4 questions=10 question_recall=1.00 term_recall=1.00
 ```
 
-Pembanding per arsip, supaya penurunan bisa diatribusikan:
+Pembanding per arsip, supaya penurunan bisa diatribusikan (perintah yang dijalankan dan keluarannya):
+
+```text
+uv run empu eval retrieval --archive batik-tulis \
+  --questions ../docs/eval/pertanyaan-retrieval.csv --k 4
+rows=18 k=4 questions=20 question_recall=1.00 term_recall=1.00
+
+uv run empu eval retrieval --archive gamelan \
+  --questions ../docs/eval/pertanyaan-retrieval-gamelan.csv --k 4
+rows=72 k=4 questions=10 question_recall=1.00 term_recall=1.00
+```
+
 
 | Ukuran | Baris | question_recall | term_recall |
 |---|---|---|---|
@@ -97,7 +108,7 @@ Pembanding per arsip, supaya penurunan bisa diatribusikan:
 | Batik, indeks gabungan | 90 | 0,95 | 0,96 |
 | Gamelan, indeks gabungan | 90 | 1,00 | 1,00 |
 
-- Daftar pertanyaan Gamelan: `docs/eval/pertanyaan-retrieval-gamelan.csv`, 10 pertanyaan (5 definisi bahasa Indonesia, 1 bahasa Jawa, 2 bahasa Inggris dengan kata lain, 1 teknik, 1 perbandingan dua laras). Semua istilah yang diharapkan adalah istilah publik.
+- Daftar pertanyaan Gamelan: `docs/eval/pertanyaan-retrieval-gamelan.csv`, 10 pertanyaan (8 bahasa Indonesia — termasuk definisi, sebutan lain, satu teknik, dan satu perbandingan dua laras — dan 2 bahasa Inggris yang memakai kata lain). Semua istilah yang diharapkan adalah istilah publik.
 - **Satu-satunya yang meleset** adalah `fiksasi` pada pertanyaan "how do you fix the dye so it does not fade?", sekarang di peringkat 31 dari 90 (sebelumnya masuk 4 besar dari 18). Sebabnya bukan pemotongan: `prefilter` mengirim 60 baris teratas, dan peringkat 31 ada di dalamnya, jadi istilah itu tetap sampai ke model. Yang berubah adalah peringkat relatif karena 72 baris Gamelan ikut bersaing.
 - **Keputusan: `ask_max_entries` tetap 60.** Angka 0,95/0,96 masih di atas ambang 0,90 di bagian sebelumnya, dan menaikkan batas ke 120 tidak akan mengubah `question_recall` — metrik ini meranking seluruh baris, bukan hanya yang terkirim. Menaikkan batas hanya akan menambah token prompt tanpa memperbaiki urutan.
 - **Batas angka ini:** kedua daftar pertanyaan ditulis dari istilah yang ada di arsipnya, jadi ini bukan uji buta. `question_recall` @4 adalah proksi konservatif; yang sebenarnya dikirim ke model adalah 60 baris.

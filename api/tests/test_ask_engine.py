@@ -1,7 +1,13 @@
 import pytest
 from factories import make_archive, make_recording
 
-from empu.ask.engine import AskError, answer_question, collect_entries
+from empu.ask.engine import (
+    REFUSAL_NO_ENTRIES_ARCHIVE,
+    REFUSAL_NO_ENTRIES_STUDIO,
+    AskError,
+    answer_question,
+    collect_entries,
+)
 from empu.cache import ResponseCache
 from empu.enums import (
     AccessLevel,
@@ -104,6 +110,22 @@ def ask(session, tmp_path, archive, model, question="apa itu canting?", scope="p
     )
 
 
+def test_a_single_empty_archive_says_this_archive(session, tmp_path):
+    a = make_archive(session, slug="hidup-kosong")
+
+    result = ask(session, tmp_path, a, fake_model({}), question="apa itu canting?")
+
+    assert result.answer == REFUSAL_NO_ENTRIES_ARCHIVE
+
+
+def test_empty_studio_scope_says_there_is_nothing_to_review(session, tmp_path):
+    a = make_archive(session, slug="hidup-kosong")
+
+    result = ask(session, tmp_path, a, fake_model({}), question="apa itu canting?", scope="studio")
+
+    assert result.answer == REFUSAL_NO_ENTRIES_STUDIO
+
+
 def test_public_scope_hides_proposed_and_withdrawn(session):
     a, ids = seed(session)
 
@@ -189,6 +211,36 @@ def test_cache_key_separates_different_archive_sets(session, tmp_path):
             cache=cache,
             model="muse-test",
             pack_names=["P"],
+        )
+
+    assert len(calls) == 2
+
+
+def test_cache_key_separates_different_row_limits(session, tmp_path):
+    a, ids = seed(session)
+    calls: list[str] = []
+    model = fake_model(
+        {
+            "answer": "ok",
+            "lang": "id",
+            "entry_ids": [ids["accepted"].id],
+            "insufficient": False,
+        },
+        calls,
+    )
+    cache = ResponseCache(tmp_path / "cache")
+
+    for limit in (1, 60):
+        answer_question(
+            session,
+            archive_ids=[a.id],
+            question="apa itu canting?",
+            scope="public",
+            ask_model=model,
+            cache=cache,
+            model="muse-test",
+            pack_names=["P"],
+            max_entries=limit,
         )
 
     assert len(calls) == 2

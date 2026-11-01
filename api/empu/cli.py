@@ -589,6 +589,7 @@ def ask_warm(
             model=model_name,
             pack_names=[pack_display_name(a, settings) for a in archives],
             scope=scope,
+            max_entries=settings.ask_max_entries,
         )
     for r in results:
         line = f"cached={r.cached} refused={r.refused} evidence={r.n_evidence} {r.question}"

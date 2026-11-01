@@ -95,9 +95,8 @@ Tukar: lebih banyak bagian bergerak (loop, batas langkah, penanganan galat per l
 | Metode | Path | Kunci | Cakupan |
 |---|---|---|---|
 | POST | `/api/public/archives/{slug}/ask` | tidak | publik; arsip sandbox → 404 |
+| POST | `/api/public/ask` | tidak | publik; semua arsip non-sandbox (sejak 1 Nov 2026, lihat bagian 12) |
 | POST | `/api/archives/{id}/ask` | `X-Studio-Key` | studio |
-
-Sejak 1 Nov 2026 ada pintu ketiga, `POST /api/public/ask`, yang mencakup semua arsip publik. Lihat bagian 12.
 
 Body: `{"question": str}` — 3–500 karakter setelah `strip`, spasi berlebih dirapatkan di server.
 
@@ -111,7 +110,9 @@ Respons (200):
   "evidence": [
     {
       "entry": { "…EntryListItem…" },
-      "occurrence": { "…OccurrenceOut…" }
+      "occurrence": { "…OccurrenceOut…" },
+      "archive_slug": "gamelan",
+      "archive_title": "Living Archive - Gamelan"
     }
   ],
   "model": "muse-spark-1.3",
@@ -187,7 +188,7 @@ Jawab dalam bahasa penanya; pakai hanya istilah di daftar; setiap klaim menunjuk
 |---|---|---|
 | A12 | Satu daftar gabungan: semua entri publik dari semua arsip non-sandbox masuk satu indeks, tiap baris diberi label `arsip=`. Satu panggilan model bisa menyitir entri dari arsip berbeda | Paling langsung menjawab "tidak harus spesifik di satu arsip"; id entri sudah unik global sehingga sitasi tetap tidak ambigu |
 | A6 (revisi) | Kunci cache = `sha256(scope + daftar archive_id terurut + revisi entri + pertanyaan ternormalisasi) + model + ASK_PROMPT_VERSION + scope` | Menambah atau menghapus arsip membatalkan jawaban lama; urutan arsip tidak mengubah kunci |
-| A13 | `ASK_PROMPT_VERSION = "ask-v3"`: template menyebut daftar pack, tiap baris menyebut arsipnya, dan model dilarang mencampur klaim antararsip | Perubahan prompt wajib menaikkan versi (CLAUDE.md) |
+| A13 | `ASK_PROMPT_VERSION = "ask-v5"`: template menyebut daftar pack, tiap baris menyebut arsipnya, model dilarang mencampur klaim antararsip, dan dilarang menyalin token `arsip=`/`id=` ke kalimat jawaban | Perubahan prompt wajib menaikkan versi (CLAUDE.md); klausa token ditambahkan setelah uji terima manual menunjukkan model menyalinnya |
 | A14 | Pintu publik baru `POST /api/public/ask` mencakup semua arsip non-sandbox. Route per-arsip dan pintu Studio tetap ada dan memanggil mesin yang sama dengan satu arsip | Kompatibilitas untuk tes, eval, dan pemakaian yang memang ingin satu arsip; Studio tetap alat tinjau per arsip |
 | A15 | Bukti membawa `archive_slug` dan `archive_title`; kartu bukti menautkan `/d/<arsip>/<id>` | Tautan tidak boleh menunjuk arsip yang salah |
 | A16 | Satu halaman publik `/ask`; `/d/[slug]/ask` dialihkan ke sana; menu "Ask" menunjuk `/ask` | Satu pintu yang jujur; URL lama tetap hidup |

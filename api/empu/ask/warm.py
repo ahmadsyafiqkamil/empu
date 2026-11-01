@@ -52,6 +52,7 @@ def warm_questions(
     model: str,
     pack_names: Sequence[str],
     scope: str = "public",
+    max_entries: int = 60,
 ) -> list[WarmResult]:
     """Answer each question in turn; one failure never stops the rest."""
     out: list[WarmResult] = []
@@ -66,6 +67,7 @@ def warm_questions(
                 cache=cache,
                 model=model,
                 pack_names=pack_names,
+                max_entries=max_entries,
             )
         except (AskError, MetaAPIError, httpx.HTTPError) as exc:
             out.append(

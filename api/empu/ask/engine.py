@@ -31,6 +31,22 @@ from empu.packs import PackError, load_pack
 from empu.visibility import entry_is_public, public_entries, public_occurrences
 
 REFUSAL_NO_ENTRIES = "No archive has published terms yet, so there is nothing to answer from."
+REFUSAL_NO_ENTRIES_ARCHIVE = (
+    "This archive has no published terms yet, so there is nothing to answer from."
+)
+REFUSAL_NO_ENTRIES_STUDIO = (
+    "This archive has nothing to review yet, so there is nothing to answer from."
+)
+
+
+def _refusal_no_entries(scope: str, archive_ids: Sequence[int]) -> str:
+    """Say which surface came up empty; "no archive" is false for one archive."""
+    if scope == "studio":
+        return REFUSAL_NO_ENTRIES_STUDIO
+    if len(set(archive_ids)) == 1:
+        return REFUSAL_NO_ENTRIES_ARCHIVE
+    return REFUSAL_NO_ENTRIES
+
 
 REFUSAL_UNCITED = "I couldn't tie that answer to a term the archive can show, so I won't give one."
 
@@ -131,10 +147,19 @@ def _revision(entries: list[tuple[Entry, list[Occurrence]]]) -> str:
 
 
 def _cache_key(
-    scope: str, archive_ids: Sequence[int], question: str, model: str, revision: str
+    scope: str,
+    archive_ids: Sequence[int],
+    question: str,
+    model: str,
+    revision: str,
+    max_entries: int,
 ) -> str:
+    """Everything that changes the prompt must change the key, or warm and the
+    server can share a key while sending the model different lists."""
     key = ",".join(str(i) for i in sorted(set(archive_ids)))
-    digest = hashlib.sha256(f"{scope}|{key}|{revision}|{question.casefold()}".encode()).hexdigest()
+    digest = hashlib.sha256(
+        f"{scope}|{key}|{revision}|{max_entries}|{question.casefold()}".encode()
+    ).hexdigest()
     return ResponseCache.key(digest, model, ASK_PROMPT_VERSION, scope)
 
 
@@ -201,7 +226,7 @@ def answer_question(
 
     if not entries:
         return AskResult(
-            answer=REFUSAL_NO_ENTRIES,
+            answer=_refusal_no_entries(scope, archive_ids),
             lang="en",
             refused=True,
             entry_ids=[],
@@ -215,7 +240,7 @@ def answer_question(
     index = build_index(entries, _archive_labels(session, archive_ids))
     rows = prefilter(question, index, limit=max_entries)
     rows_by_id = {row.id: row for row in rows}
-    key = _cache_key(scope, archive_ids, question, model, _revision(entries))
+    key = _cache_key(scope, archive_ids, question, model, _revision(entries), max_entries)
 
     cached = cache.get(key)
     if cached is not None:

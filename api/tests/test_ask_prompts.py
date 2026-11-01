@@ -75,8 +75,15 @@ def test_prompt_names_every_pack_and_labels_each_row():
     assert "arsip=Arsip Hidup" in prompt
 
 
+def test_prompt_forbids_mixing_claims_across_archives():
+    prompt = build_prompt([_row(1, "canting")], "q", pack_names=["A", "B"], scope="public")
+
+    assert "Jangan mencampur klaim antararsip" in prompt
+    assert "jangan menyalin token teknis" in prompt
+
+
 def test_prompt_version_is_pinned():
-    assert ASK_PROMPT_VERSION == "ask-v4"
+    assert ASK_PROMPT_VERSION == "ask-v5"
 
 
 def test_format_rows_is_one_line_per_entry():

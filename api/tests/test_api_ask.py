@@ -2,7 +2,7 @@ import pytest
 from factories import make_archive, make_recording
 
 from empu.ask import AskError
-from empu.ask.engine import REFUSAL_NO_ENTRIES
+from empu.ask.engine import REFUSAL_NO_ENTRIES, REFUSAL_NO_ENTRIES_ARCHIVE
 from empu.ask.ratelimit import RateLimiter
 from empu.enums import AccessLevel, Category, EntryStatus, Source, SourceKind
 from empu.meta_client import AnalyzeResult
@@ -101,7 +101,7 @@ def test_public_ask_returns_answer_and_evidence_with_media_urls(api, session):
     assert body["answer"] == "Canting adalah alat pena tembaga."
     assert body["lang"] == "id"
     assert body["refused"] is False
-    assert body["prompt_version"] == "ask-v4"
+    assert body["prompt_version"] == "ask-v5"
     assert body["cached"] is False
     evidence = body["evidence"]
     assert len(evidence) == 1
@@ -271,7 +271,7 @@ def test_public_ask_empty_archive_refuses_without_calling_the_model(api, session
 
     assert calls == []
     assert body["refused"] is True
-    assert body["answer"] == REFUSAL_NO_ENTRIES
+    assert body["answer"] == REFUSAL_NO_ENTRIES_ARCHIVE
 
 
 def test_public_ask_works_without_a_studio_key(api, session):
