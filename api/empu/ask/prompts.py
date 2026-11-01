@@ -7,9 +7,11 @@ must bump ASK_PROMPT_VERSION: it is part of the cache key.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from empu.ask.index import IndexEntry
 
-ASK_PROMPT_VERSION = "ask-v2"
+ASK_PROMPT_VERSION = "ask-v3"
 
 # A broad question ("how do I do batik") used to cite 24 terms: the answer became a
 # dump of the archive with a sentence on top. Four is enough to carry a sentence and
@@ -28,16 +30,17 @@ RESPONSE_SCHEMA: dict = {
     },
 }
 
-TEMPLATE = """Kamu penjaga kamus keahlian {pack_name}. Kamu menjawab HANYA dari daftar istilah di bawah.
+TEMPLATE = """Kamu penjaga kamus keahlian berikut: {pack_names}. Kamu menjawab HANYA dari daftar istilah di bawah.
 
 ATURAN
 1. Jawab dalam bahasa yang dipakai penanya.
 2. Pakai hanya istilah di daftar. Jangan menambah pengetahuan dari luar daftar.
-3. Setiap klaim harus ditopang id istilah dari daftar. Tulis id-nya di entry_ids, maksimal 4, pilih yang paling menopang jawaban.
-4. Kalau daftar tidak menjawab pertanyaan, isi insufficient=true dan katakan terus terang bahwa arsip belum memuatnya. Jangan menebak.
-5. Hormati label sumber: speech = diucapkan, on_screen_text = tertulis di layar, visual_only = hanya terlihat. Jangan menulis "dia mengatakan" untuk yang hanya terlihat.
-6. Jangan mengarang waktu atau kutipan.
-7. Maksimal 90 kata.
+3. Tiap baris menyebut arsipnya (`arsip=`). Jangan mencampur klaim antararsip; sebut arsipnya bila jawaban memakai lebih dari satu.
+4. Setiap klaim harus ditopang id istilah dari daftar. Tulis id-nya di entry_ids, maksimal 4, pilih yang paling menopang jawaban.
+5. Kalau daftar tidak menjawab pertanyaan, isi insufficient=true dan katakan terus terang bahwa arsip belum memuatnya. Jangan menebak.
+6. Hormati label sumber: speech = diucapkan, on_screen_text = tertulis di layar, visual_only = hanya terlihat. Jangan menulis "dia mengatakan" untuk yang hanya terlihat.
+7. Jangan mengarang waktu atau kutipan.
+8. Maksimal 90 kata.
 
 PERTANYAAN PENGGUNA
 {question}
@@ -65,6 +68,9 @@ def format_rows(rows: list[IndexEntry], *, scope: str) -> str:
     lines: list[str] = []
     for row in rows:
         parts = [f"id={row.id}", f"istilah={row.term}", f"kategori={row.category}"]
+        label = row.archive_title or row.archive_slug
+        if label:
+            parts.append(f"arsip={label}")
         if row.stage_id:
             parts.append(f"tahap={row.stage_id}")
         variants = _variants(row.variants, row.term)
@@ -83,9 +89,11 @@ def format_rows(rows: list[IndexEntry], *, scope: str) -> str:
     return "\n".join(lines)
 
 
-def build_prompt(rows: list[IndexEntry], question: str, *, pack_name: str, scope: str) -> str:
+def build_prompt(
+    rows: list[IndexEntry], question: str, *, pack_names: Sequence[str], scope: str
+) -> str:
     return TEMPLATE.format(
-        pack_name=pack_name,
+        pack_names=", ".join(pack_names),
         question=question,
         count=len(rows),
         rows=format_rows(rows, scope=scope),

@@ -6,6 +6,7 @@ visibility rules: whoever calls it passes the entries it may use.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from rapidfuzz import fuzz
@@ -16,6 +17,14 @@ QUOTE_LIMIT = 160
 MAX_EVIDENCE = 2
 TERM_HIT_BOOST = 30
 VARIANT_HIT_BOOST = 20
+
+
+@dataclass(frozen=True)
+class ArchiveLabel:
+    """What a row needs to say which archive it came from."""
+
+    slug: str
+    title: str
 
 
 @dataclass(frozen=True)
@@ -36,6 +45,9 @@ class IndexEntry:
     status: str
     variants: tuple[str, ...]
     evidence: tuple[Evidence, ...]
+    archive_slug: str = ""
+    archive_title: str = ""
+
 
 
 def _quote(occ: Occurrence) -> str:
@@ -49,9 +61,14 @@ def _ordered(entry: Entry, occurrences: list[Occurrence]) -> list[Occurrence]:
     return (best + rest)[:MAX_EVIDENCE]
 
 
-def build_index(entries: list[tuple[Entry, list[Occurrence]]]) -> list[IndexEntry]:
+def build_index(
+    entries: list[tuple[Entry, list[Occurrence]]],
+    archives: Mapping[int, ArchiveLabel] | None = None,
+) -> list[IndexEntry]:
+    labels = archives or {}
     rows: list[IndexEntry] = []
     for entry, occurrences in entries:
+        label = labels.get(entry.archive_id)
         rows.append(
             IndexEntry(
                 id=entry.id or 0,
@@ -70,6 +87,8 @@ def build_index(entries: list[tuple[Entry, list[Occurrence]]]) -> list[IndexEntr
                     )
                     for o in _ordered(entry, occurrences)
                 ),
+                archive_slug=label.slug if label else "",
+                archive_title=label.title if label else "",
             )
         )
     return rows

@@ -10,6 +10,8 @@ def _row(
     status: str = "accepted",
     variants: tuple[str, ...] = (),
     quote: str = "contoh kalimat",
+    archive_slug: str = "hidup-batik",
+    archive_title: str = "Arsip Hidup",
 ) -> IndexEntry:
     return IndexEntry(
         id=id,
@@ -21,13 +23,15 @@ def _row(
         status=status,
         variants=variants,
         evidence=(Evidence(source=source, quote=quote, t_start=134.0),),
+        archive_slug=archive_slug,
+        archive_title=archive_title,
     )
 
 
 def test_prompt_lists_every_row_id_and_source_label():
     rows = [_row(1, "canting"), _row(2, "nglorod", source="visual_only")]
 
-    prompt = build_prompt(rows, "apa itu canting?", pack_name="batik", scope="public")
+    prompt = build_prompt(rows, "apa itu canting?", pack_names=["batik"], scope="public")
 
     assert "id=1" in prompt
     assert "id=2" in prompt
@@ -37,7 +41,7 @@ def test_prompt_lists_every_row_id_and_source_label():
 
 def test_prompt_forbids_outside_knowledge_and_requires_ids():
     prompt = build_prompt(
-        [_row(1, "canting")], "apa itu canting?", pack_name="batik", scope="public"
+        [_row(1, "canting")], "apa itu canting?", pack_names=["batik"], scope="public"
     )
     assert "HANYA dari daftar istilah" in prompt
     assert "Jangan menambah pengetahuan dari luar daftar" in prompt
@@ -48,8 +52,8 @@ def test_prompt_forbids_outside_knowledge_and_requires_ids():
 def test_prompt_includes_status_only_for_studio_scope():
     rows = [_row(1, "canting", status="proposed")]
 
-    public = build_prompt(rows, "q", pack_name="batik", scope="public")
-    studio = build_prompt(rows, "q", pack_name="batik", scope="studio")
+    public = build_prompt(rows, "q", pack_names=["batik"], scope="public")
+    studio = build_prompt(rows, "q", pack_names=["batik"], scope="studio")
 
     assert "status=" not in public
     assert "status=proposed" in studio
@@ -57,13 +61,22 @@ def test_prompt_includes_status_only_for_studio_scope():
 
 def test_prompt_is_deterministic():
     rows = [_row(1, "a"), _row(2, "b")]
-    once = build_prompt(rows, "q", pack_name="p", scope="public")
-    twice = build_prompt(rows, "q", pack_name="p", scope="public")
+    once = build_prompt(rows, "q", pack_names=["p"], scope="public")
+    twice = build_prompt(rows, "q", pack_names=["p"], scope="public")
     assert once == twice
 
 
+def test_prompt_names_every_pack_and_labels_each_row():
+    rows = [_row(1, "canting")]
+
+    prompt = build_prompt(rows, "q", pack_names=["Batik Tulis", "Gamelan"], scope="public")
+
+    assert "Batik Tulis, Gamelan" in prompt
+    assert "arsip=Arsip Hidup" in prompt
+
+
 def test_prompt_version_is_pinned():
-    assert ASK_PROMPT_VERSION == "ask-v2"
+    assert ASK_PROMPT_VERSION == "ask-v3"
 
 
 def test_format_rows_is_one_line_per_entry():
@@ -75,7 +88,7 @@ def test_format_rows_is_one_line_per_entry():
 
 
 def test_prompt_caps_citations():
-    prompt = build_prompt([_row(1, "canting")], "q", pack_name="p", scope="public")
+    prompt = build_prompt([_row(1, "canting")], "q", pack_names=["p"], scope="public")
     assert "maksimal 4" in prompt
 
 

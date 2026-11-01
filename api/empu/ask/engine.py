@@ -209,7 +209,7 @@ def answer_question(
         usage = cached.get("usage") or {}
         from_cache = True
     else:
-        prompt = build_prompt(rows, question, pack_name=pack_name, scope=scope)
+        prompt = build_prompt(rows, question, pack_names=[pack_name], scope=scope)
         result = ask_model(prompt)
         if result.parsed is None:
             raise AskError(result.parse_error or "model returned no JSON")

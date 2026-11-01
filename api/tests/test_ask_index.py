@@ -1,7 +1,7 @@
 from factories import make_archive, make_recording
 from sqlmodel import select
 
-from empu.ask.index import build_index, prefilter, rank_rows
+from empu.ask.index import ArchiveLabel, build_index, prefilter, rank_rows
 from empu.enums import AccessLevel, Category, EntryStatus, Source
 from empu.models import Entry, Occurrence
 
@@ -57,6 +57,23 @@ def test_build_index_prefers_best_occurrence_and_caps_evidence(session):
     assert len(rows[0].evidence) == 2
     assert rows[0].evidence[0].quote == "best"
     assert rows[0].evidence[0].t_start == 9.0
+
+
+def test_build_index_labels_each_row_with_its_archive(session):
+    a = make_archive(session, slug="hidup-batik", title="Arsip Hidup")
+    e = _entry(session, a, "canting")
+
+    rows = build_index([(e, [])], archives={a.id: ArchiveLabel("hidup-batik", "Arsip Hidup")})
+
+    assert rows[0].archive_slug == "hidup-batik"
+    assert rows[0].archive_title == "Arsip Hidup"
+
+
+def test_build_index_leaves_the_label_empty_without_a_map(session):
+    a = make_archive(session, slug="hidup-batik")
+    e = _entry(session, a, "canting")
+
+    assert build_index([(e, [])])[0].archive_slug == ""
 
 
 def test_build_index_falls_back_to_visible_when_quote_is_empty(session):
