@@ -97,6 +97,8 @@ Tukar: lebih banyak bagian bergerak (loop, batas langkah, penanganan galat per l
 | POST | `/api/public/archives/{slug}/ask` | tidak | publik; arsip sandbox → 404 |
 | POST | `/api/archives/{id}/ask` | `X-Studio-Key` | studio |
 
+Sejak 1 Nov 2026 ada pintu ketiga, `POST /api/public/ask`, yang mencakup semua arsip publik. Lihat bagian 12.
+
 Body: `{"question": str}` — 3–500 karakter setelah `strip`, spasi berlebih dirapatkan di server.
 
 Respons (200):
@@ -174,3 +176,21 @@ Jawab dalam bahasa penanya; pakai hanya istilah di daftar; setiap klaim menunjuk
 | Latensi >10 detik saat demo | Daftar ≤60 baris, `max_output_tokens` 800; uji waktu nyata di Task 1 |
 | Istilah batik masuk ke kode | Prompt hanya berisi baris data; tes `test_no_hardcoded_craft_terms` tetap hijau |
 | Fitur memotong waktu deploy | Pintu publik = wajib; pintu Studio boleh dipotong tanpa menyentuh mesin |
+
+## 12. Ask global (1 Nov 2026)
+
+**Masalah yang memicu perubahan.** Ask diluncurkan terikat pada satu arsip di semua lapisan. Tombol Ask melayang dipasang di root layout, dan di luar `/d/[slug]` ia memilih satu arsip saja — arsip demo, Batik Tulis. Akibatnya pertanyaan "apa itu gamelan" dari beranda ditolak, padahal arsip Gamelan punya 72 entri publik. Yang salah bukan datanya, melainkan cakupannya.
+
+**Keputusan.**
+
+| # | Keputusan | Alasan |
+|---|---|---|
+| A12 | Satu daftar gabungan: semua entri publik dari semua arsip non-sandbox masuk satu indeks, tiap baris diberi label `arsip=`. Satu panggilan model bisa menyitir entri dari arsip berbeda | Paling langsung menjawab "tidak harus spesifik di satu arsip"; id entri sudah unik global sehingga sitasi tetap tidak ambigu |
+| A6 (revisi) | Kunci cache = `sha256(scope + daftar archive_id terurut + revisi entri + pertanyaan ternormalisasi) + model + ASK_PROMPT_VERSION + scope` | Menambah atau menghapus arsip membatalkan jawaban lama; urutan arsip tidak mengubah kunci |
+| A13 | `ASK_PROMPT_VERSION = "ask-v3"`: template menyebut daftar pack, tiap baris menyebut arsipnya, dan model dilarang mencampur klaim antararsip | Perubahan prompt wajib menaikkan versi (CLAUDE.md) |
+| A14 | Pintu publik baru `POST /api/public/ask` mencakup semua arsip non-sandbox. Route per-arsip dan pintu Studio tetap ada dan memanggil mesin yang sama dengan satu arsip | Kompatibilitas untuk tes, eval, dan pemakaian yang memang ingin satu arsip; Studio tetap alat tinjau per arsip |
+| A15 | Bukti membawa `archive_slug` dan `archive_title`; kartu bukti menautkan `/d/<arsip>/<id>` | Tautan tidak boleh menunjuk arsip yang salah |
+| A16 | Satu halaman publik `/ask`; `/d/[slug]/ask` dialihkan ke sana; menu "Ask" menunjuk `/ask` | Satu pintu yang jujur; URL lama tetap hidup |
+| A17 | `empu ask warm` dan `empu eval retrieval` tanpa `--archive` mencakup semua arsip | Demo dan pengukuran harus memakai jalur yang sama dengan pengunjung |
+
+**Batas yang tetap berlaku.** Pintu Studio tidak berubah: pemilih arsip dan cakupan `proposed` tetap per arsip, karena di sana pendokumentasi meninjau usulan, bukan mencari jawaban. `ask_max_entries` tetap 60; angka retrieval gabungan dan alasannya ada di `docs/reference/hasil-gate-ask.md`. Angka itu menunjukkan penurunan Batik dari 1,00 ke 0,95 pada `question_recall` @4, masih di atas ambang 0,90, dan istilah yang meleset tetap masuk 60 baris yang dikirim ke model.
