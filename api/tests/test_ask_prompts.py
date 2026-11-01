@@ -76,7 +76,7 @@ def test_prompt_names_every_pack_and_labels_each_row():
 
 
 def test_prompt_version_is_pinned():
-    assert ASK_PROMPT_VERSION == "ask-v3"
+    assert ASK_PROMPT_VERSION == "ask-v4"
 
 
 def test_format_rows_is_one_line_per_entry():

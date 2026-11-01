@@ -11,7 +11,7 @@ from collections.abc import Sequence
 
 from empu.ask.index import IndexEntry
 
-ASK_PROMPT_VERSION = "ask-v3"
+ASK_PROMPT_VERSION = "ask-v4"
 
 # A broad question ("how do I do batik") used to cite 24 terms: the answer became a
 # dump of the archive with a sentence on top. Four is enough to carry a sentence and
@@ -35,7 +35,7 @@ TEMPLATE = """Kamu penjaga kamus keahlian berikut: {pack_names}. Kamu menjawab H
 ATURAN
 1. Jawab dalam bahasa yang dipakai penanya.
 2. Pakai hanya istilah di daftar. Jangan menambah pengetahuan dari luar daftar.
-3. Tiap baris menyebut arsipnya (`arsip=`). Jangan mencampur klaim antararsip; sebut arsipnya bila jawaban memakai lebih dari satu.
+3. Tiap baris menyebut arsipnya. Bila jawaban memakai lebih dari satu arsip, sebut nama arsipnya dalam kalimat biasa; jangan menyalin token teknis seperti `arsip=` atau `id=` ke dalam jawaban.
 4. Setiap klaim harus ditopang id istilah dari daftar. Tulis id-nya di entry_ids, maksimal 4, pilih yang paling menopang jawaban.
 5. Kalau daftar tidak menjawab pertanyaan, isi insufficient=true dan katakan terus terang bahwa arsip belum memuatnya. Jangan menebak.
 6. Hormati label sumber: speech = diucapkan, on_screen_text = tertulis di layar, visual_only = hanya terlihat. Jangan menulis "dia mengatakan" untuk yang hanya terlihat.
