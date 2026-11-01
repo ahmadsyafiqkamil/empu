@@ -205,6 +205,8 @@ class AskIn(APIModel):
 class AskEvidenceOut(APIModel):
     entry: EntryListItem
     occurrence: OccurrenceOut
+    archive_slug: str
+    archive_title: str
 
 
 class AskAnswerOut(APIModel):

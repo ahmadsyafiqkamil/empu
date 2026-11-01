@@ -7,7 +7,7 @@ needs the studio key and sees entries that are still under review.
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -90,12 +90,15 @@ def _to_out(session: Session, result: AskResult) -> AskAnswerOut:
     evidence: list[AskEvidenceOut] = []
     for cited in result.evidence:
         rec = session.get(Recording, cited.occurrence.recording_id)
+        archive = session.get(Archive, cited.entry.archive_id)
         evidence.append(
             AskEvidenceOut(
                 entry=entry_list_item(cited.entry, cited.occurrences),
                 occurrence=occurrence_out(
                     cited.occurrence, recording_title=rec.title if rec else ""
                 ),
+                archive_slug=archive.slug if archive else "",
+                archive_title=archive.title if archive else "",
             )
         )
     return AskAnswerOut(
@@ -111,7 +114,7 @@ def _to_out(session: Session, result: AskResult) -> AskAnswerOut:
 
 def _run(
     session: Session,
-    archive: Archive,
+    archives: Sequence[Archive],
     body: AskIn,
     *,
     scope: str,
@@ -122,21 +125,44 @@ def _run(
     try:
         result = answer_question(
             session,
-            archive_ids=[archive.id],
+            archive_ids=[archive.id for archive in archives],
             question=body.question,
             scope=scope,
             ask_model=ask_model,
             cache=cache,
             model=settings.muse_model,
-            pack_names=[pack_display_name(archive, settings)],
+            pack_names=[pack_display_name(archive, settings) for archive in archives],
             max_entries=settings.ask_max_entries,
         )
     except (AskError, MetaAPIError, httpx.HTTPError, RuntimeError) as exc:
         # RuntimeError covers an unset Meta API key on a keyless deploy: a judge
         # should read a calm message, not a traceback.
-        log.exception("ask failed for archive %s (scope %s)", archive.id, scope)
+        log.exception("ask failed for archives %s (scope %s)", [a.id for a in archives], scope)
         raise HTTPException(502, "answer unavailable") from exc
     return _to_out(session, result)
+
+
+@router.post("/api/public/ask", response_model=AskAnswerOut)
+def public_ask_all(
+    body: AskIn,
+    request: Request,
+    session: Session = Depends(get_session),  # noqa: B008
+    settings: Settings = Depends(get_settings),  # noqa: B008
+    ask_model: Callable[[str], AnalyzeResult] = Depends(get_ask_model),  # noqa: B008
+    cache: ResponseCache = Depends(get_ask_cache),  # noqa: B008
+    limiter: RateLimiter = Depends(get_limiter),  # noqa: B008
+) -> AskAnswerOut:
+    """One door for every public archive; sandboxes never enter the list."""
+    archives = [
+        archive
+        for archive in session.exec(select(Archive).order_by(Archive.id)).all()
+        if not archive.is_sandbox
+    ]
+    if not limiter.allow(_client_key(request)):
+        raise HTTPException(429, "too many questions, try again later")
+    return _run(
+        session, archives, body, scope="public", settings=settings, ask_model=ask_model, cache=cache
+    )
 
 
 @router.post("/api/public/archives/{slug}/ask", response_model=AskAnswerOut)
@@ -156,7 +182,13 @@ def public_ask(
     if not limiter.allow(_client_key(request)):
         raise HTTPException(429, "too many questions, try again later")
     return _run(
-        session, archive, body, scope="public", settings=settings, ask_model=ask_model, cache=cache
+        session,
+        [archive],
+        body,
+        scope="public",
+        settings=settings,
+        ask_model=ask_model,
+        cache=cache,
     )
 
 
@@ -173,7 +205,13 @@ def studio_ask(
     if archive is None:
         raise HTTPException(404, "archive not found")
     return _run(
-        session, archive, body, scope="studio", settings=settings, ask_model=ask_model, cache=cache
+        session,
+        [archive],
+        body,
+        scope="studio",
+        settings=settings,
+        ask_model=ask_model,
+        cache=cache,
     )
 
 

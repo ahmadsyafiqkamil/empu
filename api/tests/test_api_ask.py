@@ -173,6 +173,47 @@ def test_public_ask_404_for_unknown_archive(api, session):
     assert r.status_code == 404
 
 
+def test_global_ask_answers_from_every_archive(api, session):
+    a, batik, _ = setup_public(session)
+    b = make_archive(session, slug="gamelan", title="Living Archive - Gamelan")
+    rec = make_recording(session, b)
+    saron = _entry(session, b, "saron")
+    _occ(session, saron, rec, evidence_quote="ini saron")
+    use_model(api, _payload(entry_ids=[batik.id, saron.id]))
+
+    body = api.post("/api/public/ask", json={"question": "apa itu saron?"}).json()
+
+    assert body["refused"] is False
+    assert [e["archive_slug"] for e in body["evidence"]] == ["hidup-batik", "gamelan"]
+    assert [e["archive_title"] for e in body["evidence"]] == [
+        "Arsip Hidup",
+        "Living Archive - Gamelan",
+    ]
+
+
+def test_global_ask_never_reads_a_sandbox(api, session):
+    a, entry, _ = setup_public(session)
+    sandbox = make_archive(session, slug="sandbox", title="Judge sandbox", is_sandbox=True)
+    rec = make_recording(session, sandbox)
+    hidden = _entry(session, sandbox, "rahasia")
+    _occ(session, hidden, rec)
+    use_model(api, _payload(entry_ids=[hidden.id]))
+
+    body = api.post("/api/public/ask", json={"question": "apa itu rahasia?"}).json()
+
+    assert body["refused"] is True
+    assert body["evidence"] == []
+
+
+def test_global_ask_with_no_public_archive_says_so(api, session):
+    use_model(api, _payload(entry_ids=[]))
+
+    body = api.post("/api/public/ask", json={"question": "apa itu canting?"}).json()
+
+    assert body["refused"] is True
+    assert body["answer"] == REFUSAL_NO_ENTRIES
+
+
 @pytest.mark.parametrize("question", ["", "a", "   ", "x" * 501])
 def test_public_ask_422_for_unusable_question(api, session, question):
     setup_public(session)
