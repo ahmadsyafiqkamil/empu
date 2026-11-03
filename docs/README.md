@@ -16,6 +16,7 @@ Folder ini adalah konteks lengkap untuk membuat implementation plan Empu dengan 
 | 8 | `../packs/batik_tulis.yaml` | Craft pack draf (13 tahap, 42 istilah) |
 | 9 | `eval/` | Set uji, format kunci jawaban |
 | 10 | `00-konteks-hackathon.md` | Fakta hackathon, kriteria juri, nama, klaim yang aman, positioning, visi |
+| 11 | `konteks-fitur.md` | Daftar lengkap fitur yang sudah ada di aplikasi (permukaan publik, Ask, Studio, pipeline, ekspor, evaluasi, batasan) |
 
 ## Cara membuat plan
 
